@@ -73,7 +73,7 @@ export function About() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.15 }}
-              className="mb-0 mt-7 text-base leading-[1.8] text-slate-50/50"
+              className="mb-0 mt-7 text-base leading-[1.8] text-slate-50/70"
             >
               {profile.aboutBody}
             </motion.p>
@@ -98,7 +98,7 @@ export function About() {
                   >
                     {stat.value}
                   </div>
-                  <div className="mt-1.5 text-[13px] tracking-[0.01em] text-slate-50/40">
+                  <div className="mt-1.5 text-[13px] tracking-[0.01em] text-slate-50/70">
                     {stat.label}
                   </div>
                 </div>
@@ -133,7 +133,7 @@ export function About() {
                     <h3 className="m-0 text-base font-bold tracking-[-0.01em] text-slate-50">
                       {pillar.title}
                     </h3>
-                    <p className="mb-0 mt-1.5 text-sm leading-[1.65] text-slate-50/45">
+                    <p className="mb-0 mt-1.5 text-sm leading-[1.65] text-slate-50/60">
                       {pillar.desc}
                     </p>
                   </div>

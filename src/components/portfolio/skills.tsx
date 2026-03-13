@@ -67,7 +67,7 @@ export function Skills() {
                       <span className="text-[13px] font-medium text-slate-50/75">
                         {skill.name}
                       </span>
-                      <span className="text-[11px] font-semibold text-slate-50/30">
+                      <span className="text-[11px] font-semibold text-slate-50/50">
                         {skill.level}%
                       </span>
                     </div>
@@ -100,11 +100,15 @@ export function Skills() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
+          className="rounded-[1.25rem] border border-white/10 bg-white/[0.03] p-8 backdrop-blur-[12px]"
         >
-          <p className="mb-5 text-[13px] font-semibold uppercase tracking-[0.1em] text-slate-50/30">
-            Also worked with
-          </p>
-          <div className="flex flex-wrap gap-2.5">
+          <div className="mb-6 flex items-center gap-3">
+            <div className="h-px w-8 bg-gradient-to-r from-cyan-400/70 to-transparent" />
+            <p className="m-0 text-[14px] font-bold uppercase tracking-[0.18em] text-slate-50/70">
+              Also worked with
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
             {allBadges.map((badge, index) => (
               <motion.span
                 key={badge}
@@ -114,10 +118,13 @@ export function Skills() {
                 transition={{ duration: 0.35, delay: index * 0.025 }}
                 whileHover={{
                   scale: 1.06,
-                  borderColor: "rgba(0,212,255,0.4)",
+                  borderColor: "rgba(0,212,255,0.45)",
+                  backgroundColor: "rgba(0,212,255,0.08)",
                   color: "#f8fafc",
+                  boxShadow:
+                    "0 0 0 1px rgba(0,212,255,0.12), 0 18px 38px rgba(0,0,0,0.35)",
                 }}
-                className="inline-block cursor-default rounded-full border border-white/8 bg-white/4 px-3.5 py-1.5 text-xs font-medium tracking-[0.01em] text-slate-50/45 transition-all duration-200"
+                className="inline-block cursor-default rounded-full border border-white/12 bg-white/[0.06] px-4 py-2 text-[13px] font-semibold tracking-[0.01em] text-slate-50/70 transition-all duration-200"
               >
                 {badge}
               </motion.span>
@@ -128,4 +135,3 @@ export function Skills() {
     </section>
   );
 }
-

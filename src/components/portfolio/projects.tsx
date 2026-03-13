@@ -108,7 +108,7 @@ function ProjectCard({
         <h3 className="m-0 text-[22px] font-extrabold tracking-[-0.025em] text-slate-50">
           {project.title}
         </h3>
-        <p className="mb-0 mt-2.5 text-sm leading-[1.7] text-slate-50/45">
+        <p className="mb-0 mt-2.5 text-sm leading-[1.7] text-slate-50/60">
           {project.desc}
         </p>
 
