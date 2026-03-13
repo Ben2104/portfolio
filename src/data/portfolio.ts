@@ -202,7 +202,6 @@ export const allBadges = [
   "Prisma",
   "Docker",
   "GitHub Actions",
-  "Cloudflare",
   "Figma",
   "Git",
   "Linux",
@@ -222,7 +221,7 @@ export const experiences = [
       "Refactored the existing Next.js codebase into a more modular and scalable architecture, reducing technical debt and improving long-term maintainability.",
       "Designed and implemented new dashboard features enabling users to upload and manage images, integrating Next.js frontend components with backend APIs for seamless data handling.",
     ],
-    tags: ["Next.js"],
+    tags: ["Next.js", "Tailwind CSS", "React.js", "Node.js"],
   },
   {
     role: "Instructional Student Assistant",
@@ -235,7 +234,7 @@ export const experiences = [
       "Graded Python assignments, labs, and exam on computer arithmetic and matrix computations, providing clear feedback on correctness, efficiency, and code quality while maintaining consistent rubrics.",
       "Debugged student code and coached systematic problem decomposition, edge-case handling, and test-case design to improve assignment outcomes and confidence.",
     ],
-    tags: ["Python"],
+    tags: ["Python", "Linear Algebra", "Discrete Mathematics"],
   },
   {
     role: "Computer Technical Support Volunteer",
@@ -249,7 +248,7 @@ export const experiences = [
       "Diagnosed and resolved technical issues related to hardware failures, software malfunctions, and network connectivity problems. Delivered hands-on troubleshooting support to improve efficiency and minimize downtime for users.",
       "Refurbished and repaired broken and outdated laptops by replacing defective components, optimizing system performance, and reinstalling necessary software. Successfully restored numerous devices, which were then distributed to underprivileged students in need of reliable technology for their education.",
     ],
-    tags: ["Linux"],
+    tags: ["Linux", "Hardware", "Hardware Troubleshooting"],
   },
   {
     role: "Teaching Assistant",
@@ -263,7 +262,7 @@ export const experiences = [
       "Conducted review sessions, provided one-on-one tutoring, and facilitated group discussions to enhance student understanding.",
       "Evaluated labs, assignments, quizzes, and exams, providing constructive feedback to students and instructor to support academic growth.",
     ],
-    tags: ["C++", "Linux"],
+    tags: ["C++", "Linux", "Debugging"],
   },
 ] as const;
 
