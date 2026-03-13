@@ -85,19 +85,23 @@ function ProjectCard({
               boxShadow: `0 0 8px ${project.color}`,
             }}
           />
-          <span
-            className="text-[11px] font-semibold uppercase tracking-[0.1em]"
-            style={{ color: project.color }}
-          >
-            {project.subtitle}
-          </span>
+          {project.subtitle ? (
+            <span
+              className="text-[11px] font-semibold uppercase tracking-[0.1em]"
+              style={{ color: project.color }}
+            >
+              {project.subtitle}
+            </span>
+          ) : null}
         </div>
-        <div className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full bg-black/50 px-2.5 py-1 backdrop-blur-lg">
-          <Star size={11} className="fill-amber-400 text-amber-400" />
-          <span className="text-xs font-semibold text-slate-50">
-            {project.stars}
-          </span>
-        </div>
+        {"stars" in project && project.stars ? (
+          <div className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full bg-black/50 px-2.5 py-1 backdrop-blur-lg">
+            <Star size={11} className="fill-amber-400 text-amber-400" />
+            <span className="text-xs font-semibold text-slate-50">
+              {project.stars}
+            </span>
+          </div>
+        ) : null}
       </div>
 
       <div className="p-6">
@@ -120,20 +124,22 @@ function ProjectCard({
         </div>
 
         <div className="mt-6 flex items-center gap-3">
-          <motion.a
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.96 }}
-            href={project.liveHref}
-            className="flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold tracking-[0.02em]"
-            style={{
-              background: `${project.color}18`,
-              borderColor: `${project.color}35`,
-              color: project.color,
-            }}
-          >
-            <ExternalLink size={12} />
-            Live Demo
-          </motion.a>
+          {project.liveHref ? (
+            <motion.a
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.96 }}
+              href={project.liveHref}
+              className="flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold tracking-[0.02em]"
+              style={{
+                background: `${project.color}18`,
+                borderColor: `${project.color}35`,
+                color: project.color,
+              }}
+            >
+              <ExternalLink size={12} />
+              Live Demo
+            </motion.a>
+          ) : null}
           <motion.a
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.96 }}

@@ -10,9 +10,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Alex Chen | Portfolio",
+  title: "Khoi Do | Portfolio",
   description:
-    "Interactive 3D portfolio generated from a Figma Make design and implemented in Next.js.",
+    "Portfolio website of Khoi Do, a software engineer specializing in web development and design. Showcasing projects, skills, and experience in creating modern and responsive web applications.",
 };
 
 export default function RootLayout({

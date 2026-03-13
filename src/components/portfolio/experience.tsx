@@ -107,34 +107,40 @@ export function Experience() {
                     </span>
                   </div>
 
-                  <p className="mb-5 mt-0 text-sm leading-[1.8] text-slate-50/48">
-                    {experience.description}
-                  </p>
+                  {experience.description ? (
+                    <p className="mb-5 mt-0 text-sm leading-[1.8] text-slate-50/48">
+                      {experience.description}
+                    </p>
+                  ) : null}
 
-                  <ul className="mb-6 flex flex-col gap-2">
-                    {experience.highlights.map((highlight) => (
-                      <li key={highlight} className="flex items-start gap-3">
+                  {experience.highlights.length > 0 ? (
+                    <ul className="mb-6 flex flex-col gap-2">
+                      {experience.highlights.map((highlight) => (
+                        <li key={highlight} className="flex items-start gap-3">
+                          <span
+                            className="mt-1.5 h-1 w-1 shrink-0 rounded-full"
+                            style={{ background: experience.color }}
+                          />
+                          <span className="text-[13px] leading-[1.6] text-slate-50/60">
+                            {highlight}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+
+                  {experience.tags.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {experience.tags.map((tag) => (
                         <span
-                          className="mt-1.5 h-1 w-1 shrink-0 rounded-full"
-                          style={{ background: experience.color }}
-                        />
-                        <span className="text-[13px] leading-[1.6] text-slate-50/60">
-                          {highlight}
+                          key={tag}
+                          className="rounded-full border border-white/8 bg-white/5 px-2.5 py-[3px] text-[11px] font-semibold tracking-[0.02em] text-slate-50/50"
+                        >
+                          {tag}
                         </span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <div className="flex flex-wrap gap-2">
-                    {experience.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-full border border-white/8 bg-white/5 px-2.5 py-[3px] text-[11px] font-semibold tracking-[0.02em] text-slate-50/50"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  ) : null}
                 </motion.div>
               </motion.div>
             ))}
