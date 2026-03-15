@@ -271,14 +271,14 @@ export const socials = [
     icon: "github",
     label: "GitHub",
     handle: "@Ben2104",
-    href: "#https://github.com/Ben2104",
+    href: "https://github.com/Ben2104",
     color: "#f8fafc",
   },
   {
     icon: "linkedin",
     label: "LinkedIn",
     handle: "Hoang Khoi Do",
-    href: "#https://www.linkedin.com/in/hoang-khoi-do/",
+    href: "https://www.linkedin.com/in/hoang-khoi-do/",
     color: "#0ea5e9",
   },
   {

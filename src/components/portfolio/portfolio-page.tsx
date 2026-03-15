@@ -6,6 +6,7 @@ import { Hero } from "./hero";
 import { Navbar } from "./navbar";
 import { Projects } from "./projects";
 import { Skills } from "./skills";
+import { Testimonial } from "./testimonial";
 
 export function PortfolioPage() {
   return (
@@ -14,6 +15,7 @@ export function PortfolioPage() {
       <Hero />
       <About />
       <Projects />
+      <Testimonial />
       <Skills />
       <Experience />
       <Contact />
@@ -21,4 +23,3 @@ export function PortfolioPage() {
     </main>
   );
 }
-

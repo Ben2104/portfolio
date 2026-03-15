@@ -3,24 +3,27 @@
 @source "../**/*.{ts,tsx}";
 
 :root {
-  --portfolio-bg: #04040f;
-  --portfolio-fg: #f8fafc;
-  --portfolio-cyan: #00d4ff;
-  --portfolio-purple: #7c3aed;
-  --portfolio-orange: #f97316;
+  --portfolio-bg: #1a1a1a;
+  --portfolio-surface: #131313;
+  --portfolio-surface-soft: #202020;
+  --portfolio-text: #fdfdfd;
+  --portfolio-muted: #a8a8a8;
+  --portfolio-subtle: #949494;
+  --portfolio-line: #323232;
+  --portfolio-accent: #ff9142;
 }
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 96px;
+  scroll-padding-top: 110px;
 }
 
 body {
   min-height: 100vh;
   overflow-x: hidden;
   background: var(--portfolio-bg);
-  color: var(--portfolio-fg);
-  font-family: var(--font-inter), sans-serif;
+  color: var(--portfolio-text);
+  font-family: var(--font-rubik), sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -29,9 +32,17 @@ body {
   box-sizing: border-box;
 }
 
+.font-syne {
+  font-family: var(--font-syne), sans-serif;
+}
+
+.font-rubik {
+  font-family: var(--font-rubik), sans-serif;
+}
+
 ::selection {
-  background: rgb(0 212 255 / 25%);
-  color: var(--portfolio-fg);
+  background: rgb(255 145 66 / 28%);
+  color: var(--portfolio-text);
 }
 
 ::-webkit-scrollbar {
@@ -39,21 +50,21 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--portfolio-bg);
+  background: #151515;
 }
 
 ::-webkit-scrollbar-thumb {
   border-radius: 999px;
-  background: rgb(0 212 255 / 25%);
+  background: rgb(255 255 255 / 18%);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(0 212 255 / 45%);
+  background: rgb(255 255 255 / 28%);
 }
 
 input::placeholder,
 textarea::placeholder {
-  color: rgb(248 250 252 / 22%);
+  color: rgb(255 255 255 / 28%);
 }
 
 a,

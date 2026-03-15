@@ -1,8 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { Code2, Layers, Zap } from "lucide-react";
-import { motion, useScroll, useTransform } from "motion/react";
-import { useRef } from "react";
+import { motion } from "motion/react";
 
 import { pillars, profile, stats } from "@/data/portfolio";
 
@@ -14,136 +14,111 @@ const iconMap = {
   zap: Zap,
 } as const;
 
+const PROFILE_IMAGE = "/profile/profilepicture.JPEG";
+
+function scrollToTarget(target: string) {
+  document.querySelector(target)?.scrollIntoView({ behavior: "smooth" });
+}
+
 export function About() {
-  const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const y = useTransform(scrollYProgress, [0, 1], [60, -60]);
-
   return (
-    <section
-      id="about"
-      ref={ref}
-      className="relative bg-[var(--portfolio-bg)] px-6 py-40"
-    >
-      <motion.div
-        style={{ y }}
-        className="pointer-events-none absolute left-0 top-0 h-full w-px"
-        aria-hidden
-      >
-        <div
-          className="h-full w-px"
-          style={{
-            background:
-              "linear-gradient(to bottom, transparent, rgba(0,212,255,0.2), transparent)",
-          }}
-        />
-      </motion.div>
+    <section id="about" className="relative bg-[var(--portfolio-bg)] px-6 py-28">
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 36% 24% at 18% 34%, rgba(255,145,66,0.1), transparent 70%)",
+        }}
+      />
+      <div className="relative mx-auto w-full max-w-[1200px]">
+        <SectionHeading accent="var(--portfolio-accent)" label="About Me" />
 
-      <div className="relative mx-auto max-w-7xl">
-        <SectionHeading accent="#00d4ff" label="About" />
-
-        <div className="grid grid-cols-1 items-center gap-20 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-[minmax(0,1fr)_454px] md:items-start">
           <div>
-            <motion.h2
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="m-0 text-[clamp(32px,4vw,56px)] font-extrabold leading-[1.08] tracking-[-0.035em] text-slate-50"
-            >
-              Building the future,
-              <br />
-              <span
-                style={{
-                  background: "linear-gradient(135deg, #00d4ff, #7c3aed)",
-                  WebkitBackgroundClip: "text",
-                  backgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
-              >
-                one commit at a time.
-              </span>
-            </motion.h2>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.15 }}
-              className="mb-0 mt-7 text-base leading-[1.8] text-slate-50/70"
-            >
+            <h2 className="font-syne m-0 max-w-[640px] text-[clamp(38px,5vw,56px)] font-bold leading-[1.06] tracking-[-0.02em] text-[var(--portfolio-text)]">
+              {profile.aboutHeading}
+            </h2>
+            <p className="font-rubik mb-0 mt-7 max-w-[640px] text-[16px] leading-[1.75] text-[var(--portfolio-muted)]">
               {profile.aboutBody}
-            </motion.p>
+            </p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-              className="mt-12 grid grid-cols-2 gap-6"
+            <button
+              type="button"
+              onClick={() => scrollToTarget("#contact")}
+              className="mt-9 rounded-full bg-[var(--portfolio-accent)] px-8 py-3.5 font-rubik text-[12px] font-bold uppercase tracking-[0.11em] text-[var(--portfolio-text)] shadow-[0_18px_40px_rgba(255,145,66,0.24)]"
             >
+              Discover More About Me
+            </button>
+
+            <div className="mt-10 grid max-w-[460px] grid-cols-2 gap-6">
               {stats.map((stat) => (
                 <div key={stat.label}>
-                  <div
-                    className="text-4xl font-extrabold leading-none tracking-[-0.04em]"
-                    style={{
-                      background: "linear-gradient(135deg, #00d4ff, #7c3aed)",
-                      WebkitBackgroundClip: "text",
-                      backgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                    }}
-                  >
+                  <p className="font-syne m-0 text-4xl font-bold leading-none text-white">
                     {stat.value}
-                  </div>
-                  <div className="mt-1.5 text-[13px] tracking-[0.01em] text-slate-50/70">
+                  </p>
+                  <p className="font-rubik mb-0 mt-2 text-[12px] uppercase tracking-[0.1em] text-[var(--portfolio-subtle)]">
                     {stat.label}
-                  </div>
+                  </p>
                 </div>
               ))}
-            </motion.div>
+            </div>
           </div>
 
-          <div className="flex flex-col gap-5">
-            {pillars.map((pillar, index) => {
-              const Icon = iconMap[pillar.icon];
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.55 }}
+            className="relative w-full overflow-hidden rounded-[30px] border border-white/10"
+          >
+            <div className="relative aspect-[454/506] w-full bg-[#1f1f1f]">
+              <Image
+                src={PROFILE_IMAGE}
+                alt={`${profile.name} profile photo`}
+                fill
+                className="object-cover"
+                sizes="(max-width: 900px) 100vw, 454px"
+                priority={false}
+              />
+            </div>
+            <div
+              className="pointer-events-none absolute left-[-20px] top-[56%] h-[178px] w-[55px] rounded-[30px] border"
+              style={{ borderColor: "rgba(255,145,66,0.7)" }}
+            />
+            <div
+              className="pointer-events-none absolute right-[18px] top-[8%] h-[34px] w-[110px] rounded-[30px] border"
+              style={{ borderColor: "rgba(255,145,66,0.7)" }}
+            />
+          </motion.div>
+        </div>
 
-              return (
-                <motion.div
-                  key={pillar.title}
-                  initial={{ opacity: 0, x: 30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.12 }}
-                  whileHover={{ x: 6, scale: 1.01 }}
-                  className="flex cursor-default items-start gap-5 rounded-[1.25rem] border border-white/6 bg-white/[0.028] p-6 backdrop-blur-[10px]"
-                >
-                  <div
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border"
-                    style={{
-                      background: `${pillar.color}14`,
-                      borderColor: `${pillar.color}30`,
-                    }}
-                  >
-                    <Icon size={18} style={{ color: pillar.color }} />
-                  </div>
-                  <div>
-                    <h3 className="m-0 text-base font-bold tracking-[-0.01em] text-slate-50">
-                      {pillar.title}
-                    </h3>
-                    <p className="mb-0 mt-1.5 text-sm leading-[1.65] text-slate-50/60">
-                      {pillar.desc}
-                    </p>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
+        <div className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-3">
+          {pillars.map((pillar, index) => {
+            const Icon = iconMap[pillar.icon];
+
+            return (
+              <motion.article
+                key={pillar.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45, delay: index * 0.08 }}
+                className="rounded-2xl border border-white/10 bg-[var(--portfolio-surface)] p-6"
+              >
+                <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/6">
+                  <Icon size={18} style={{ color: pillar.color }} />
+                </div>
+                <h3 className="font-syne m-0 text-[24px] font-bold text-[var(--portfolio-text)]">
+                  {pillar.title}
+                </h3>
+                <p className="font-rubik mb-0 mt-3 text-[15px] leading-[1.65] text-[var(--portfolio-muted)]">
+                  {pillar.desc}
+                </p>
+              </motion.article>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 }
-

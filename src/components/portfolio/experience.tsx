@@ -8,144 +8,90 @@ import { SectionHeading } from "./section-heading";
 
 export function Experience() {
   return (
-    <section
-      id="experience"
-      className="relative px-6 py-40"
-      style={{ background: "linear-gradient(to bottom, #04040f, #050412, #04040f)" }}
-    >
-      <div
-        className="pointer-events-none absolute inset-0"
-        aria-hidden
-        style={{
-          background:
-            "radial-gradient(ellipse 50% 60% at 70% 40%, rgba(124,58,237,0.05) 0%, transparent 70%)",
-        }}
-      />
+    <section id="experience" className="relative bg-[var(--portfolio-bg)] px-6 py-28">
+      <div className="relative mx-auto w-full max-w-[1200px]">
+        <SectionHeading accent="var(--portfolio-accent)" label="Experience" />
 
-      <div className="relative mx-auto max-w-7xl">
-        <SectionHeading accent="#00d4ff" label="Experience" />
+        <h2 className="font-syne m-0 text-[clamp(36px,5vw,56px)] font-bold leading-[1.08] tracking-[-0.02em] text-[var(--portfolio-text)]">
+          Work History
+        </h2>
 
-        <motion.h2
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-[72px] m-0 text-[clamp(32px,4.5vw,60px)] font-extrabold leading-[1.05] tracking-[-0.035em] text-slate-50"
-        >
-          Where I&apos;ve worked.
-        </motion.h2>
-
-        <div className="relative">
-          <div
-            className="absolute bottom-0 left-4 top-0 w-px md:left-8"
-            style={{
-              background:
-                "linear-gradient(to bottom, rgba(0,212,255,0.4), rgba(124,58,237,0.2), transparent)",
-            }}
-          />
-
-          <div className="flex flex-col">
+        {experiences.length > 0 ? (
+          <div className="mt-10 space-y-5">
             {experiences.map((experience, index) => (
-              <motion.div
+              <motion.article
                 key={`${experience.company}-${experience.role}`}
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{
-                  duration: 0.7,
-                  delay: index * 0.12,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className="relative pb-14 pl-16 md:pl-24"
+                transition={{ duration: 0.45, delay: index * 0.06 }}
+                className="rounded-2xl border border-white/10 bg-[var(--portfolio-surface)] p-6"
               >
-                <div
-                  className="absolute left-4 top-2 flex h-4 w-4 -translate-x-1/2 items-center justify-center rounded-full md:left-8"
-                  style={{
-                    background: "#04040f",
-                    border: `2px solid ${experience.color}`,
-                    boxShadow: `0 0 16px ${experience.color}60`,
-                  }}
-                >
-                  <div
-                    className="h-1.5 w-1.5 rounded-full"
-                    style={{ background: experience.color }}
-                  />
+                <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                  <div>
+                    <h3 className="font-syne m-0 text-[27px] font-bold leading-[1.2] text-[var(--portfolio-text)]">
+                      {experience.role}
+                    </h3>
+                    <p className="font-rubik mb-0 mt-2 text-[15px] leading-[1.55] text-[var(--portfolio-muted)]">
+                      <span style={{ color: experience.color }}>{experience.company}</span>
+                      {" · "}
+                      {experience.location}
+                    </p>
+                  </div>
+                  <span
+                    className="w-fit rounded-full border px-4 py-1.5 font-rubik text-[11px] font-bold uppercase tracking-[0.08em]"
+                    style={{
+                      color: experience.color,
+                      borderColor: `${experience.color}88`,
+                      background: `${experience.color}1a`,
+                    }}
+                  >
+                    {experience.period}
+                  </span>
                 </div>
 
-                <motion.div
-                  whileHover={{ x: 6 }}
-                  transition={{ duration: 0.25 }}
-                  className="group cursor-default rounded-[1.25rem] border border-white/7 bg-white/[0.025] p-7 backdrop-blur-[12px]"
-                >
-                  <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                      <h3 className="m-0 text-xl font-extrabold tracking-[-0.025em] text-slate-50">
-                        {experience.role}
-                      </h3>
-                      <div className="mt-1 flex items-center gap-2">
+                {experience.description ? (
+                  <p className="font-rubik mb-0 mt-4 text-[15px] leading-[1.72] text-[var(--portfolio-muted)]">
+                    {experience.description}
+                  </p>
+                ) : null}
+
+                {experience.highlights.length > 0 ? (
+                  <ul className="mt-5 space-y-2.5">
+                    {experience.highlights.map((highlight) => (
+                      <li key={highlight} className="flex gap-3">
                         <span
-                          className="text-[15px] font-bold"
-                          style={{ color: experience.color }}
-                        >
-                          {experience.company}
+                          className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full"
+                          style={{ background: experience.color }}
+                        />
+                        <span className="font-rubik text-[14px] leading-[1.7] text-white/78">
+                          {highlight}
                         </span>
-                        <span className="text-[13px] text-white/20">·</span>
-                        <span className="text-[13px] text-slate-50/35">
-                          {experience.location}
-                        </span>
-                      </div>
-                    </div>
-                    <span
-                      className="w-fit whitespace-nowrap rounded-full border px-3 py-1 text-[11px] font-semibold tracking-[0.02em]"
-                      style={{
-                        color: experience.color,
-                        background: `${experience.color}12`,
-                        borderColor: `${experience.color}25`,
-                      }}
-                    >
-                      {experience.period}
-                    </span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
+
+                {experience.tags.length > 0 ? (
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {experience.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full border border-white/16 px-3 py-1.5 font-rubik text-[11px] font-medium uppercase tracking-[0.08em] text-white/72"
+                      >
+                        {tag}
+                      </span>
+                    ))}
                   </div>
-
-                  {experience.description ? (
-                    <p className="mb-5 mt-0 text-sm leading-[1.8] text-slate-50/48">
-                      {experience.description}
-                    </p>
-                  ) : null}
-
-                  {experience.highlights.length > 0 ? (
-                    <ul className="mb-6 flex flex-col gap-2">
-                      {experience.highlights.map((highlight) => (
-                        <li key={highlight} className="flex items-start gap-3">
-                          <span
-                            className="mt-1.5 h-1 w-1 shrink-0 rounded-full"
-                            style={{ background: experience.color }}
-                          />
-                          <span className="text-[13px] leading-[1.6] text-slate-50/60">
-                            {highlight}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : null}
-
-                  {experience.tags.length > 0 ? (
-                    <div className="flex flex-wrap gap-2">
-                      {experience.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="rounded-full border border-white/8 bg-white/5 px-2.5 py-[3px] text-[11px] font-semibold tracking-[0.02em] text-slate-50/50"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  ) : null}
-                </motion.div>
-              </motion.div>
+                ) : null}
+              </motion.article>
             ))}
           </div>
-        </div>
+        ) : (
+          <p className="font-rubik mt-10 text-[15px] text-[var(--portfolio-muted)]">
+            Experience details are not available right now.
+          </p>
+        )}
       </div>
     </section>
   );
