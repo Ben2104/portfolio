@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import { motion, useMotionValueEvent, useScroll } from "motion/react";
 
@@ -43,8 +44,16 @@ export function Navbar() {
         <button
           type="button"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="font-syne text-[18px] font-bold uppercase tracking-[0.06em] text-[var(--portfolio-text)]"
+          className="flex items-center gap-3 font-syne text-[18px] font-bold uppercase tracking-[0.06em] text-[var(--portfolio-text)]"
         >
+          <Image
+            src="/profile/favicon.png"
+            alt={`${profile.name} logo`}
+            width={28}
+            height={28}
+            className="h-[clamp(1.125rem,2.2vw,1.75rem)] w-[clamp(1.125rem,2.2vw,1.75rem)] shrink-0 rounded-sm object-cover"
+            priority
+          />
           {profile.name}
         </button>
 

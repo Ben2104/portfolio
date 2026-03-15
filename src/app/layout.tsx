@@ -20,6 +20,11 @@ export const metadata: Metadata = {
   title: "Khoi Do | Portfolio",
   description:
     "Portfolio website of Khoi Do, a software engineer specializing in web development and design. Showcasing projects, skills, and experience in creating modern and responsive web applications.",
+  icons: {
+    icon: "/profile/favicon.png",
+    shortcut: "/profile/favicon.png",
+    apple: "/profile/favicon.png",
+  },
 };
 
 export default function RootLayout({
