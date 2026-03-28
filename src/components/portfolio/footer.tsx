@@ -7,7 +7,7 @@ export function Footer() {
     <footer className="relative bg-[var(--portfolio-surface)] px-6 pb-12 pt-20">
       <div className="mx-auto w-full max-w-[1200px]">
         <p className="font-clash m-0 text-center text-[24px] font-bold text-[var(--portfolio-accent)]">
-          Get in Touch With Us
+          Get in Touch With Me
         </p>
         <a
           href={`mailto:${profile.email}`}

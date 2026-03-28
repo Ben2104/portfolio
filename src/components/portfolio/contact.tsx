@@ -59,18 +59,14 @@ export function Contact() {
           {profile.contactHeading}
         </h2>
         <p className="font-satoshi mt-3 text-[17px] text-[var(--portfolio-subtle)]">
-          For any project, knock us.
+          For any project, knock me.
         </p>
         <div className="mt-7 h-px w-full bg-white/20" />
 
         <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1.2fr]">
           <div className="space-y-6">
             <h3 className="font-clash m-0 text-[clamp(36px,5vw,64px)] font-bold leading-[1.04] text-[var(--portfolio-text)]">
-              Get in
-              <br />
-              Touch With
-              <br />
-              Us
+              Get in Touch With Me
             </h3>
             <p className="font-satoshi m-0 max-w-[460px] text-[16px] leading-[1.75] text-[var(--portfolio-muted)]">
               {profile.opportunityBlurb}
