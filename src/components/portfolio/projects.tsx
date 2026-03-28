@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowRight, ExternalLink, Github } from "lucide-react";
+import { ExternalLink, Github } from "lucide-react";
 import { motion } from "motion/react";
 
 import { projects } from "@/data/portfolio";
@@ -17,66 +17,67 @@ function ProjectCard({
 }) {
   return (
     <motion.article
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.05 }}
-      className="overflow-hidden rounded-2xl border border-white/8 bg-[var(--portfolio-surface)]"
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.45, delay: index * 0.06 }}
+      className="group flex flex-col overflow-hidden rounded-xl border border-white/12 bg-[#222222] transition-all duration-300 hover:border-white/25 hover:shadow-[0_8px_32px_rgba(255,145,66,0.08)]"
     >
-      <div className="relative aspect-[560/420] w-full overflow-hidden">
+      {/* Image preview */}
+      <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#111]">
         <Image
           src={project.image}
           alt={project.title}
           fill
-          sizes="(max-width: 900px) 100vw, 50vw"
-          className="object-cover transition-transform duration-500 hover:scale-105"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
         />
-      </div>
 
-      <div className="p-6">
-        <div className="flex items-center gap-4">
-          <h3 className="font-clash m-0 text-[24px] font-bold leading-[1.2] text-[var(--portfolio-text)]">
-            {project.title}
-          </h3>
-          <div
-            className="h-px min-w-12 flex-1"
-            style={{ background: "rgba(255,145,66,0.7)" }}
-          />
-        </div>
-
-        <p className="font-satoshi mb-0 mt-4 text-[15px] leading-[1.72] text-[var(--portfolio-muted)]">
-          {project.desc}
-        </p>
-
-        <div className="mt-5 flex flex-wrap gap-2">
-          {project.tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full border border-white/12 px-3 py-1.5 font-satoshi text-[11px] font-medium uppercase tracking-[0.08em] text-white/72"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        <div className="mt-6 flex flex-wrap items-center gap-3">
+        {/* Hover overlay with links */}
+        <div className="absolute inset-0 flex items-center justify-center gap-3 bg-black/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
           {project.liveHref ? (
             <a
               href={project.liveHref}
-              className="inline-flex items-center gap-2 rounded-full border px-4 py-2 font-satoshi text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--portfolio-accent)]"
-              style={{ borderColor: "rgba(255,145,66,0.7)" }}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--portfolio-accent)] text-white transition-transform hover:scale-110"
+              aria-label={`Live demo of ${project.title}`}
             >
-              <ExternalLink size={13} />
-              Live Demo
+              <ExternalLink size={16} />
             </a>
           ) : null}
           <a
             href={project.sourceHref}
-            className="inline-flex items-center gap-2 rounded-full border border-white/18 px-4 py-2 font-satoshi text-[11px] font-bold uppercase tracking-[0.1em] text-white/82"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-sm transition-transform hover:scale-110"
+            aria-label={`Source code of ${project.title}`}
           >
-            <Github size={13} />
-            Source Code
+            <Github size={16} />
           </a>
+        </div>
+      </div>
+
+      {/* Card body */}
+      <div className="flex flex-1 flex-col px-5 pb-5 pt-4">
+        <h3 className="font-clash m-0 text-[18px] font-bold leading-tight text-white">
+          {project.title}
+        </h3>
+
+        <p className="font-satoshi mb-0 mt-2 line-clamp-2 text-[13px] leading-[1.65] text-white/70">
+          {project.desc}
+        </p>
+
+        {/* Tags */}
+        <div className="mt-auto flex flex-wrap gap-1.5 pt-4">
+          {project.tags.map((tag) => (
+            <span
+              key={tag}
+              className="rounded-md border border-white/10 bg-white/8 px-2.5 py-1 font-satoshi text-[10px] font-medium text-white/75"
+            >
+              {tag}
+            </span>
+          ))}
         </div>
       </div>
     </motion.article>
@@ -101,22 +102,8 @@ export function Projects() {
           My Projects Highlight
         </h2>
 
-        <div className="mt-8 flex justify-center">
-          <button
-            type="button"
-            onClick={() =>
-              document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })
-            }
-            className="inline-flex items-center gap-2 rounded-full border px-6 py-2.5 font-satoshi text-[11px] font-bold uppercase tracking-[0.12em] text-white"
-            style={{ borderColor: "rgba(255,145,66,0.75)" }}
-          >
-            Explore More
-            <ArrowRight size={12} />
-          </button>
-        </div>
-
         {projects.length > 0 ? (
-          <div className="mt-14 grid grid-cols-1 gap-8 lg:grid-cols-2">
+          <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {projects.map((project, index) => (
               <ProjectCard key={project.title} project={project} index={index} />
             ))}
