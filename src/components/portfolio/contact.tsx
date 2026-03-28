@@ -55,27 +55,27 @@ export function Contact() {
       <div className="relative mx-auto w-full max-w-[1200px]">
         <SectionHeading accent="var(--portfolio-accent)" label="Contact" />
 
-        <h2 className="font-syne m-0 text-[clamp(40px,6vw,72px)] font-bold leading-[1.08] tracking-[-0.02em] text-[var(--portfolio-text)]">
+        <h2 className="font-clash m-0 text-[clamp(40px,6vw,72px)] font-bold leading-[1.08] tracking-[-0.02em] text-[var(--portfolio-text)]">
           {profile.contactHeading}
         </h2>
-        <p className="font-rubik mt-3 text-[17px] text-[var(--portfolio-subtle)]">
+        <p className="font-satoshi mt-3 text-[17px] text-[var(--portfolio-subtle)]">
           For any project, knock us.
         </p>
         <div className="mt-7 h-px w-full bg-white/20" />
 
         <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1.2fr]">
           <div className="space-y-6">
-            <h3 className="font-syne m-0 text-[clamp(36px,5vw,64px)] font-bold leading-[1.04] text-[var(--portfolio-text)]">
+            <h3 className="font-clash m-0 text-[clamp(36px,5vw,64px)] font-bold leading-[1.04] text-[var(--portfolio-text)]">
               Get in
               <br />
               Touch With
               <br />
               Us
             </h3>
-            <p className="font-rubik m-0 max-w-[460px] text-[16px] leading-[1.75] text-[var(--portfolio-muted)]">
+            <p className="font-satoshi m-0 max-w-[460px] text-[16px] leading-[1.75] text-[var(--portfolio-muted)]">
               {profile.opportunityBlurb}
             </p>
-            <p className="font-rubik m-0 text-[14px] text-[var(--portfolio-muted)]">
+            <p className="font-satoshi m-0 text-[14px] text-[var(--portfolio-muted)]">
               Typical response time:{" "}
               <span className="font-semibold text-white">{profile.responseTime}</span>
             </p>
@@ -89,17 +89,17 @@ export function Contact() {
                 className="flex flex-col items-start gap-4"
               >
                 <CheckCircle className="text-[var(--portfolio-accent)]" size={40} />
-                <h3 className="font-syne m-0 text-3xl text-[var(--portfolio-text)]">
+                <h3 className="font-clash m-0 text-3xl text-[var(--portfolio-text)]">
                   Email draft opened
                 </h3>
-                <p className="font-rubik m-0 max-w-md text-[15px] text-[var(--portfolio-muted)]">
+                <p className="font-satoshi m-0 max-w-md text-[15px] text-[var(--portfolio-muted)]">
                   Your message was added to a new draft. If no mail app opened, you can
                   use the direct email link below.
                 </p>
                 <button
                   type="button"
                   onClick={() => setSent(false)}
-                  className="rounded-full border border-white/25 px-5 py-2.5 font-rubik text-[12px] font-bold uppercase tracking-[0.1em] text-white"
+                  className="rounded-full border border-white/25 px-5 py-2.5 font-satoshi text-[12px] font-bold uppercase tracking-[0.1em] text-white"
                 >
                   Send Another
                 </button>
@@ -107,7 +107,7 @@ export function Contact() {
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-6">
                 <label className="block">
-                  <span className="font-rubik block text-[12px] font-bold uppercase tracking-[0.1em] text-white">
+                  <span className="font-satoshi block text-[12px] font-bold uppercase tracking-[0.1em] text-white">
                     Name
                   </span>
                   <input
@@ -116,12 +116,12 @@ export function Contact() {
                     value={form.name}
                     onChange={handleChange("name")}
                     placeholder="Your name"
-                    className="mt-2 w-full border-0 border-b border-white/35 bg-transparent px-0 pb-3 pt-1 font-rubik text-[18px] text-white outline-none focus:border-[var(--portfolio-accent)]"
+                    className="mt-2 w-full border-0 border-b border-white/35 bg-transparent px-0 pb-3 pt-1 font-satoshi text-[18px] text-white outline-none focus:border-[var(--portfolio-accent)]"
                   />
                 </label>
 
                 <label className="block">
-                  <span className="font-rubik block text-[12px] font-bold uppercase tracking-[0.1em] text-white">
+                  <span className="font-satoshi block text-[12px] font-bold uppercase tracking-[0.1em] text-white">
                     Email
                   </span>
                   <input
@@ -130,12 +130,12 @@ export function Contact() {
                     value={form.email}
                     onChange={handleChange("email")}
                     placeholder="your@email.com"
-                    className="mt-2 w-full border-0 border-b border-white/35 bg-transparent px-0 pb-3 pt-1 font-rubik text-[18px] text-white outline-none focus:border-[var(--portfolio-accent)]"
+                    className="mt-2 w-full border-0 border-b border-white/35 bg-transparent px-0 pb-3 pt-1 font-satoshi text-[18px] text-white outline-none focus:border-[var(--portfolio-accent)]"
                   />
                 </label>
 
                 <label className="block">
-                  <span className="font-rubik block text-[12px] font-bold uppercase tracking-[0.1em] text-white">
+                  <span className="font-satoshi block text-[12px] font-bold uppercase tracking-[0.1em] text-white">
                     Message
                   </span>
                   <textarea
@@ -144,13 +144,13 @@ export function Contact() {
                     value={form.message}
                     onChange={handleChange("message")}
                     placeholder="Tell me about your project"
-                    className="mt-2 w-full resize-none border-0 border-b border-white/35 bg-transparent px-0 pb-3 pt-1 font-rubik text-[18px] text-white outline-none focus:border-[var(--portfolio-accent)]"
+                    className="mt-2 w-full resize-none border-0 border-b border-white/35 bg-transparent px-0 pb-3 pt-1 font-satoshi text-[18px] text-white outline-none focus:border-[var(--portfolio-accent)]"
                   />
                 </label>
 
                 <button
                   type="submit"
-                  className="w-fit rounded-full bg-[var(--portfolio-accent)] px-7 py-2.5 font-rubik text-[12px] font-bold uppercase tracking-[0.11em] text-white"
+                  className="w-fit rounded-full bg-[var(--portfolio-accent)] px-7 py-2.5 font-satoshi text-[12px] font-bold uppercase tracking-[0.11em] text-white"
                 >
                   Send
                 </button>
@@ -175,7 +175,7 @@ export function Contact() {
                       <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15">
                         <Icon size={15} className="text-white/75" />
                       </span>
-                      <span className="font-rubik text-[13px] font-medium text-white/80">
+                      <span className="font-satoshi text-[13px] font-medium text-white/80">
                         {social.handle}
                       </span>
                     </div>
@@ -185,7 +185,7 @@ export function Contact() {
               })}
             </div>
           ) : (
-            <p className="font-rubik m-0 text-[15px] text-[var(--portfolio-muted)]">
+            <p className="font-satoshi m-0 text-[15px] text-[var(--portfolio-muted)]">
               Contact links are not available right now.
             </p>
           )}

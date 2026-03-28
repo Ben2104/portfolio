@@ -35,7 +35,7 @@ function ProjectCard({
 
       <div className="p-6">
         <div className="flex items-center gap-4">
-          <h3 className="font-syne m-0 text-[24px] font-bold leading-[1.2] text-[var(--portfolio-text)]">
+          <h3 className="font-clash m-0 text-[24px] font-bold leading-[1.2] text-[var(--portfolio-text)]">
             {project.title}
           </h3>
           <div
@@ -44,7 +44,7 @@ function ProjectCard({
           />
         </div>
 
-        <p className="font-rubik mb-0 mt-4 text-[15px] leading-[1.72] text-[var(--portfolio-muted)]">
+        <p className="font-satoshi mb-0 mt-4 text-[15px] leading-[1.72] text-[var(--portfolio-muted)]">
           {project.desc}
         </p>
 
@@ -52,7 +52,7 @@ function ProjectCard({
           {project.tags.map((tag) => (
             <span
               key={tag}
-              className="rounded-full border border-white/12 px-3 py-1.5 font-rubik text-[11px] font-medium uppercase tracking-[0.08em] text-white/72"
+              className="rounded-full border border-white/12 px-3 py-1.5 font-satoshi text-[11px] font-medium uppercase tracking-[0.08em] text-white/72"
             >
               {tag}
             </span>
@@ -63,7 +63,7 @@ function ProjectCard({
           {project.liveHref ? (
             <a
               href={project.liveHref}
-              className="inline-flex items-center gap-2 rounded-full border px-4 py-2 font-rubik text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--portfolio-accent)]"
+              className="inline-flex items-center gap-2 rounded-full border px-4 py-2 font-satoshi text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--portfolio-accent)]"
               style={{ borderColor: "rgba(255,145,66,0.7)" }}
             >
               <ExternalLink size={13} />
@@ -72,7 +72,7 @@ function ProjectCard({
           ) : null}
           <a
             href={project.sourceHref}
-            className="inline-flex items-center gap-2 rounded-full border border-white/18 px-4 py-2 font-rubik text-[11px] font-bold uppercase tracking-[0.1em] text-white/82"
+            className="inline-flex items-center gap-2 rounded-full border border-white/18 px-4 py-2 font-satoshi text-[11px] font-bold uppercase tracking-[0.1em] text-white/82"
           >
             <Github size={13} />
             Source Code
@@ -97,7 +97,7 @@ export function Projects() {
       <div className="relative mx-auto w-full max-w-[1200px]">
         <SectionHeading accent="var(--portfolio-accent)" label="Featured Work" />
 
-        <h2 className="font-syne m-0 text-center text-[clamp(40px,6vw,64px)] font-bold tracking-[-0.02em] text-[var(--portfolio-text)]">
+        <h2 className="font-clash m-0 text-center text-[clamp(40px,6vw,64px)] font-bold tracking-[-0.02em] text-[var(--portfolio-text)]">
           My Projects Highlight
         </h2>
 
@@ -107,7 +107,7 @@ export function Projects() {
             onClick={() =>
               document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })
             }
-            className="inline-flex items-center gap-2 rounded-full border px-6 py-2.5 font-rubik text-[11px] font-bold uppercase tracking-[0.12em] text-white"
+            className="inline-flex items-center gap-2 rounded-full border px-6 py-2.5 font-satoshi text-[11px] font-bold uppercase tracking-[0.12em] text-white"
             style={{ borderColor: "rgba(255,145,66,0.75)" }}
           >
             Explore More
@@ -122,7 +122,7 @@ export function Projects() {
             ))}
           </div>
         ) : (
-          <p className="font-rubik mt-12 text-center text-[15px] text-[var(--portfolio-muted)]">
+          <p className="font-satoshi mt-12 text-center text-[15px] text-[var(--portfolio-muted)]">
             No projects available yet.
           </p>
         )}

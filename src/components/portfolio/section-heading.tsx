@@ -11,7 +11,7 @@ export function SectionHeading({ accent, label }: SectionHeadingProps) {
         style={{ background: `linear-gradient(to right, ${accent}, transparent)` }}
       />
       <span
-        className="font-rubik text-[12px] font-semibold uppercase tracking-[0.18em]"
+        className="font-satoshi text-[12px] font-semibold uppercase tracking-[0.18em]"
         style={{ color: accent }}
       >
         {label}

@@ -46,7 +46,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
-            className="rounded-full border border-white/16 bg-white/5 px-4 py-2 font-rubik text-[11px] font-semibold uppercase tracking-[0.14em] text-white/80"
+            className="rounded-full border border-white/16 bg-white/5 px-4 py-2 font-satoshi text-[11px] font-semibold uppercase tracking-[0.14em] text-white/80"
           >
             {profile.availability}
           </motion.span>
@@ -55,7 +55,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="font-syne mt-8 max-w-[600px] text-[clamp(36px,5.5vw,68px)] font-bold leading-[1.08] tracking-[-0.02em] text-[var(--portfolio-text)]"
+            className="font-clash mt-8 max-w-[600px] text-[clamp(36px,5.5vw,68px)] font-bold leading-[1.08] tracking-[-0.02em] text-[var(--portfolio-text)]"
           >
             {profile.title}
           </motion.h1>
@@ -69,7 +69,7 @@ export function Hero() {
             {profile.roles.map((role) => (
               <span
                 key={role}
-                className="rounded-full border border-white/12 px-4 py-1.5 font-rubik text-[11px] font-medium uppercase tracking-[0.11em] text-white/70"
+                className="rounded-full border border-white/12 px-4 py-1.5 font-satoshi text-[11px] font-medium uppercase tracking-[0.11em] text-white/70"
               >
                 {role}
               </span>
@@ -85,14 +85,14 @@ export function Hero() {
             <button
               type="button"
               onClick={() => scrollToTarget("#projects")}
-              className="rounded-full bg-[var(--portfolio-accent)] px-9 py-4 font-rubik text-[12px] font-bold uppercase tracking-[0.12em] text-[var(--portfolio-text)] shadow-[0_20px_60px_rgba(255,145,66,0.25)] transition hover:brightness-105"
+              className="rounded-full bg-[var(--portfolio-accent)] px-9 py-4 font-satoshi text-[12px] font-bold uppercase tracking-[0.12em] text-[var(--portfolio-text)] shadow-[0_20px_60px_rgba(255,145,66,0.25)] transition hover:brightness-105"
             >
               Explore Works
             </button>
             <button
               type="button"
               onClick={() => scrollToTarget("#contact")}
-              className="rounded-full border border-white/28 bg-black/30 px-9 py-4 font-rubik text-[12px] font-bold uppercase tracking-[0.12em] text-white/90 transition hover:bg-white/5"
+              className="rounded-full border border-white/28 bg-black/30 px-9 py-4 font-satoshi text-[12px] font-bold uppercase tracking-[0.12em] text-white/90 transition hover:bg-white/5"
             >
               Get In Touch
             </button>

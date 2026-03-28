@@ -27,14 +27,14 @@ export function Testimonial() {
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="font-syne m-0 text-[clamp(36px,5vw,64px)] font-bold text-[var(--portfolio-text)]"
+            className="font-clash m-0 text-[clamp(36px,5vw,64px)] font-bold text-[var(--portfolio-text)]"
           >
             Testimonial
           </motion.h2>
-          <p className="font-rubik mt-6 max-w-[880px] text-[17px] leading-[1.8] text-[var(--portfolio-subtle)]">
+          <p className="font-satoshi mt-6 max-w-[880px] text-[17px] leading-[1.8] text-[var(--portfolio-subtle)]">
             "{profile.aboutBody}"
           </p>
-          <p className="font-syne mb-0 mt-7 text-[24px] font-bold text-white">
+          <p className="font-clash mb-0 mt-7 text-[24px] font-bold text-white">
             - {profile.name}
           </p>
         </div>

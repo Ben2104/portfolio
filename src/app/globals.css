@@ -23,7 +23,7 @@ body {
   overflow-x: hidden;
   background: var(--portfolio-bg);
   color: var(--portfolio-text);
-  font-family: var(--font-rubik), sans-serif;
+  font-family: 'Satoshi', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -32,12 +32,12 @@ body {
   box-sizing: border-box;
 }
 
-.font-syne {
-  font-family: var(--font-syne), sans-serif;
+.font-clash {
+  font-family: 'Clash Display', sans-serif;
 }
 
-.font-rubik {
-  font-family: var(--font-rubik), sans-serif;
+.font-satoshi {
+  font-family: 'Satoshi', sans-serif;
 }
 
 ::selection {

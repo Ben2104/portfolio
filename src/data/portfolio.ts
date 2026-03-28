@@ -3,7 +3,7 @@ export const profile = {
   name: "Khoi Do",
   availability: "Available for work",
   title:
-    "Crafting digital experiences at the intersection of design and engineering.",
+    "Crafting digital experiences where design meets engineering.",
   roles: ["Computer Science Student", "Software Engineer"],
   aboutHeading: "Building the future, one commit at a time.",
   aboutBody:
@@ -20,7 +20,6 @@ export const navLinks = [
   { label: "Projects", href: "#projects" },
   { label: "Skills", href: "#skills" },
   { label: "Experience", href: "#experience" },
-  { label: "Contact", href: "#contact" },
 ] as const;
 
 export const stats = [

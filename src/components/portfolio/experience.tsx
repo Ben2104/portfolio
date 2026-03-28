@@ -12,7 +12,7 @@ export function Experience() {
       <div className="relative mx-auto w-full max-w-[1200px]">
         <SectionHeading accent="var(--portfolio-accent)" label="Experience" />
 
-        <h2 className="font-syne m-0 text-[clamp(36px,5vw,56px)] font-bold leading-[1.08] tracking-[-0.02em] text-[var(--portfolio-text)]">
+        <h2 className="font-clash m-0 text-[clamp(36px,5vw,56px)] font-bold leading-[1.08] tracking-[-0.02em] text-[var(--portfolio-text)]">
           Work History
         </h2>
 
@@ -29,17 +29,17 @@ export function Experience() {
               >
                 <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                   <div>
-                    <h3 className="font-syne m-0 text-[27px] font-bold leading-[1.2] text-[var(--portfolio-text)]">
+                    <h3 className="font-clash m-0 text-[27px] font-bold leading-[1.2] text-[var(--portfolio-text)]">
                       {experience.role}
                     </h3>
-                    <p className="font-rubik mb-0 mt-2 text-[15px] leading-[1.55] text-[var(--portfolio-muted)]">
+                    <p className="font-satoshi mb-0 mt-2 text-[15px] leading-[1.55] text-[var(--portfolio-muted)]">
                       <span style={{ color: experience.color }}>{experience.company}</span>
                       {" · "}
                       {experience.location}
                     </p>
                   </div>
                   <span
-                    className="w-fit rounded-full border px-4 py-1.5 font-rubik text-[11px] font-bold uppercase tracking-[0.08em]"
+                    className="w-fit rounded-full border px-4 py-1.5 font-satoshi text-[11px] font-bold uppercase tracking-[0.08em]"
                     style={{
                       color: experience.color,
                       borderColor: `${experience.color}88`,
@@ -51,7 +51,7 @@ export function Experience() {
                 </div>
 
                 {experience.description ? (
-                  <p className="font-rubik mb-0 mt-4 text-[15px] leading-[1.72] text-[var(--portfolio-muted)]">
+                  <p className="font-satoshi mb-0 mt-4 text-[15px] leading-[1.72] text-[var(--portfolio-muted)]">
                     {experience.description}
                   </p>
                 ) : null}
@@ -64,7 +64,7 @@ export function Experience() {
                           className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full"
                           style={{ background: experience.color }}
                         />
-                        <span className="font-rubik text-[14px] leading-[1.7] text-white/78">
+                        <span className="font-satoshi text-[14px] leading-[1.7] text-white/78">
                           {highlight}
                         </span>
                       </li>
@@ -77,7 +77,7 @@ export function Experience() {
                     {experience.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-full border border-white/16 px-3 py-1.5 font-rubik text-[11px] font-medium uppercase tracking-[0.08em] text-white/72"
+                        className="rounded-full border border-white/16 px-3 py-1.5 font-satoshi text-[11px] font-medium uppercase tracking-[0.08em] text-white/72"
                       >
                         {tag}
                       </span>
@@ -88,7 +88,7 @@ export function Experience() {
             ))}
           </div>
         ) : (
-          <p className="font-rubik mt-10 text-[15px] text-[var(--portfolio-muted)]">
+          <p className="font-satoshi mt-10 text-[15px] text-[var(--portfolio-muted)]">
             Experience details are not available right now.
           </p>
         )}

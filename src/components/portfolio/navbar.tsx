@@ -44,7 +44,7 @@ export function Navbar() {
         <button
           type="button"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="flex items-center gap-3 font-syne text-[18px] font-bold uppercase tracking-[0.06em] text-[var(--portfolio-text)]"
+          className="flex items-center gap-3 font-clash text-[18px] font-bold uppercase tracking-[0.06em] text-[var(--portfolio-text)]"
         >
           <Image
             src="/profile/favicon.png"
@@ -63,7 +63,7 @@ export function Navbar() {
               key={link.label}
               type="button"
               onClick={() => handleNav(link.href)}
-              className="font-rubik text-[11px] font-semibold uppercase tracking-[0.11em] text-white/52 transition-colors hover:text-white"
+              className="font-satoshi text-[11px] font-semibold uppercase tracking-[0.11em] text-white/52 transition-colors hover:text-white"
             >
               {link.label}
             </button>
@@ -71,7 +71,7 @@ export function Navbar() {
           <button
             type="button"
             onClick={() => handleNav("#contact")}
-            className="rounded-full border border-white/30 bg-black/25 px-5 py-2 font-rubik text-[11px] font-semibold uppercase tracking-[0.11em] text-white"
+            className="rounded-full border border-white/30 bg-black/25 px-5 py-2 font-satoshi text-[11px] font-semibold uppercase tracking-[0.11em] text-white"
           >
             Contact
           </button>
@@ -99,7 +99,7 @@ export function Navbar() {
                 key={link.label}
                 type="button"
                 onClick={() => handleNav(link.href)}
-                className="w-fit font-rubik text-[12px] font-semibold uppercase tracking-[0.11em] text-white/75"
+                className="w-fit font-satoshi text-[12px] font-semibold uppercase tracking-[0.11em] text-white/75"
               >
                 {link.label}
               </button>

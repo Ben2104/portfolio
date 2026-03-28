@@ -12,7 +12,7 @@ export function Skills() {
       <div className="relative mx-auto w-full max-w-[1200px]">
         <SectionHeading accent="var(--portfolio-accent)" label="Skills & Tech" />
 
-        <h2 className="font-syne m-0 text-[clamp(36px,5vw,56px)] font-bold leading-[1.08] tracking-[-0.02em] text-[var(--portfolio-text)]">
+        <h2 className="font-clash m-0 text-[clamp(36px,5vw,56px)] font-bold leading-[1.08] tracking-[-0.02em] text-[var(--portfolio-text)]">
           Technical Toolkit
         </h2>
 
@@ -32,7 +32,7 @@ export function Skills() {
                     className="h-2.5 w-2.5 rounded-full"
                     style={{ background: category.color }}
                   />
-                  <span className="font-rubik text-[12px] font-bold uppercase tracking-[0.11em] text-white">
+                  <span className="font-satoshi text-[12px] font-bold uppercase tracking-[0.11em] text-white">
                     {category.label}
                   </span>
                 </div>
@@ -41,10 +41,10 @@ export function Skills() {
                   {category.skills.map((skill, skillIndex) => (
                     <div key={skill.name}>
                       <div className="mb-1.5 flex items-center justify-between">
-                        <span className="font-rubik text-[14px] text-white/82">
+                        <span className="font-satoshi text-[14px] text-white/82">
                           {skill.name}
                         </span>
-                        <span className="font-rubik text-[12px] text-white/58">
+                        <span className="font-satoshi text-[12px] text-white/58">
                           {skill.level}%
                         </span>
                       </div>
@@ -68,21 +68,21 @@ export function Skills() {
             ))}
           </div>
         ) : (
-          <p className="font-rubik mt-10 text-[15px] text-[var(--portfolio-muted)]">
+          <p className="font-satoshi mt-10 text-[15px] text-[var(--portfolio-muted)]">
             Skills will be added soon.
           </p>
         )}
 
         {allBadges.length > 0 ? (
           <div className="mt-8 rounded-2xl border border-white/10 bg-[var(--portfolio-surface)] p-6">
-            <p className="font-rubik m-0 text-[12px] font-semibold uppercase tracking-[0.11em] text-white/70">
+            <p className="font-satoshi m-0 text-[12px] font-semibold uppercase tracking-[0.11em] text-white/70">
               Also worked with
             </p>
             <div className="mt-4 flex flex-wrap gap-2.5">
               {allBadges.map((badge) => (
                 <span
                   key={badge}
-                  className="rounded-full border border-white/16 px-3 py-1.5 font-rubik text-[11px] font-medium uppercase tracking-[0.08em] text-white/72"
+                  className="rounded-full border border-white/16 px-3 py-1.5 font-satoshi text-[11px] font-medium uppercase tracking-[0.08em] text-white/72"
                 >
                   {badge}
                 </span>

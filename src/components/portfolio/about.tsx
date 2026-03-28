@@ -35,17 +35,17 @@ export function About() {
 
         <div className="grid grid-cols-1 gap-12 md:grid-cols-[minmax(0,1fr)_454px] md:items-start">
           <div>
-            <h2 className="font-syne m-0 max-w-[640px] text-[clamp(38px,5vw,56px)] font-bold leading-[1.06] tracking-[-0.02em] text-[var(--portfolio-text)]">
+            <h2 className="font-clash m-0 max-w-[640px] text-[clamp(38px,5vw,56px)] font-bold leading-[1.06] tracking-[-0.02em] text-[var(--portfolio-text)]">
               {profile.aboutHeading}
             </h2>
-            <p className="font-rubik mb-0 mt-7 max-w-[640px] text-[16px] leading-[1.75] text-[var(--portfolio-muted)]">
+            <p className="font-satoshi mb-0 mt-7 max-w-[640px] text-[16px] leading-[1.75] text-[var(--portfolio-muted)]">
               {profile.aboutBody}
             </p>
 
             <button
               type="button"
               onClick={() => scrollToTarget("#contact")}
-              className="mt-9 rounded-full bg-[var(--portfolio-accent)] px-8 py-3.5 font-rubik text-[12px] font-bold uppercase tracking-[0.11em] text-[var(--portfolio-text)] shadow-[0_18px_40px_rgba(255,145,66,0.24)]"
+              className="mt-9 rounded-full bg-[var(--portfolio-accent)] px-8 py-3.5 font-satoshi text-[12px] font-bold uppercase tracking-[0.11em] text-[var(--portfolio-text)] shadow-[0_18px_40px_rgba(255,145,66,0.24)]"
             >
               Discover More About Me
             </button>
@@ -53,10 +53,10 @@ export function About() {
             <div className="mt-10 grid max-w-[460px] grid-cols-2 gap-6">
               {stats.map((stat) => (
                 <div key={stat.label}>
-                  <p className="font-syne m-0 text-4xl font-bold leading-none text-white">
+                  <p className="font-clash m-0 text-4xl font-bold leading-none text-white">
                     {stat.value}
                   </p>
-                  <p className="font-rubik mb-0 mt-2 text-[12px] uppercase tracking-[0.1em] text-[var(--portfolio-subtle)]">
+                  <p className="font-satoshi mb-0 mt-2 text-[12px] uppercase tracking-[0.1em] text-[var(--portfolio-subtle)]">
                     {stat.label}
                   </p>
                 </div>
@@ -108,10 +108,10 @@ export function About() {
                 <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/6">
                   <Icon size={18} style={{ color: pillar.color }} />
                 </div>
-                <h3 className="font-syne m-0 text-[24px] font-bold text-[var(--portfolio-text)]">
+                <h3 className="font-clash m-0 text-[24px] font-bold text-[var(--portfolio-text)]">
                   {pillar.title}
                 </h3>
-                <p className="font-rubik mb-0 mt-3 text-[15px] leading-[1.65] text-[var(--portfolio-muted)]">
+                <p className="font-satoshi mb-0 mt-3 text-[15px] leading-[1.65] text-[var(--portfolio-muted)]">
                   {pillar.desc}
                 </p>
               </motion.article>
