@@ -118,17 +118,19 @@ export function Skills() {
     const canvas = canvasRef.current;
     const wrapper = wrapperRef.current;
     if (!canvas || !wrapper) return;
+    const canvasNode: HTMLCanvasElement = canvas;
+    const wrapperNode: HTMLDivElement = wrapper;
 
-    const ctx = canvas.getContext("2d")!;
+    const ctx = canvasNode.getContext("2d")!;
     let dpr = window.devicePixelRatio || 1;
 
     const resize = () => {
       dpr = window.devicePixelRatio || 1;
-      const rect = wrapper.getBoundingClientRect();
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      canvas.style.width = `${rect.width}px`;
-      canvas.style.height = `${rect.height}px`;
+      const rect = wrapperNode.getBoundingClientRect();
+      canvasNode.width = rect.width * dpr;
+      canvasNode.height = rect.height * dpr;
+      canvasNode.style.width = `${rect.width}px`;
+      canvasNode.style.height = `${rect.height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
@@ -137,7 +139,7 @@ export function Skills() {
 
     const data = skills.current;
     const count = data.length;
-    const baseRadius = Math.min(canvas.width / dpr, canvas.height / dpr) * 0.34;
+    const baseRadius = Math.min(canvasNode.width / dpr, canvasNode.height / dpr) * 0.34;
     const positions = fibonacciSphere(count, baseRadius);
 
     /* Per-orb animation offsets */
@@ -150,8 +152,8 @@ export function Skills() {
     let time = 0;
 
     function frame() {
-      const w = canvas.width / dpr;
-      const h = canvas.height / dpr;
+      const w = canvasNode.width / dpr;
+      const h = canvasNode.height / dpr;
       const cx = w / 2;
       const cy = h / 2;
 
