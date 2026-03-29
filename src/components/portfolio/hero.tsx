@@ -46,7 +46,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
-            className="rounded-full border border-white/16 bg-white/5 px-4 py-2 font-satoshi text-[11px] font-semibold uppercase tracking-[0.14em] text-white/80"
+            className="rounded-full border border-white/5 bg-white/5 px-4 py-2 font-satoshi text-[11px] font-semibold uppercase tracking-[0.14em] text-(--portfolio-muted)"
           >
             {profile.availability}
           </motion.span>
@@ -101,12 +101,12 @@ export function Hero() {
 
         {/* Right side — Spline 3D Robot */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-          className="relative flex w-full flex-1 items-center justify-center lg:justify-end"
+           initial={{ opacity: 0, scale: 0.9 }}
+           animate={{ opacity: 1, scale: 1 }}
+           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+           className="relative flex w-full flex-1 items-center justify-center lg:justify-end"
         >
-          <div className="aspect-square w-full max-w-125 lg:max-w-none">
+          <div className="mx-auto aspect-square w-full max-w-125 lg:mx-0 lg:max-w-none">
             <SplineScene
               scene="https://prod.spline.design/nr48L-rggf90uxqF/scene.splinecode"
               className="h-full w-full"
