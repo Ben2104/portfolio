@@ -78,7 +78,7 @@ export function About() {
                 fill
                 className="object-cover"
                 sizes="(max-width: 900px) 100vw, 454px"
-                priority={false}
+                priority
               />
             </div>
             <div

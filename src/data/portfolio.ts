@@ -1,3 +1,4 @@
+
 export const profile = {
   initials: "KD",
   name: "Khoi Do",
@@ -49,6 +50,25 @@ export const pillars = [
 ] as const;
 
 export const projects = [
+  {
+    title: "CrisisLineAI",
+    subtitle: "Voice AI Agent Crisis Support System",
+    desc: "A multi-channel crisis support system that combines realtime web chat, counselor takeover controls, and voice-call AI orchestration.",
+    tags: [
+      "Next.js",
+      "Tailwind CSS",
+      "FastAPI",
+      "Python",
+      "Firebase",
+      "Twilio",
+      "Docker",
+    ],
+    color: "#7c3aed",
+    image: "/projects/crisislineai.png",
+    liveHref: "https://devpost.com/software/crisisline-ai",
+    sourceHref: "https://github.com/Ben2104/CrisisLineAI",
+    stars: "",
+  },
   {
     title: "Shape-Sign",
     subtitle: "",

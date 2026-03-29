@@ -11,3 +11,4 @@ pnpm-debug.log*
 /AGENTS.md
 /.agent/*
 /.codex/*
+.gitnexus
