@@ -239,9 +239,8 @@ export function Skills() {
         const screenX = cx + (x + floatX) * scale;
         const screenY = cy + (y + floatY) * scale;
 
-        /* Orb size: base 14-32px, scaled by skill level */
-        const levelNorm = data[i].level / 100;
-        const orbRadius = (14 + levelNorm * 18) * scale;
+        /* Orb size: uniform for all skills, only scaled by perspective */
+        const orbRadius = 40 * scale;
 
         projected.push({
           x: screenX,
@@ -272,7 +271,7 @@ export function Skills() {
       /* Draw orbs */
       for (const orb of projected) {
         const depth = (orb.z + baseRadius) / (baseRadius * 2); // 0 (back) → 1 (front)
-        const opacity = 0.25 + depth * 0.75;
+        const opacity = 0.45 + depth * 0.55; // higher minimum so back icons stay visible
 
         /* Check hover */
         const dx = mousePos.current.x - orb.x;
@@ -283,54 +282,10 @@ export function Skills() {
           foundHover = orb.skill;
         }
 
-        /* Outer glow */
-        const glowRadius = orb.r * (isHovered ? 3.2 : 2.2);
-        const glow = ctx.createRadialGradient(orb.x, orb.y, orb.r * 0.2, orb.x, orb.y, glowRadius);
-        glow.addColorStop(0, hexToRgba(orb.skill.color, opacity * (isHovered ? 0.35 : 0.18)));
-        glow.addColorStop(1, hexToRgba(orb.skill.color, 0));
-        ctx.beginPath();
-        ctx.arc(orb.x, orb.y, glowRadius, 0, Math.PI * 2);
-        ctx.fillStyle = glow;
-        ctx.fill();
-
-        /* Main orb body (subtle circular backdrop for the icon) */
-        const grad = ctx.createRadialGradient(
-          orb.x - orb.r * 0.3,
-          orb.y - orb.r * 0.3,
-          orb.r * 0.1,
-          orb.x,
-          orb.y,
-          orb.r
-        );
-        grad.addColorStop(0, hexToRgba(orb.skill.color, opacity * (isHovered ? 0.45 : 0.3)));
-        grad.addColorStop(0.6, hexToRgba(orb.skill.color, opacity * (isHovered ? 0.3 : 0.18)));
-        grad.addColorStop(1, hexToRgba(orb.skill.color, opacity * 0.06));
-
-        ctx.beginPath();
-        ctx.arc(orb.x, orb.y, orb.r, 0, Math.PI * 2);
-        ctx.fillStyle = grad;
-        ctx.fill();
-
-        /* Inner highlight (glass effect) */
-        const highlight = ctx.createRadialGradient(
-          orb.x - orb.r * 0.25,
-          orb.y - orb.r * 0.35,
-          orb.r * 0.05,
-          orb.x - orb.r * 0.15,
-          orb.y - orb.r * 0.2,
-          orb.r * 0.55
-        );
-        highlight.addColorStop(0, `rgba(255,255,255,${opacity * 0.25})`);
-        highlight.addColorStop(1, `rgba(255,255,255,0)`);
-        ctx.beginPath();
-        ctx.arc(orb.x, orb.y, orb.r, 0, Math.PI * 2);
-        ctx.fillStyle = highlight;
-        ctx.fill();
-
-        /* ── Draw PNG icon instead of text ── */
+        /* ── Draw PNG icon (no colored glare) ── */
         const img = imageMap.get(orb.skill.name);
-        if (img && img.complete && img.naturalWidth > 0 && depth > 0.15) {
-          const iconSize = orb.r * 1.5;
+        if (img && img.complete && img.naturalWidth > 0) {
+          const iconSize = orb.r * 1.6;
           ctx.save();
           ctx.globalAlpha = opacity * (isHovered ? 1 : 0.88);
           ctx.drawImage(
