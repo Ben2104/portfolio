@@ -39,7 +39,7 @@ export function Hero() {
       />
 
       {/* Side-by-side layout: text left, robot right */}
-      <div className="relative mx-auto flex w-full max-w-[1200px] flex-col items-center gap-8 lg:flex-row lg:items-center lg:gap-4">
+      <div className="relative mx-auto flex w-full max-w-300 flex-col items-center gap-8 lg:flex-row lg:items-center lg:gap-4">
         {/* Left side — text content */}
         <div className="flex flex-1 flex-col items-center text-center lg:items-start lg:text-left">
           <motion.span
@@ -55,7 +55,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="font-clash mt-8 max-w-[600px] text-[clamp(36px,5.5vw,68px)] font-bold leading-[1.08] tracking-[-0.02em] text-(--portfolio-text)"
+            className="font-clash mt-8 max-w-150 text-[clamp(36px,5.5vw,68px)] font-bold leading-[1.08] tracking-[-0.02em] text-(--portfolio-text)"
           >
             {profile.title}
           </motion.h1>
@@ -106,7 +106,7 @@ export function Hero() {
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           className="relative flex w-full flex-1 items-center justify-center lg:justify-end"
         >
-          <div className="aspect-square w-full max-w-[500px] lg:max-w-none">
+          <div className="aspect-square w-full max-w-125 lg:max-w-none">
             <SplineScene
               scene="https://prod.spline.design/nr48L-rggf90uxqF/scene.splinecode"
               className="h-full w-full"
