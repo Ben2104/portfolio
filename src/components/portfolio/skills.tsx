@@ -3,7 +3,7 @@
 import { useRef, useEffect, useCallback, useState } from "react";
 import { motion } from "motion/react";
 
-import { skillCategories, allBadges } from "@/data/portfolio";
+import { skillCategories } from "@/data/portfolio";
 import { SectionHeading } from "./section-heading";
 
 /* ── Flatten skills into orb data ─────────────────────────────── */
@@ -13,6 +13,7 @@ type OrbSkill = {
   level: number;
   color: string;
   category: string;
+  icon: string;
 };
 
 function flattenSkills(): OrbSkill[] {
@@ -24,6 +25,7 @@ function flattenSkills(): OrbSkill[] {
         level: skill.level,
         color: cat.color,
         category: cat.label,
+        icon: skill.icon,
       });
     }
   }
@@ -51,6 +53,29 @@ function hexToRgba(hex: string, alpha: number) {
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
   return `rgba(${r},${g},${b},${alpha})`;
+}
+
+/* ── Preload images ───────────────────────────────────────────── */
+
+function preloadImages(skills: OrbSkill[]): Promise<Map<string, HTMLImageElement>> {
+  return new Promise((resolve) => {
+    const map = new Map<string, HTMLImageElement>();
+    let loaded = 0;
+    const total = skills.length;
+
+    for (const skill of skills) {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = img.onerror = () => {
+        map.set(skill.name, img);
+        loaded++;
+        if (loaded >= total) resolve(map);
+      };
+      img.src = skill.icon;
+    }
+
+    if (total === 0) resolve(map);
+  });
 }
 
 /* ── Main component ───────────────────────────────────────────── */
@@ -150,6 +175,12 @@ export function Skills() {
     }));
 
     let time = 0;
+    let imageMap: Map<string, HTMLImageElement> = new Map();
+
+    /* Preload all skill icons */
+    preloadImages(data).then((map) => {
+      imageMap = map;
+    });
 
     function frame() {
       const w = canvasNode.width / dpr;
@@ -262,7 +293,7 @@ export function Skills() {
         ctx.fillStyle = glow;
         ctx.fill();
 
-        /* Main orb body */
+        /* Main orb body (subtle circular backdrop for the icon) */
         const grad = ctx.createRadialGradient(
           orb.x - orb.r * 0.3,
           orb.y - orb.r * 0.3,
@@ -271,9 +302,9 @@ export function Skills() {
           orb.y,
           orb.r
         );
-        grad.addColorStop(0, hexToRgba(orb.skill.color, opacity * (isHovered ? 1 : 0.9)));
-        grad.addColorStop(0.6, hexToRgba(orb.skill.color, opacity * (isHovered ? 0.7 : 0.5)));
-        grad.addColorStop(1, hexToRgba(orb.skill.color, opacity * 0.15));
+        grad.addColorStop(0, hexToRgba(orb.skill.color, opacity * (isHovered ? 0.45 : 0.3)));
+        grad.addColorStop(0.6, hexToRgba(orb.skill.color, opacity * (isHovered ? 0.3 : 0.18)));
+        grad.addColorStop(1, hexToRgba(orb.skill.color, opacity * 0.06));
 
         ctx.beginPath();
         ctx.arc(orb.x, orb.y, orb.r, 0, Math.PI * 2);
@@ -289,24 +320,26 @@ export function Skills() {
           orb.y - orb.r * 0.2,
           orb.r * 0.55
         );
-        highlight.addColorStop(0, `rgba(255,255,255,${opacity * 0.45})`);
+        highlight.addColorStop(0, `rgba(255,255,255,${opacity * 0.25})`);
         highlight.addColorStop(1, `rgba(255,255,255,0)`);
         ctx.beginPath();
         ctx.arc(orb.x, orb.y, orb.r, 0, Math.PI * 2);
         ctx.fillStyle = highlight;
         ctx.fill();
 
-        /* Skill label */
-        if (depth > 0.25) {
+        /* ── Draw PNG icon instead of text ── */
+        const img = imageMap.get(orb.skill.name);
+        if (img && img.complete && img.naturalWidth > 0 && depth > 0.15) {
+          const iconSize = orb.r * 1.5;
           ctx.save();
-          const fontSize = Math.max(9, orb.r * 0.72);
-          ctx.font = `600 ${fontSize}px 'Satoshi', sans-serif`;
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.fillStyle = `rgba(255,255,255,${opacity * (isHovered ? 1 : 0.92)})`;
-          ctx.shadowColor = "rgba(0,0,0,0.6)";
-          ctx.shadowBlur = 4;
-          ctx.fillText(orb.skill.name, orb.x, orb.y);
+          ctx.globalAlpha = opacity * (isHovered ? 1 : 0.88);
+          ctx.drawImage(
+            img,
+            orb.x - iconSize / 2,
+            orb.y - iconSize / 2,
+            iconSize,
+            iconSize
+          );
           ctx.restore();
         }
       }
