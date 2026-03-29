@@ -4,14 +4,14 @@ import { profile } from "@/data/portfolio";
 
 export function Footer() {
   return (
-    <footer className="relative bg-[var(--portfolio-surface)] px-6 pb-12 pt-20">
+    <footer className="relative bg-(--portfolio-surface) px-6 pb-12 pt-20">
       <div className="mx-auto w-full max-w-[1200px]">
-        <p className="font-clash m-0 text-center text-[24px] font-bold text-[var(--portfolio-accent)]">
+        <p className="font-clash m-0 text-center text-[24px] font-bold text-(--portfolio-accent)">
           Get in Touch With Me
         </p>
         <a
           href={`mailto:${profile.email}`}
-          className="font-clash mt-4 block text-center text-[clamp(34px,6vw,64px)] font-bold leading-[1.08] text-[var(--portfolio-text)] underline decoration-2 underline-offset-[6px]"
+          className="font-clash mt-4 block text-center text-[clamp(34px,6vw,64px)] font-bold leading-[1.08] text-(--portfolio-text) underline decoration-2 underline-offset-[6px]"
         >
           {profile.email}
         </a>

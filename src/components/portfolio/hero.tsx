@@ -13,7 +13,7 @@ export function Hero() {
   return (
     <section
       id="hero"
-      className="relative overflow-hidden bg-[var(--portfolio-bg)] px-6 pb-20 pt-36 md:pb-32 md:pt-44"
+      className="relative overflow-hidden bg-(--portfolio-bg) px-6 pb-20 pt-36 md:pb-32 md:pt-44"
     >
       {/* Ambient background glow effects */}
       <div
@@ -55,7 +55,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="font-clash mt-8 max-w-[600px] text-[clamp(36px,5.5vw,68px)] font-bold leading-[1.08] tracking-[-0.02em] text-[var(--portfolio-text)]"
+            className="font-clash mt-8 max-w-[600px] text-[clamp(36px,5.5vw,68px)] font-bold leading-[1.08] tracking-[-0.02em] text-(--portfolio-text)"
           >
             {profile.title}
           </motion.h1>
@@ -85,7 +85,7 @@ export function Hero() {
             <button
               type="button"
               onClick={() => scrollToTarget("#projects")}
-              className="rounded-full bg-[var(--portfolio-accent)] px-9 py-4 font-satoshi text-[12px] font-bold uppercase tracking-[0.12em] text-[var(--portfolio-text)] shadow-[0_20px_60px_rgba(255,145,66,0.25)] transition hover:brightness-105"
+              className="rounded-full bg-(--portfolio-accent) px-9 py-4 font-satoshi text-[12px] font-bold uppercase tracking-[0.12em] text-(--portfolio-text) shadow-[0_20px_60px_rgba(255,145,66,0.25)] transition hover:brightness-105"
             >
               Explore Works
             </button>

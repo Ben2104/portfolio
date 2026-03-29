@@ -9,7 +9,7 @@ import { Skills } from "./skills";
 
 export function PortfolioPage() {
   return (
-    <main className="min-h-screen overflow-x-clip bg-[var(--portfolio-bg)]">
+    <main className="min-h-screen overflow-x-clip bg-(--portfolio-bg)">
       <Navbar />
       <Hero />
       <About />

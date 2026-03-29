@@ -51,44 +51,44 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" className="relative bg-[var(--portfolio-bg)] px-6 py-28">
+    <section id="contact" className="relative bg-(--portfolio-bg) px-6 py-28">
       <div className="relative mx-auto w-full max-w-[1200px]">
         <SectionHeading accent="var(--portfolio-accent)" label="Contact" />
 
-        <h2 className="font-clash m-0 text-[clamp(40px,6vw,72px)] font-bold leading-[1.08] tracking-[-0.02em] text-[var(--portfolio-text)]">
+        <h2 className="font-clash m-0 text-[clamp(40px,6vw,72px)] font-bold leading-[1.08] tracking-[-0.02em] text-(--portfolio-text)">
           {profile.contactHeading}
         </h2>
-        <p className="font-satoshi mt-3 text-[17px] text-[var(--portfolio-subtle)]">
+        <p className="font-satoshi mt-3 text-[17px] text-(--portfolio-subtle)">
           For any project, knock me.
         </p>
         <div className="mt-7 h-px w-full bg-white/20" />
 
         <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1.2fr]">
           <div className="space-y-6">
-            <h3 className="font-clash m-0 text-[clamp(36px,5vw,64px)] font-bold leading-[1.04] text-[var(--portfolio-text)]">
+            <h3 className="font-clash m-0 text-[clamp(36px,5vw,64px)] font-bold leading-[1.04] text-(--portfolio-text)">
               Get in Touch With Me
             </h3>
-            <p className="font-satoshi m-0 max-w-[460px] text-[16px] leading-[1.75] text-[var(--portfolio-muted)]">
+            <p className="font-satoshi m-0 max-w-[460px] text-[16px] leading-[1.75] text-(--portfolio-muted)">
               {profile.opportunityBlurb}
             </p>
-            <p className="font-satoshi m-0 text-[14px] text-[var(--portfolio-muted)]">
+            <p className="font-satoshi m-0 text-[14px] text-(--portfolio-muted)">
               Typical response time:{" "}
               <span className="font-semibold text-white">{profile.responseTime}</span>
             </p>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-[var(--portfolio-surface)] p-6 md:p-8">
+          <div className="rounded-2xl border border-white/10 bg-(--portfolio-surface) p-6 md:p-8">
             {sent ? (
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="flex flex-col items-start gap-4"
               >
-                <CheckCircle className="text-[var(--portfolio-accent)]" size={40} />
-                <h3 className="font-clash m-0 text-3xl text-[var(--portfolio-text)]">
+                <CheckCircle className="text-(--portfolio-accent)" size={40} />
+                <h3 className="font-clash m-0 text-3xl text-(--portfolio-text)">
                   Email draft opened
                 </h3>
-                <p className="font-satoshi m-0 max-w-md text-[15px] text-[var(--portfolio-muted)]">
+                <p className="font-satoshi m-0 max-w-md text-[15px] text-(--portfolio-muted)">
                   Your message was added to a new draft. If no mail app opened, you can
                   use the direct email link below.
                 </p>
@@ -112,7 +112,7 @@ export function Contact() {
                     value={form.name}
                     onChange={handleChange("name")}
                     placeholder="Your name"
-                    className="mt-2 w-full border-0 border-b border-white/35 bg-transparent px-0 pb-3 pt-1 font-satoshi text-[18px] text-white outline-none focus:border-[var(--portfolio-accent)]"
+                    className="mt-2 w-full border-0 border-b border-white/35 bg-transparent px-0 pb-3 pt-1 font-satoshi text-[18px] text-white outline-none focus:border-(--portfolio-accent)"
                   />
                 </label>
 
@@ -126,7 +126,7 @@ export function Contact() {
                     value={form.email}
                     onChange={handleChange("email")}
                     placeholder="your@email.com"
-                    className="mt-2 w-full border-0 border-b border-white/35 bg-transparent px-0 pb-3 pt-1 font-satoshi text-[18px] text-white outline-none focus:border-[var(--portfolio-accent)]"
+                    className="mt-2 w-full border-0 border-b border-white/35 bg-transparent px-0 pb-3 pt-1 font-satoshi text-[18px] text-white outline-none focus:border-(--portfolio-accent)"
                   />
                 </label>
 
@@ -140,13 +140,13 @@ export function Contact() {
                     value={form.message}
                     onChange={handleChange("message")}
                     placeholder="Tell me about your project"
-                    className="mt-2 w-full resize-none border-0 border-b border-white/35 bg-transparent px-0 pb-3 pt-1 font-satoshi text-[18px] text-white outline-none focus:border-[var(--portfolio-accent)]"
+                    className="mt-2 w-full resize-none border-0 border-b border-white/35 bg-transparent px-0 pb-3 pt-1 font-satoshi text-[18px] text-white outline-none focus:border-(--portfolio-accent)"
                   />
                 </label>
 
                 <button
                   type="submit"
-                  className="w-fit rounded-full bg-[var(--portfolio-accent)] px-7 py-2.5 font-satoshi text-[12px] font-bold uppercase tracking-[0.11em] text-white"
+                  className="w-fit rounded-full bg-(--portfolio-accent) px-7 py-2.5 font-satoshi text-[12px] font-bold uppercase tracking-[0.11em] text-white"
                 >
                   Send
                 </button>
@@ -155,7 +155,7 @@ export function Contact() {
           </div>
         </div>
 
-        <div className="mt-8 rounded-2xl border border-white/10 bg-[var(--portfolio-surface)] p-6">
+        <div className="mt-8 rounded-2xl border border-white/10 bg-(--portfolio-surface) p-6">
           {socials.length > 0 ? (
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               {socials.map((social) => {
@@ -181,7 +181,7 @@ export function Contact() {
               })}
             </div>
           ) : (
-            <p className="font-satoshi m-0 text-[15px] text-[var(--portfolio-muted)]">
+            <p className="font-satoshi m-0 text-[15px] text-(--portfolio-muted)">
               Contact links are not available right now.
             </p>
           )}

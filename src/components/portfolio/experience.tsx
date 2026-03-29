@@ -8,11 +8,11 @@ import { SectionHeading } from "./section-heading";
 
 export function Experience() {
   return (
-    <section id="experience" className="relative bg-[var(--portfolio-bg)] px-6 py-28">
+    <section id="experience" className="relative bg-(--portfolio-bg) px-6 py-28">
       <div className="relative mx-auto w-full max-w-[1200px]">
         <SectionHeading accent="var(--portfolio-accent)" label="Experience" />
 
-        <h2 className="font-clash m-0 text-[clamp(36px,5vw,56px)] font-bold leading-[1.08] tracking-[-0.02em] text-[var(--portfolio-text)]">
+        <h2 className="font-clash m-0 text-[clamp(36px,5vw,56px)] font-bold leading-[1.08] tracking-[-0.02em] text-(--portfolio-text)">
           Work History
         </h2>
 
@@ -25,14 +25,14 @@ export function Experience() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45, delay: index * 0.06 }}
-                className="rounded-2xl border border-white/10 bg-[var(--portfolio-surface)] p-6"
+                className="rounded-2xl border border-white/10 bg-(--portfolio-surface) p-6"
               >
                 <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                   <div>
-                    <h3 className="font-clash m-0 text-[27px] font-bold leading-[1.2] text-[var(--portfolio-text)]">
+                    <h3 className="font-clash m-0 text-[27px] font-bold leading-[1.2] text-(--portfolio-text)">
                       {experience.role}
                     </h3>
-                    <p className="font-satoshi mb-0 mt-2 text-[15px] leading-[1.55] text-[var(--portfolio-muted)]">
+                    <p className="font-satoshi mb-0 mt-2 text-[15px] leading-[1.55] text-(--portfolio-muted)">
                       <span style={{ color: experience.color }}>{experience.company}</span>
                       {" · "}
                       {experience.location}
@@ -51,7 +51,7 @@ export function Experience() {
                 </div>
 
                 {experience.description ? (
-                  <p className="font-satoshi mb-0 mt-4 text-[15px] leading-[1.72] text-[var(--portfolio-muted)]">
+                  <p className="font-satoshi mb-0 mt-4 text-[15px] leading-[1.72] text-(--portfolio-muted)">
                     {experience.description}
                   </p>
                 ) : null}
@@ -88,7 +88,7 @@ export function Experience() {
             ))}
           </div>
         ) : (
-          <p className="font-satoshi mt-10 text-[15px] text-[var(--portfolio-muted)]">
+          <p className="font-satoshi mt-10 text-[15px] text-(--portfolio-muted)">
             Experience details are not available right now.
           </p>
         )}

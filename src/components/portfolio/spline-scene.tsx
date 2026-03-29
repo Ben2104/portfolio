@@ -49,7 +49,7 @@ function SplineSceneInner({ scene, className = "" }: SplineSceneProps) {
       {/* Loading skeleton */}
       {!isLoaded && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="h-16 w-16 animate-spin rounded-full border-4 border-white/10 border-t-[var(--portfolio-accent)]" />
+          <div className="h-16 w-16 animate-spin rounded-full border-4 border-white/10 border-t-(--portfolio-accent)" />
         </div>
       )}
 

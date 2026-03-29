@@ -44,7 +44,7 @@ export function Navbar() {
         <button
           type="button"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="flex items-center gap-3 font-clash text-[18px] font-bold uppercase tracking-[0.06em] text-[var(--portfolio-text)]"
+          className="flex items-center gap-3 font-clash text-[18px] font-bold uppercase tracking-[0.06em] text-(--portfolio-text)"
         >
           <Image
             src="/profile/favicon.png"
@@ -91,7 +91,7 @@ export function Navbar() {
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="border-t border-white/10 bg-[var(--portfolio-surface)] px-6 pb-6 pt-4 md:hidden"
+          className="border-t border-white/10 bg-(--portfolio-surface) px-6 pb-6 pt-4 md:hidden"
         >
           <div className="mx-auto flex max-w-[1200px] flex-col gap-4">
             {navLinks.map((link) => (

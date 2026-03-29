@@ -22,7 +22,7 @@ function scrollToTarget(target: string) {
 
 export function About() {
   return (
-    <section id="about" className="relative bg-[var(--portfolio-bg)] px-6 py-28">
+    <section id="about" className="relative bg-(--portfolio-bg) px-6 py-28">
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -35,17 +35,17 @@ export function About() {
 
         <div className="grid grid-cols-1 gap-12 md:grid-cols-[minmax(0,1fr)_454px] md:items-start">
           <div>
-            <h2 className="font-clash m-0 max-w-[640px] text-[clamp(38px,5vw,56px)] font-bold leading-[1.06] tracking-[-0.02em] text-[var(--portfolio-text)]">
+            <h2 className="font-clash m-0 max-w-[640px] text-[clamp(38px,5vw,56px)] font-bold leading-[1.06] tracking-[-0.02em] text-(--portfolio-text)">
               {profile.aboutHeading}
             </h2>
-            <p className="font-satoshi mb-0 mt-7 max-w-[640px] text-[16px] leading-[1.75] text-[var(--portfolio-muted)]">
+            <p className="font-satoshi mb-0 mt-7 max-w-[640px] text-[16px] leading-[1.75] text-(--portfolio-muted)">
               {profile.aboutBody}
             </p>
 
             <button
               type="button"
               onClick={() => scrollToTarget("#contact")}
-              className="mt-9 rounded-full bg-[var(--portfolio-accent)] px-8 py-3.5 font-satoshi text-[12px] font-bold uppercase tracking-[0.11em] text-[var(--portfolio-text)] shadow-[0_18px_40px_rgba(255,145,66,0.24)]"
+              className="mt-9 rounded-full bg-(--portfolio-accent) px-8 py-3.5 font-satoshi text-[12px] font-bold uppercase tracking-[0.11em] text-(--portfolio-text) shadow-[0_18px_40px_rgba(255,145,66,0.24)]"
             >
               Discover More About Me
             </button>
@@ -56,7 +56,7 @@ export function About() {
                   <p className="font-clash m-0 text-4xl font-bold leading-none text-white">
                     {stat.value}
                   </p>
-                  <p className="font-satoshi mb-0 mt-2 text-[12px] uppercase tracking-[0.1em] text-[var(--portfolio-subtle)]">
+                  <p className="font-satoshi mb-0 mt-2 text-[12px] uppercase tracking-[0.1em] text-(--portfolio-subtle)">
                     {stat.label}
                   </p>
                 </div>
@@ -103,15 +103,15 @@ export function About() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45, delay: index * 0.08 }}
-                className="rounded-2xl border border-white/10 bg-[var(--portfolio-surface)] p-6"
+                className="rounded-2xl border border-white/10 bg-(--portfolio-surface) p-6"
               >
                 <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/6">
                   <Icon size={18} style={{ color: pillar.color }} />
                 </div>
-                <h3 className="font-clash m-0 text-[24px] font-bold text-[var(--portfolio-text)]">
+                <h3 className="font-clash m-0 text-[24px] font-bold text-(--portfolio-text)">
                   {pillar.title}
                 </h3>
-                <p className="font-satoshi mb-0 mt-3 text-[15px] leading-[1.65] text-[var(--portfolio-muted)]">
+                <p className="font-satoshi mb-0 mt-3 text-[15px] leading-[1.65] text-(--portfolio-muted)">
                   {pillar.desc}
                 </p>
               </motion.article>

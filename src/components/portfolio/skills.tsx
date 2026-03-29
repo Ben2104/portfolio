@@ -324,15 +324,15 @@ export function Skills() {
   }, []);
 
   return (
-    <section id="skills" className="relative bg-[var(--portfolio-bg)] px-6 py-28">
+    <section id="skills" className="relative bg-(--portfolio-bg) px-6 py-28">
       <div className="relative mx-auto w-full max-w-[1200px]">
         <SectionHeading accent="var(--portfolio-accent)" label="Skills & Tech" />
 
-        <h2 className="font-clash m-0 text-[clamp(36px,5vw,56px)] font-bold leading-[1.08] tracking-[-0.02em] text-[var(--portfolio-text)]">
+        <h2 className="font-clash m-0 text-[clamp(36px,5vw,56px)] font-bold leading-[1.08] tracking-[-0.02em] text-(--portfolio-text)">
           Technical Toolkit
         </h2>
 
-        <p className="font-satoshi mt-3 max-w-lg text-[15px] text-[var(--portfolio-muted)]">
+        <p className="font-satoshi mt-3 max-w-lg text-[15px] text-(--portfolio-muted)">
           Drag to explore
         </p>
 
@@ -392,7 +392,7 @@ export function Skills() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: ci * 0.08 }}
-                className="rounded-2xl border border-white/10 bg-[var(--portfolio-surface)] p-5"
+                className="rounded-2xl border border-white/10 bg-(--portfolio-surface) p-5"
               >
                 <div className="mb-3 flex items-center gap-2.5">
                   <span

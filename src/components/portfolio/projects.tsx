@@ -40,7 +40,7 @@ function ProjectCard({
               href={project.liveHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--portfolio-accent)] text-white transition-transform hover:scale-110"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-(--portfolio-accent) text-white transition-transform hover:scale-110"
               aria-label={`Live demo of ${project.title}`}
             >
               <ExternalLink size={16} />
@@ -86,7 +86,7 @@ function ProjectCard({
 
 export function Projects() {
   return (
-    <section id="projects" className="relative bg-[var(--portfolio-bg)] px-6 py-28">
+    <section id="projects" className="relative bg-(--portfolio-bg) px-6 py-28">
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -98,7 +98,7 @@ export function Projects() {
       <div className="relative mx-auto w-full max-w-[1200px]">
         <SectionHeading accent="var(--portfolio-accent)" label="Featured Work" />
 
-        <h2 className="font-clash m-0 text-center text-[clamp(40px,6vw,64px)] font-bold tracking-[-0.02em] text-[var(--portfolio-text)]">
+        <h2 className="font-clash m-0 text-center text-[clamp(40px,6vw,64px)] font-bold tracking-[-0.02em] text-(--portfolio-text)">
           My Projects Highlight
         </h2>
 
@@ -109,7 +109,7 @@ export function Projects() {
             ))}
           </div>
         ) : (
-          <p className="font-satoshi mt-12 text-center text-[15px] text-[var(--portfolio-muted)]">
+          <p className="font-satoshi mt-12 text-center text-[15px] text-(--portfolio-muted)">
             No projects available yet.
           </p>
         )}
