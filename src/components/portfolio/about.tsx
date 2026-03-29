@@ -30,15 +30,15 @@ export function About() {
             "radial-gradient(ellipse 36% 24% at 18% 34%, rgba(255,145,66,0.1), transparent 70%)",
         }}
       />
-      <div className="relative mx-auto w-full max-w-[1200px]">
+      <div className="relative mx-auto w-full max-w-300">
         <SectionHeading accent="var(--portfolio-accent)" label="About Me" />
 
         <div className="grid grid-cols-1 gap-12 md:grid-cols-[minmax(0,1fr)_454px] md:items-start">
           <div>
-            <h2 className="font-clash m-0 max-w-[640px] text-[clamp(38px,5vw,56px)] font-bold leading-[1.06] tracking-[-0.02em] text-(--portfolio-text)">
+            <h2 className="font-clash m-0 max-w-160 text-[clamp(38px,5vw,56px)] font-bold leading-[1.06] tracking-[-0.02em] text-(--portfolio-text)">
               {profile.aboutHeading}
             </h2>
-            <p className="font-satoshi mb-0 mt-7 max-w-[640px] text-[16px] leading-[1.75] text-(--portfolio-muted)">
+            <p className="font-satoshi mb-0 mt-7 max-w-160 text-[16px] leading-[1.75] text-(--portfolio-muted)">
               {profile.aboutBody}
             </p>
 
@@ -50,13 +50,13 @@ export function About() {
               Discover More About Me
             </button>
 
-            <div className="mt-10 grid max-w-[460px] grid-cols-2 gap-6">
+            <div className="mt-10 grid max-w-115 grid-cols-2 gap-6">
               {stats.map((stat) => (
                 <div key={stat.label}>
                   <p className="font-clash m-0 text-4xl font-bold leading-none text-white">
                     {stat.value}
                   </p>
-                  <p className="font-satoshi mb-0 mt-2 text-[12px] uppercase tracking-[0.1em] text-(--portfolio-subtle)">
+                  <p className="font-satoshi mb-0 mt-2 text-[12px] uppercase tracking-widest text-(--portfolio-subtle)">
                     {stat.label}
                   </p>
                 </div>
@@ -71,7 +71,7 @@ export function About() {
             transition={{ duration: 0.55 }}
             className="relative w-full overflow-hidden rounded-[30px] border border-white/10"
           >
-            <div className="relative aspect-[454/506] w-full bg-[#1f1f1f]">
+            <div className="relative aspect-454/506 w-full bg-[#1f1f1f]">
               <Image
                 src={PROFILE_IMAGE}
                 alt={`${profile.name} profile photo`}

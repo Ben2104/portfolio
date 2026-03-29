@@ -59,6 +59,9 @@ function SplineSceneInner({ scene, className = "" }: SplineSceneProps) {
         onWheel={(e) => e.stopPropagation()}
       />
 
+      {/* Patch to cover the Spline watermark */}
+      <div className="pointer-events-none absolute bottom-0 right-0 z-20 h-16 w-72 bg-(--portfolio-bg)" />
+
       <Spline
         scene={scene}
         onLoad={onLoad}
