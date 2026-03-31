@@ -33,9 +33,9 @@ export function Contact() {
 
   const handleChange =
     (field: keyof ContactForm) =>
-    (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setForm((current) => ({ ...current, [field]: event.target.value }));
-    };
+      (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setForm((current) => ({ ...current, [field]: event.target.value }));
+      };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -52,7 +52,7 @@ export function Contact() {
 
   return (
     <section id="contact" className="relative bg-(--portfolio-bg) px-6 py-28">
-      <div className="relative mx-auto w-full max-w-[1200px]">
+      <div className="relative mx-auto w-full max-w-300">
         <SectionHeading accent="var(--portfolio-accent)" label="Contact" />
 
         <h2 className="font-clash m-0 text-[clamp(40px,6vw,72px)] font-bold leading-[1.08] tracking-[-0.02em] text-(--portfolio-text)">
@@ -68,7 +68,7 @@ export function Contact() {
             <h3 className="font-clash m-0 text-[clamp(36px,5vw,64px)] font-bold leading-[1.04] text-(--portfolio-text)">
               Get in Touch With Me
             </h3>
-            <p className="font-satoshi m-0 max-w-[460px] text-[16px] leading-[1.75] text-(--portfolio-muted)">
+            <p className="font-satoshi m-0 max-w-115t-[16px] leading-[1.75] text-(--portfolio-muted)">
               {profile.opportunityBlurb}
             </p>
             <p className="font-satoshi m-0 text-[14px] text-(--portfolio-muted)">
@@ -95,7 +95,7 @@ export function Contact() {
                 <button
                   type="button"
                   onClick={() => setSent(false)}
-                  className="rounded-full border border-white/25 px-5 py-2.5 font-satoshi text-[12px] font-bold uppercase tracking-[0.1em] text-white"
+                  className="rounded-full border border-white/25 px-5 py-2.5 font-satoshi text-[12px] font-bold uppercase tracking-widest text-white"
                 >
                   Send Another
                 </button>
@@ -103,7 +103,7 @@ export function Contact() {
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-6">
                 <label className="block">
-                  <span className="font-satoshi block text-[12px] font-bold uppercase tracking-[0.1em] text-white">
+                  <span className="font-satoshi block text-[12px] font-bold uppercase tracking-widesttext-white">
                     Name
                   </span>
                   <input
@@ -117,7 +117,7 @@ export function Contact() {
                 </label>
 
                 <label className="block">
-                  <span className="font-satoshi block text-[12px] font-bold uppercase tracking-[0.1em] text-white">
+                  <span className="font-satoshi block text-[12px] font-bold uppercase tracking-widest text-white">
                     Email
                   </span>
                   <input
@@ -131,7 +131,7 @@ export function Contact() {
                 </label>
 
                 <label className="block">
-                  <span className="font-satoshi block text-[12px] font-bold uppercase tracking-[0.1em] text-white">
+                  <span className="font-satoshi block text-[12px] font-bold uppercase tracking-widest text-white">
                     Message
                   </span>
                   <textarea
