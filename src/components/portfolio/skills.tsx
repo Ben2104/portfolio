@@ -20,6 +20,7 @@ function flattenSkills(): OrbSkill[] {
   const out: OrbSkill[] = [];
   for (const cat of skillCategories) {
     for (const skill of cat.skills) {
+      if (!skill.icon) continue;
       out.push({
         name: skill.name,
         level: skill.level,
