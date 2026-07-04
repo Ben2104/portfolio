@@ -57,13 +57,13 @@ export function Navbar() {
           {profile.name}
         </button>
 
-        <div className="hidden items-center gap-8 md:flex">
+        <div className="hidden items-center gap-5 lg:gap-6 md:flex">
           {navLinks.map((link) => (
             <button
               key={link.label}
               type="button"
               onClick={() => handleNav(link.href)}
-              className="font-satoshi text-[11px] font-semibold uppercase tracking-[0.11em] text-white/52 transition-colors hover:text-white"
+              className="font-satoshi text-[10.5px] font-semibold uppercase tracking-[0.08em] text-white/52 transition-colors hover:text-white whitespace-nowrap"
             >
               {link.label}
             </button>
