@@ -38,9 +38,16 @@ export function About() {
             <h2 className="font-clash m-0 max-w-160 text-[clamp(38px,5vw,56px)] font-bold leading-[1.06] tracking-[-0.02em] text-(--portfolio-text)">
               {profile.aboutHeading}
             </h2>
-            <p className="font-satoshi mb-0 mt-7 max-w-160 text-[16px] leading-[1.75] text-(--portfolio-muted)">
-              {profile.aboutBody}
-            </p>
+            <div className="mt-7 max-w-160 space-y-4">
+              {profile.aboutBody.map((paragraph) => (
+                <p
+                  key={paragraph}
+                  className="font-satoshi m-0 text-[16px] leading-[1.75] text-(--portfolio-muted)"
+                >
+                  {paragraph}
+                </p>
+              ))}
+            </div>
 
             <button
               type="button"

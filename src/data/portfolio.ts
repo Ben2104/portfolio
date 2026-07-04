@@ -4,16 +4,21 @@ export const profile = {
   name: "Khoi Do",
   availability: "Available for work",
   title:
-    "Crafting digital experiences where design meets engineering.",
+    "Building full-stack, AI-powered applications with Next.js, FastAPI, Python, and modern cloud tooling — turning complex technical problems into useful, accessible products.",
   roles: ["Computer Science Student", "Software Engineer"],
-  aboutHeading: "Building the future, one commit at a time.",
-  aboutBody:
-    "I'm a Computer Science Student with a passion for creating innovative solutions at the intersection of design and engineering. When I'm not coding, I contribute to open source and mentor other students on their journey.",
+  aboutHeading: "Engineering software. Teaching it too.",
+  aboutBody: [
+    "I'm a Computer Science student at California State University, Long Beach, where I transferred after starting at De Anza College. I focus on building full-stack applications that pair strong user experience with reliable backend systems — recent work spans AI-powered emergency response tools, real-time communication platforms, automation workflows, and technical dashboards.",
+    "Alongside engineering, I have teaching and mentorship experience through instructional support roles at CSULB and De Anza, where I help students strengthen programming fundamentals, debugging habits, and problem-solving skills. I'm interested in software engineering roles where I can build practical products, learn from strong teams, and contribute across frontend, backend, and AI-enabled systems.",
+  ],
   contactHeading: "Let's build something extraordinary.",
+  contactBlurb:
+    "Interested in software engineering opportunities, technical collaborations, or student-led projects? I'd be happy to connect.",
   opportunityBlurb:
     "Currently exploring Software Engineer roles, and interesting OSS collaborations.",
   responseTime: "under 24 hours",
   email: "dohoangkhoi341@gmail.com",
+  resumeHref: "/resume/Khoi_Do_Resume.pdf",
 };
 
 export const navLinks = [

@@ -1,8 +1,9 @@
 "use client";
 
+import { Github, Linkedin } from "lucide-react";
 import { motion } from "motion/react";
 
-import { profile } from "@/data/portfolio";
+import { profile, socials } from "@/data/portfolio";
 import { SplineScene } from "./spline-scene";
 
 function scrollToTarget(target: string) {
@@ -10,6 +11,9 @@ function scrollToTarget(target: string) {
 }
 
 export function Hero() {
+  const githubHref = socials.find((social) => social.icon === "github")?.href ?? "";
+  const linkedinHref = socials.find((social) => social.icon === "linkedin")?.href ?? "";
+
   return (
     <section
       id="hero"
@@ -80,21 +84,51 @@ export function Hero() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="mt-10 flex flex-col items-center gap-4 sm:flex-row lg:items-start"
+            className="mt-10 flex flex-wrap items-center justify-center gap-3 lg:justify-start"
           >
             <button
               type="button"
               onClick={() => scrollToTarget("#projects")}
-              className="rounded-full bg-(--portfolio-accent) px-9 py-4 font-satoshi text-[12px] font-bold uppercase tracking-[0.12em] text-(--portfolio-text) shadow-[0_20px_60px_rgba(255,145,66,0.25)] transition hover:brightness-105"
+              className="rounded-full bg-(--portfolio-accent) px-8 py-3.5 font-satoshi text-[12px] font-bold uppercase tracking-[0.12em] text-(--portfolio-text) shadow-[0_20px_60px_rgba(255,145,66,0.25)] transition hover:brightness-105"
             >
-              Explore Works
+              View Projects
             </button>
+            <a
+              href={profile.resumeHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full border border-white/28 bg-black/30 px-8 py-3.5 font-satoshi text-[12px] font-bold uppercase tracking-[0.12em] text-white/90 transition hover:bg-white/5"
+            >
+              View Resume
+            </a>
+            {githubHref ? (
+              <a
+                href={githubHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 rounded-full border border-white/28 bg-black/30 px-8 py-3.5 font-satoshi text-[12px] font-bold uppercase tracking-[0.12em] text-white/90 transition hover:bg-white/5"
+              >
+                <Github size={14} />
+                GitHub
+              </a>
+            ) : null}
+            {linkedinHref ? (
+              <a
+                href={linkedinHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 rounded-full border border-white/28 bg-black/30 px-8 py-3.5 font-satoshi text-[12px] font-bold uppercase tracking-[0.12em] text-white/90 transition hover:bg-white/5"
+              >
+                <Linkedin size={14} />
+                LinkedIn
+              </a>
+            ) : null}
             <button
               type="button"
               onClick={() => scrollToTarget("#contact")}
-              className="rounded-full border border-white/28 bg-black/30 px-9 py-4 font-satoshi text-[12px] font-bold uppercase tracking-[0.12em] text-white/90 transition hover:bg-white/5"
+              className="rounded-full border border-white/28 bg-black/30 px-8 py-3.5 font-satoshi text-[12px] font-bold uppercase tracking-[0.12em] text-white/90 transition hover:bg-white/5"
             >
-              Get In Touch
+              Contact Me
             </button>
           </motion.div>
         </div>
