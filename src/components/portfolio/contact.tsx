@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import { ArrowUpRight, CheckCircle, Github, Linkedin, Mail, Twitter } from "lucide-react";
+import { ArrowUpRight, CheckCircle, Download, Github, Linkedin, Mail, Twitter } from "lucide-react";
 import { motion } from "motion/react";
 
 import { profile, socials } from "@/data/portfolio";
@@ -59,7 +59,7 @@ export function Contact() {
           {profile.contactHeading}
         </h2>
         <p className="font-satoshi mt-3 text-[17px] text-(--portfolio-subtle)">
-          For any project, knock me.
+          {profile.contactBlurb}
         </p>
         <div className="mt-7 h-px w-full bg-white/20" />
 
@@ -68,6 +68,12 @@ export function Contact() {
             <h3 className="font-clash m-0 text-[clamp(36px,5vw,64px)] font-bold leading-[1.04] text-(--portfolio-text)">
               Get in Touch With Me
             </h3>
+            <a
+              href={`mailto:${profile.email}`}
+              className="font-clash block text-[clamp(22px,3vw,32px)] font-bold text-(--portfolio-accent) underline decoration-2 underline-offset-4"
+            >
+              {profile.email}
+            </a>
             <p className="font-satoshi m-0 max-w-115t-[16px] leading-[1.75] text-(--portfolio-muted)">
               {profile.opportunityBlurb}
             </p>
@@ -75,6 +81,14 @@ export function Contact() {
               Typical response time:{" "}
               <span className="font-semibold text-white">{profile.responseTime}</span>
             </p>
+            <a
+              href={profile.resumeHref}
+              download
+              className="inline-flex w-fit items-center gap-2 rounded-full border border-white/28 bg-black/30 px-6 py-3 font-satoshi text-[12px] font-bold uppercase tracking-[0.11em] text-white/90 transition hover:bg-white/5"
+            >
+              <Download size={14} />
+              Download Resume
+            </a>
           </div>
 
           <div className="rounded-2xl border border-white/10 bg-(--portfolio-surface) p-6 md:p-8">
@@ -148,8 +162,11 @@ export function Contact() {
                   type="submit"
                   className="w-fit rounded-full bg-(--portfolio-accent) px-7 py-2.5 font-satoshi text-[12px] font-bold uppercase tracking-[0.11em] text-white"
                 >
-                  Send
+                  Send via Email
                 </button>
+                <p className="font-satoshi m-0 text-[12px] text-white/45">
+                  Opens a draft in your default email app.
+                </p>
               </form>
             )}
           </div>
