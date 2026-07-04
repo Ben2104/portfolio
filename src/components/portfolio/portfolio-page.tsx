@@ -15,9 +15,9 @@ export function PortfolioPage() {
       <Navbar />
       <Hero />
       <About />
+      <Experience />
       <Projects />
       <Skills />
-      <Experience />
       <Contact />
       <Footer />
     </main>

@@ -17,10 +17,15 @@ export const profile = {
 };
 
 export const navLinks = [
+  { label: "Home", href: "#hero" },
   { label: "About", href: "#about" },
+  { label: "Experience", href: "#experience" },
+  { label: "Teaching", href: "#teaching" },
   { label: "Projects", href: "#projects" },
   { label: "Skills", href: "#skills" },
-  { label: "Experience", href: "#experience" },
+  { label: "Education", href: "#education" },
+  { label: "Awards", href: "#awards" },
+  { label: "Contact", href: "#contact" },
 ] as const;
 
 export const stats = [
@@ -227,11 +232,25 @@ export const allBadges = [
   "WebSockets",
 ] as const;
 
-export const experiences = [
+export const professionalExperience = [
+  {
+    role: "Software Engineering Intern",
+    company: "DFM Europe",
+    period: "Jun 2026 — Present",
+    location: "Ho Chi Minh City, Vietnam · On-site",
+    color: "#7c3aed",
+    description: "",
+    highlights: [
+      "Engineering a Python/FastAPI backend for the ATN Drawing system, automating the conversion of 3D engineering models into precise 2D technical drawings for construction industry applications.",
+      "Integrating the OpenAI API into the FastAPI service to intelligently scale 2D output, maximizing sketch paper utilization and improving drawing precision.",
+      "Developing an AI-powered isometric view generation feature using the OpenAI API, producing dimensionally accurate projections that optimize space usage on technical sketch sheets.",
+    ],
+    tags: ["Python", "FastAPI", "OpenAI API", "Technical Drawing Automation"],
+  },
   {
     role: "Webmaster",
     company: "ACM at CSULB",
-    period: "Jan 2026 — Present",
+    period: "Jan 2026 — May 2026",
     location: "Long Beach, California, United States · Hybrid",
     color: "#00d4ff",
     description: "",
@@ -240,48 +259,40 @@ export const experiences = [
       "Refactored the existing Next.js codebase into a more modular and scalable architecture, reducing technical debt and improving long-term maintainability.",
       "Designed and implemented new dashboard features enabling users to upload and manage images, integrating Next.js frontend components with backend APIs for seamless data handling.",
     ],
-    tags: ["Next.js", "Tailwind CSS", "React.js", "Node.js"],
+    tags: ["Next.js", "React.js", "Tailwind CSS", "Backend APIs"],
   },
+] as const;
+
+export const leadershipExperience = [
   {
-    role: "Instructional Student Assistant",
-    company: "California State University, Long Beach",
-    period: "Aug 2025 — Present",
-    location: "Long Beach, California, United States · Hybrid",
-    color: "#7c3aed",
+    role: "Project Manager",
+    company: "AI Club at CSULB",
+    period: "Jun 2026 — Present",
+    location: "Long Beach, California, United States · Remote",
+    color: "#f97316",
     description: "",
     highlights: [
-      "Graded Python assignments, labs, and exam on computer arithmetic and matrix computations, providing clear feedback on correctness, efficiency, and code quality while maintaining consistent rubrics.",
-      "Debugged student code and coached systematic problem decomposition, edge-case handling, and test-case design to improve assignment outcomes and confidence.",
+      "Leading planning and coordination for a faculty-mentored biometric sensor research project investigating heat, humidity, and alcohol sensors on human subjects, defining project scope, milestones, and team responsibilities.",
+      "Conducting literature research on wearable sensor technologies and physiological data collection, synthesizing findings to guide the team's technical direction and experimental design.",
     ],
-    tags: ["Python", "Linear Algebra", "Discrete Mathematics"],
+    tags: ["Biometric Sensors", "Wearable Technology", "Research Coordination"],
   },
+] as const;
+
+export const volunteerExperience = [
   {
     role: "Computer Technical Support Volunteer",
     company: "De Anza College",
     period: "Dec 2023 — Jun 2024",
     location: "Cupertino, California, United States · On-site",
-    color: "#f97316",
+    color: "#00d4ff",
     description: "",
     highlights: [
       "Installed and configured a wide range of hardware and software, ensuring optimal functionality and seamless integration for various computing environments. Provided support for system updates, security patches, and application installations to enhance performance.",
       "Diagnosed and resolved technical issues related to hardware failures, software malfunctions, and network connectivity problems. Delivered hands-on troubleshooting support to improve efficiency and minimize downtime for users.",
       "Refurbished and repaired broken and outdated laptops by replacing defective components, optimizing system performance, and reinstalling necessary software. Successfully restored numerous devices, which were then distributed to underprivileged students in need of reliable technology for their education.",
     ],
-    tags: ["Linux", "Hardware", "Hardware Troubleshooting"],
-  },
-  {
-    role: "Teaching Assistant",
-    company: "De Anza College",
-    period: "Sep 2023 — Jun 2024",
-    location: "Cupertino, California, United States",
-    color: "#00d4ff",
-    description: "",
-    highlights: [
-      "Assisted professors in planning and delivering instructional content for Beginning Programming Methodologies in C++, helping students grasp fundamental concepts.",
-      "Conducted review sessions, provided one-on-one tutoring, and facilitated group discussions to enhance student understanding.",
-      "Evaluated labs, assignments, quizzes, and exams, providing constructive feedback to students and instructor to support academic growth.",
-    ],
-    tags: ["C++", "Linux", "Debugging"],
+    tags: ["Linux", "Hardware Troubleshooting", "System Setup"],
   },
 ] as const;
 
