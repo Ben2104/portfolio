@@ -14,9 +14,11 @@ inside the existing Next.js app.
 ## Sources of truth (in priority order)
 
 1. `Khoi_Do_resume_v4.docx` / `.pdf` (`/Users/kaydee/Desktop/CSULB Document/Resume/`) — extracted directly from the docx XML, not retyped from a paste, so bullet wording below is verbatim from the resume.
-2. GitHub (`github.com/Ben2104`) — checked live via `gh` CLI (authenticated as the account owner): repo list, READMEs, and a code search inside `911-Operator-Assistant` to verify tag claims.
-3. Current live site content (`src/data/portfolio.ts`) — used for anything not in the resume but already published (De Anza TA, De Anza volunteer, 6 of the 8 projects).
-4. LinkedIn — **not accessible**. `https://www.linkedin.com/in/hoang-khoi-do/` returned HTTP 999 (anti-scraping block); no authenticated session available in this environment. Nothing in this spec relies on LinkedIn as sole confirmation.
+2. LinkedIn (`linkedin.com/in/hoang-khoi-do`) — direct `WebFetch` was blocked (HTTP 999, anti-scraping), so this was checked through the user's own logged-in Chrome session (profile, `/details/experience/`, `/details/education/`), and via the user's own public posts (Marina Hacks 5.0 win, BeachHacks 8.0 win, role-start announcements). Used to cross-check dates and to pull tech-stack detail the resume doesn't mention.
+3. GitHub (`github.com/Ben2104`) — checked live via `gh` CLI (authenticated as the account owner): repo list, READMEs, and a code search inside `911-Operator-Assistant` to verify tag claims.
+4. Current live site content (`src/data/portfolio.ts`) — used for anything not in the resume but already published.
+
+Where resume and LinkedIn agreed, that's noted as double-confirmed. Where they conflicted, the resolution is called out explicitly below (see DFM Europe dates).
 
 ## Architecture
 
@@ -40,12 +42,12 @@ labeled sub-groups, each with its own `<h3>` sub-heading (no separate nav entrie
 these three, since the 9-item nav above doesn't call them out individually):
 
 1. **Professional Experience**
-   - **Software Engineering Intern — DFM Europe** · Ho Chi Minh City, Vietnam · **May 2026 — Present** (present tense: the internship is ongoing relative to today's date, per user decision)
+   - **Software Engineering Intern — DFM Europe** · Ho Chi Minh City, Vietnam · **Jun 2026 — Present** (present tense, ongoing). Resume said "May 2026 – Aug 2026"; LinkedIn's `/details/experience/` says "Jun 2026 - Present" with no end date. **Conflict resolved per user decision: use LinkedIn's dates** — treated as more recently updated / reflecting the actual confirmed start and that it hasn't ended.
      - Engineered a Python/FastAPI backend for the ATN Drawing system, automating the conversion of 3D engineering models into precise 2D technical drawings for construction industry applications.
      - Integrating the OpenAI API into the FastAPI service to intelligently scale 2D output, maximizing sketch paper utilization and improving drawing precision.
      - Developing an AI-powered isometric view generation feature using the OpenAI API, producing dimensionally accurate projections that optimize space usage on technical sketch sheets.
      - Tags: Python, FastAPI, OpenAI API, Technical Drawing Automation
-   - **Webmaster — ACM at CSULB** · Long Beach, CA · **Jan 2026 — May 2026** (past tense; resume confirms the end date, replacing the live site's stale "Jan 2026 — Present")
+   - **Webmaster — ACM at CSULB** · Long Beach, CA · **Jan 2026 — May 2026** (past tense; **double-confirmed** — resume and LinkedIn's `/details/experience/` both say "Jan 2026 – May 2026" exactly, replacing the live site's stale "Jan 2026 — Present")
      - Led the redesign and redevelopment of the ACM at CSULB landing page using Next.js, improving usability, responsiveness, and visual consistency across the site.
      - Refactored the existing Next.js codebase into a more modular, scalable architecture, reducing technical debt. (kept from current live site — resume dropped this bullet for space, not because it's false)
      - Designed and implemented new dashboard features enabling users to upload and manage images, integrating Next.js frontend components with backend APIs for seamless data handling.
@@ -58,7 +60,7 @@ these three, since the 9-item nav above doesn't call them out individually):
      - Tags: Biometric Sensors, Wearable Technology, Research Coordination
 
 3. **Technical / Volunteer Experience**
-   - **Computer Technical Support Volunteer — De Anza College** · Cupertino, CA · Dec 2023 — Jun 2024 (kept verbatim from current live site — **TODO: not present in resume v4; confirm still accurate before publishing**)
+   - **Computer Technical Support Volunteer — De Anza College** · Cupertino, CA · Dec 2023 — Jun 2024 (not in resume v4, but **LinkedIn `/details/experience/` confirms this exact role, dates, and bullet text verbatim** — no longer a loose end)
      - Installed and configured a wide range of hardware and software, ensuring optimal functionality and seamless integration for various computing environments.
      - Diagnosed and resolved technical issues related to hardware failures, software malfunctions, and network connectivity problems.
      - Refurbished and repaired broken and outdated laptops, restoring devices for distribution to underprivileged students.
@@ -70,7 +72,7 @@ these three, since the 9-item nav above doesn't call them out individually):
   - Graded Python assignments, labs, and exams on computer arithmetic and matrix computations, providing feedback on correctness, efficiency, and code quality while maintaining consistent rubrics.
   - Debugged student code and coached systematic problem decomposition, edge-case handling, and test-case design to improve assignment outcomes and confidence. (kept from current live site — resume trimmed to one bullet for space, not a contradiction)
   - Tags: Python, Computer Arithmetic, Matrix Computations, Grading Rubrics
-- **Teaching Assistant — De Anza College** · Cupertino, CA · Sep 2023 — Jun 2024 (**TODO: not present in resume v4; kept from current live site per user instruction, confirm still accurate**)
+- **Teaching Assistant — De Anza College** · Cupertino, CA · Sep 2023 — Jun 2024 (not in resume v4, but **LinkedIn confirms this role, dates, and bullet text verbatim** — no longer a loose end)
   - Assisted professors in planning and delivering instructional content for Beginning Programming Methodologies in C++.
   - Conducted review sessions, provided one-on-one tutoring, and facilitated group discussions.
   - Evaluated labs, assignments, quizzes, and exams, providing constructive feedback.
@@ -92,13 +94,15 @@ Featured first, in this order:
    - Summary: Real-time crisis support platform connecting callers, AI agents, and counselors through synchronized web chat, voice-call orchestration, transcription, and dashboard context.
    - Bullets: real-time multi-party chat (Next.js + Firebase); FastAPI transcription service processing recorded call audio via AssemblyAI; structured transcripts for dashboard visualization + GPT-4o context integration; counselor takeover workflow.
    - GitHub: `github.com/Ben2104/CrisisLineAI` · Devpost: `devpost.com/software/crisisline-ai` (moved from the old `liveHref`)
-2. **911 Operator Assistant** — Next.js, React, Tailwind CSS, FastAPI, Google Maps API, Twilio
+2. **911 Operator Assistant** — Next.js, React, Tailwind CSS, FastAPI, Google Gemini (Vertex AI), Faster-Whisper, Google Maps API, Twilio
    - Summary: Emergency response dashboard helping 911 operators visualize incidents and improve situational awareness during calls.
-   - Bullets: built by a team of three; Next.js 15 (App Router) frontend connected to FastAPI backend; interactive incident map with Google Maps JavaScript API, 100% accurate location markers, 30% improvement in operator situational awareness (both metrics are resume-stated, not invented).
-   - Award: **Best Overall Award — Marina Hacks 5.0** (out of 40 projects)
-   - GitHub: `github.com/Ben2104/911-Operator-Assistant` · Devpost: `devpost.com/software/911-operator-assistant` (new — found in repo README, not previously on the site)
-   - Dropped tags: `Geoapify API` (zero hits searching the actual repo code — unconfirmed) and `Node.js` (no separate Node backend exists; FastAPI/Python is the only backend)
+   - Bullets: built by a team of three (Kien Pham, Sy Nguyen Nguyen, and the user — confirmed via the user's own LinkedIn win post); Next.js 15 (App Router) frontend connected to a FastAPI backend; transcribes calls with Faster-Whisper and classifies incidents with Google Gemini (Vertex AI); interactive incident map with Google Maps JavaScript API, 100% accurate location markers, 30% improvement in operator situational awareness (metrics are resume-stated, not invented).
+   - Award: **Best Overall Award — Marina Hacks 5.0** (out of 40 projects per the resume; the user's LinkedIn post separately cites "80+ participants" — different unit, not a contradiction)
+   - GitHub: `github.com/Ben2104/911-Operator-Assistant` · Devpost: `devpost.com/software/911-operator-assistant` (found in repo README and confirmed again in the user's LinkedIn win post)
+   - Tag corrections from the old site data: dropped `Geoapify API` (zero hits searching the actual repo code — unconfirmed) and `Node.js` (no separate Node backend exists; FastAPI/Python is the only backend). Added `Google Gemini (Vertex AI)` and `Faster-Whisper` — confirmed independently by both the GitHub repo's `requirements.txt`/env vars (`GOOGLEGEM_API_KEY`, `torch`/`faster-whisper`) and the user's own LinkedIn post describing the tech stack.
 3. **Shape-Sign** — Next.js, React, Tailwind CSS, TensorFlow, Python — unchanged from current site (GitHub description matches verbatim); live demo `shape-sign.vercel.app` confirmed still set as the repo homepage.
+   - **New**: Award ribbon **Best Overall Award — BeachHacks 8.0**. The current site's Awards section only listed this award generically; the user's own LinkedIn post ("My team and I took home the Best Overall title at BeachHacks 8.0 with our project, Shape&Sign!") ties it specifically to this project, out of 200 participants / 42 projects (per teammate Sy Nguyen Nguyen's public post about the same shared project).
+   - **New bullet** (from teammate's public post about the same project, safe to state as a project fact): achieved 98% detection accuracy for alphabet signs and 80% for phrase signs.
 4. **QuizzRiff** — Python, HTML, CSS, SQLite3, Flask, WolframAlpha API — unchanged, GitHub description matches.
 5. **The Bookstore** — MongoDB, Express.js, React.js, Node.js, Tailwind CSS — unchanged.
 6. **LLM Chatbot** — React, Tailwind CSS, Vite, Node.js, Express, OpenAI API, Multer — unchanged.
@@ -135,14 +139,22 @@ New small component `education.tsx`, `#education`:
 - California State University, Long Beach — B.S. Computer Science — Expected Dec 2026 — Long Beach, CA
 - Activities line: AI Club at CSULB, ACM at CSULB
 
+Note: LinkedIn's `/details/education/` lists this degree as "Bachelor of Engineering -
+BE, Computer Science" (Aug 2024 – Dec 2026) rather than "B.S." — keeping the resume's
+"B.S. Computer Science" wording since the resume is the higher-priority, more
+deliberately-worded source for this. Flagging the discrepancy rather than silently
+picking one; revisit if the user says LinkedIn's degree title is the correct one.
+
 ## Awards section (new)
 
 New small component `awards.tsx`, `#awards`:
 
-- Best Overall Award (1st Place) — BeachHacks (2025)
-- Best Overall Award (1st Place) — Marina Hacks 5.0 at CSULB (2025)
+- Best Overall Award (1st Place) — BeachHacks 8.0 (2025) — for **Shape-Sign**
+- Best Overall Award (1st Place) — Marina Hacks 5.0 at CSULB (2025) — for **911 Operator Assistant**
 
-(Both confirmed verbatim from the resume's Honors & Awards section.)
+(Both confirmed verbatim from the resume's Honors & Awards section; the specific
+project tie-in and "8.0" event number come from the user's own LinkedIn win posts,
+which also corroborate the "(2025)" timing via relative post-age.)
 
 ## Hero
 
@@ -159,9 +171,12 @@ copy:
 
 `profile.aboutHeading` / `profile.aboutBody` replaced with the user-suggested
 2-paragraph copy (lightly tightened), mentioning CSULB, full-stack + AI-assisted +
-automation + teaching focus areas. Existing "pillars" cards (Clean Code / Full Stack /
-Performance) and the stats numbers (`1.5+ Years`, `15+ Projects Shipped`) are left
-untouched — out of scope, not called out in the request.
+automation + teaching focus areas. One detail folded in from the user's own LinkedIn
+About text ("I transferred from De Anza Community College"), since it's their own
+stated words and gives the teaching/volunteer De Anza roles a coherent backstory.
+Existing "pillars" cards (Clean Code / Full Stack / Performance) and the stats numbers
+(`1.5+ Years`, `15+ Projects Shipped`) are left untouched — out of scope, not called
+out in the request.
 
 ## Contact
 
@@ -227,17 +242,24 @@ contributor doc) confirms the actual check flow is `npx tsc --noEmit` plus
 ## Known TODOs (to land as inline comments, not blockers)
 
 - De Anza Teaching Assistant and De Anza Computer Technical Support Volunteer: not
-  present in resume v4. Kept from the current live site per user instruction.
-  TODO comment: confirm these are still accurate/current before next resume refresh.
-- LinkedIn was not independently verified in this pass (scraping blocked, no
-  authenticated session). If dates or titles ever conflict between resume and
-  LinkedIn in the future, resume wins per the user's own stated priority.
+  present in resume v4, but independently confirmed via the user's own LinkedIn
+  `/details/experience/` page (exact dates and bullet text match). No action needed;
+  noted here only because they won't show up if someone re-diffs against resume v4 alone.
+- Degree title conflict (resume "B.S. Computer Science" vs LinkedIn "Bachelor of
+  Engineering - BE, Computer Science") — resume wording kept, see Education section
+  note above.
+- DFM Europe date conflict (resume "May 2026 – Aug 2026" vs LinkedIn "Jun 2026 –
+  Present") — resolved in favor of LinkedIn's dates per explicit user decision, see
+  Professional Experience section above.
 
 ## Explicit assumptions
 
 - "Today" for tense purposes is 2026-07-04, making the DFM Europe internship
-  (May 2026 – Aug 2026) currently in progress → present tense, per user decision.
+  (Jun 2026 – Present per LinkedIn) currently in progress → present tense, per user decision.
 - Contact form stays `mailto:`-based by user's explicit choice; no backend/email
   service integration is in scope for this change.
 - Unverified skill badges (PostgreSQL, Supabase, Prisma, Figma, standalone
   WebSockets) are dropped rather than kept-with-TODO, per user's explicit choice.
+- LinkedIn access in this pass was through the user's own logged-in Chrome session
+  (their own profile) — not third-party scraping. Direct unauthenticated `WebFetch`
+  to linkedin.com is blocked (HTTP 999) and was not retried further.
