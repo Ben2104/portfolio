@@ -21,8 +21,14 @@ function ProjectCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.45, delay: index * 0.06 }}
-      className="group flex flex-col overflow-hidden rounded-xl border border-white/12 bg-[#222222] transition-all duration-300 hover:border-white/25 hover:shadow-[0_8px_32px_rgba(255,145,66,0.08)]"
+      className="group relative flex flex-col overflow-hidden rounded-xl border border-white/12 bg-[#222222] transition-all duration-300 hover:border-white/25 hover:shadow-[0_8px_32px_rgba(255,145,66,0.08)]"
     >
+      {project.award ? (
+        <span className="absolute left-3 top-3 z-10 rounded-full border border-(--portfolio-accent)/60 bg-black/70 px-3 py-1 font-satoshi text-[10px] font-bold uppercase tracking-[0.06em] text-(--portfolio-accent)">
+          🏆 {project.award}
+        </span>
+      ) : null}
+
       {/* Image preview */}
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#111]">
         <Image
@@ -32,30 +38,6 @@ function ProjectCard({
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
         />
-
-        {/* Hover overlay with links */}
-        <div className="absolute inset-0 flex items-center justify-center gap-3 bg-black/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          {project.liveHref ? (
-            <a
-              href={project.liveHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-(--portfolio-accent) text-white transition-transform hover:scale-110"
-              aria-label={`Live demo of ${project.title}`}
-            >
-              <ExternalLink size={16} />
-            </a>
-          ) : null}
-          <a
-            href={project.sourceHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-sm transition-transform hover:scale-110"
-            aria-label={`Source code of ${project.title}`}
-          >
-            <Github size={16} />
-          </a>
-        </div>
       </div>
 
       {/* Card body */}
@@ -64,9 +46,22 @@ function ProjectCard({
           {project.title}
         </h3>
 
-        <p className="font-satoshi mb-0 mt-2 line-clamp-2 text-[13px] leading-[1.65] text-white/70">
+        <p className="font-satoshi mb-0 mt-2 text-[13px] leading-[1.65] text-white/70">
           {project.desc}
         </p>
+
+        {project.bullets.length > 0 ? (
+          <ul className="mt-3 space-y-1.5">
+            {project.bullets.map((bullet) => (
+              <li key={bullet} className="flex gap-2">
+                <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-white/40" />
+                <span className="font-satoshi text-[12px] leading-[1.55] text-white/65">
+                  {bullet}
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : null}
 
         {/* Tags */}
         <div className="mt-auto flex flex-wrap gap-1.5 pt-4">
@@ -78,6 +73,41 @@ function ProjectCard({
               {tag}
             </span>
           ))}
+        </div>
+
+        {/* Links */}
+        <div className="mt-4 flex items-center gap-4 border-t border-white/10 pt-4">
+          <a
+            href={project.sourceHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 font-satoshi text-[11px] font-semibold uppercase tracking-[0.06em] text-white/70 hover:text-white"
+          >
+            <Github size={13} />
+            Code
+          </a>
+          {project.liveHref ? (
+            <a
+              href={project.liveHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 font-satoshi text-[11px] font-semibold uppercase tracking-[0.06em] text-white/70 hover:text-white"
+            >
+              <ExternalLink size={13} />
+              Live
+            </a>
+          ) : null}
+          {project.devpostHref ? (
+            <a
+              href={project.devpostHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 font-satoshi text-[11px] font-semibold uppercase tracking-[0.06em] text-white/70 hover:text-white"
+            >
+              <ExternalLink size={13} />
+              Devpost
+            </a>
+          ) : null}
         </div>
       </div>
     </motion.article>
