@@ -296,6 +296,36 @@ export const volunteerExperience = [
   },
 ] as const;
 
+export const teachingExperience = [
+  {
+    role: "Instructional Student Assistant",
+    company: "California State University, Long Beach",
+    period: "Aug 2025 — Present",
+    location: "Long Beach, California, United States · Hybrid",
+    color: "#7c3aed",
+    description: "",
+    highlights: [
+      "Grading Python assignments, labs, and exams on computer arithmetic and matrix computations, providing feedback on correctness, efficiency, and code quality while maintaining consistent rubrics.",
+      "Debugging student code and coaching systematic problem decomposition, edge-case handling, and test-case design to improve assignment outcomes and confidence.",
+    ],
+    tags: ["Python", "Computer Arithmetic", "Matrix Computations", "Grading Rubrics"],
+  },
+  {
+    role: "Teaching Assistant",
+    company: "De Anza College",
+    period: "Sep 2023 — Jun 2024",
+    location: "Cupertino, California, United States",
+    color: "#00d4ff",
+    description: "",
+    highlights: [
+      "Assisted professors in planning and delivering instructional content for Beginning Programming Methodologies in C++, helping students grasp fundamental concepts.",
+      "Conducted review sessions, provided one-on-one tutoring, and facilitated group discussions to enhance student understanding.",
+      "Evaluated labs, assignments, quizzes, and exams, providing constructive feedback to students and instructor to support academic growth.",
+    ],
+    tags: ["C++", "Linux", "Debugging"],
+  },
+] as const;
+
 export const socials = [
   {
     icon: "github",
