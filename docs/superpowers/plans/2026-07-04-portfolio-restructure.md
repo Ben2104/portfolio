@@ -140,7 +140,16 @@ import {
 
 import { SectionHeading } from "./section-heading";
 
-type ExperienceEntry = (typeof professionalExperience)[number];
+type ExperienceEntry = {
+  role: string;
+  company: string;
+  period: string;
+  location: string;
+  color: string;
+  description: string;
+  highlights: readonly string[];
+  tags: readonly string[];
+};
 
 function ExperienceCard({
   experience,
