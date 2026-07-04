@@ -1,5 +1,6 @@
 import { About } from "./about";
 import { Contact } from "./contact";
+import { Education } from "./education";
 import { Experience } from "./experience";
 import { Footer } from "./footer";
 import { Hero } from "./hero";
@@ -20,6 +21,7 @@ export function PortfolioPage() {
       <Teaching />
       <Projects />
       <Skills />
+      <Education />
       <Contact />
       <Footer />
     </main>

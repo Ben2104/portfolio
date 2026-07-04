@@ -428,3 +428,13 @@ export const socials = [
     color: "#00d4ff",
   },
 ] as const;
+
+export const education = [
+  {
+    school: "California State University, Long Beach",
+    degree: "B.S. Computer Science",
+    period: "Expected Dec 2026",
+    location: "Long Beach, CA",
+    activities: ["AI Club at CSULB", "ACM at CSULB"],
+  },
+] as const;
