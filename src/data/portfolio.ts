@@ -438,3 +438,18 @@ export const education = [
     activities: ["AI Club at CSULB", "ACM at CSULB"],
   },
 ] as const;
+
+export const awards = [
+  {
+    title: "Best Overall Award (1st Place)",
+    event: "BeachHacks 8.0",
+    year: "2025",
+    project: "Shape-Sign",
+  },
+  {
+    title: "Best Overall Award (1st Place)",
+    event: "Marina Hacks 5.0 at CSULB",
+    year: "2025",
+    project: "911 Operator Assistant",
+  },
+] as const;

@@ -1,4 +1,5 @@
 import { About } from "./about";
+import { Awards } from "./awards";
 import { Contact } from "./contact";
 import { Education } from "./education";
 import { Experience } from "./experience";
@@ -22,6 +23,7 @@ export function PortfolioPage() {
       <Projects />
       <Skills />
       <Education />
+      <Awards />
       <Contact />
       <Footer />
     </main>
