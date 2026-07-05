@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import {
   leadershipExperience,
   professionalExperience,
+  teachingExperience,
   volunteerExperience,
 } from "@/data/portfolio";
 
@@ -129,6 +130,7 @@ export function Experience() {
         </h2>
 
         <ExperienceGroup label="Professional Experience" items={professionalExperience} />
+        <ExperienceGroup label="Teaching Experience" items={teachingExperience} />
         <ExperienceGroup label="Leadership & Research Experience" items={leadershipExperience} />
         <ExperienceGroup label="Technical / Volunteer Experience" items={volunteerExperience} />
       </div>

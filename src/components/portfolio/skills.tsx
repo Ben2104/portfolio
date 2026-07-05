@@ -20,7 +20,6 @@ function flattenSkills(): OrbSkill[] {
   const out: OrbSkill[] = [];
   for (const cat of skillCategories) {
     for (const skill of cat.skills) {
-      if (!skill.icon) continue;
       out.push({
         name: skill.name,
         level: skill.level,
@@ -31,6 +30,20 @@ function flattenSkills(): OrbSkill[] {
     }
   }
   return out;
+}
+
+/* ── Fallback label for skills without an icon asset ──────────── */
+
+function fallbackLabel(name: string) {
+  const words = name.split(/\s+/).filter(Boolean);
+  if (words.length > 1) {
+    return words
+      .slice(0, 2)
+      .map((w) => w[0])
+      .join("")
+      .toUpperCase();
+  }
+  return name.slice(0, 2).toUpperCase();
 }
 
 /* ── Fibonacci sphere distribution ────────────────────────────── */
@@ -65,6 +78,10 @@ function preloadImages(skills: OrbSkill[]): Promise<Map<string, HTMLImageElement
     const total = skills.length;
 
     for (const skill of skills) {
+      if (!skill.icon) {
+        loaded++;
+        continue;
+      }
       const img = new Image();
       img.crossOrigin = "anonymous";
       img.onload = img.onerror = () => {
@@ -75,7 +92,7 @@ function preloadImages(skills: OrbSkill[]): Promise<Map<string, HTMLImageElement
       img.src = skill.icon;
     }
 
-    if (total === 0) resolve(map);
+    if (loaded >= total) resolve(map);
   });
 }
 
@@ -283,7 +300,7 @@ export function Skills() {
           foundHover = orb.skill;
         }
 
-        /* ── Draw PNG icon (no colored glare) ── */
+        /* ── Draw PNG icon, or a colored fallback badge when no icon asset exists ── */
         const img = imageMap.get(orb.skill.name);
         if (img && img.complete && img.naturalWidth > 0) {
           const iconSize = orb.r * 1.6;
@@ -296,6 +313,19 @@ export function Skills() {
             iconSize,
             iconSize
           );
+          ctx.restore();
+        } else if (!orb.skill.icon) {
+          ctx.save();
+          ctx.globalAlpha = opacity * (isHovered ? 1 : 0.88);
+          ctx.beginPath();
+          ctx.arc(orb.x, orb.y, orb.r * 0.82, 0, Math.PI * 2);
+          ctx.fillStyle = hexToRgba(orb.skill.color, 0.9);
+          ctx.fill();
+          ctx.font = `700 ${Math.max(10, orb.r * 0.55)}px sans-serif`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillStyle = "#0d0d0d";
+          ctx.fillText(fallbackLabel(orb.skill.name), orb.x, orb.y);
           ctx.restore();
         }
       }
@@ -373,7 +403,7 @@ export function Skills() {
           </div>
 
           {/* ── Category legend ──────────────────────── */}
-          <div className="flex w-full flex-col gap-4 lg:w-[42%] lg:pt-6">
+          <div className="grid w-full grid-cols-1 gap-2.5 sm:grid-cols-2 lg:w-[42%] lg:pt-6">
             {skillCategories.map((cat, ci) => (
               <motion.div
                 key={cat.label}
@@ -381,22 +411,22 @@ export function Skills() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: ci * 0.08 }}
-                className="rounded-2xl border border-white/10 bg-(--portfolio-surface) p-5"
+                className="rounded-xl border border-white/10 bg-(--portfolio-surface) p-3.5"
               >
-                <div className="mb-3 flex items-center gap-2.5">
+                <div className="mb-2 flex items-center gap-2">
                   <span
-                    className="h-2.5 w-2.5 rounded-full"
+                    className="h-2 w-2 shrink-0 rounded-full"
                     style={{ background: cat.color }}
                   />
-                  <span className="font-satoshi text-[12px] font-bold uppercase tracking-[0.11em] text-white">
+                  <span className="font-satoshi text-[10.5px] font-bold uppercase tracking-[0.09em] text-white">
                     {cat.label}
                   </span>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5">
                   {cat.skills.map((skill) => (
                     <span
                       key={skill.name}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-white/12 px-3 py-1.5 font-satoshi text-[12px] text-white/75"
+                      className="inline-flex items-center gap-1 rounded-full border border-white/12 px-2 py-1 font-satoshi text-[11px] text-white/75"
                     >
                       <span
                         className="inline-block h-1.5 w-1.5 rounded-full"

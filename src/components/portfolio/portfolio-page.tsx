@@ -1,5 +1,4 @@
 import { About } from "./about";
-import { Awards } from "./awards";
 import { Contact } from "./contact";
 import { Education } from "./education";
 import { Experience } from "./experience";
@@ -8,7 +7,6 @@ import { Hero } from "./hero";
 import { Navbar } from "./navbar";
 import { Projects } from "./projects";
 import { Skills } from "./skills";
-import { Teaching } from "./teaching";
 import { TerminalPreloader } from "./terminal-preloader";
 
 export function PortfolioPage() {
@@ -19,11 +17,9 @@ export function PortfolioPage() {
       <Hero />
       <About />
       <Experience />
-      <Teaching />
       <Projects />
       <Skills />
       <Education />
-      <Awards />
       <Contact />
       <Footer />
     </main>

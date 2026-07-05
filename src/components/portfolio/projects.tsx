@@ -50,19 +50,6 @@ function ProjectCard({
           {project.desc}
         </p>
 
-        {project.bullets.length > 0 ? (
-          <ul className="mt-3 space-y-1.5">
-            {project.bullets.map((bullet) => (
-              <li key={bullet} className="flex gap-2">
-                <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-white/40" />
-                <span className="font-satoshi text-[12px] leading-[1.55] text-white/65">
-                  {bullet}
-                </span>
-              </li>
-            ))}
-          </ul>
-        ) : null}
-
         {/* Tags */}
         <div className="mt-auto flex flex-wrap gap-1.5 pt-4">
           {project.tags.map((tag) => (

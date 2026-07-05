@@ -4,13 +4,11 @@ export const profile = {
   name: "Khoi Do",
   availability: "Available for work",
   title:
-    "Building full-stack, AI-powered applications with Next.js, FastAPI, Python, and modern cloud tooling — turning complex technical problems into useful, accessible products.",
+    "Crafting digital experiences where design meets engineering.",
   roles: ["Computer Science Student", "Software Engineer"],
-  aboutHeading: "Engineering software. Teaching it too.",
-  aboutBody: [
-    "I'm a Computer Science student at California State University, Long Beach, where I transferred after starting at De Anza College. I focus on building full-stack applications that pair strong user experience with reliable backend systems — recent work spans AI-powered emergency response tools, real-time communication platforms, automation workflows, and technical dashboards.",
-    "Alongside engineering, I have teaching and mentorship experience through instructional support roles at CSULB and De Anza, where I help students strengthen programming fundamentals, debugging habits, and problem-solving skills. I'm interested in software engineering roles where I can build practical products, learn from strong teams, and contribute across frontend, backend, and AI-enabled systems.",
-  ],
+  aboutHeading: "Building the future, one commit at a time.",
+  aboutBody:
+    "I'm a Computer Science Student with a passion for creating innovative solutions at the intersection of design and engineering. When I'm not coding, I contribute to open source and mentor other students on their journey.",
   contactHeading: "Let's build something extraordinary.",
   contactBlurb:
     "Interested in software engineering opportunities, technical collaborations, or student-led projects? I'd be happy to connect.",
@@ -22,15 +20,10 @@ export const profile = {
 };
 
 export const navLinks = [
-  { label: "Home", href: "#hero" },
   { label: "About", href: "#about" },
-  { label: "Experience", href: "#experience" },
-  { label: "Teaching", href: "#teaching" },
   { label: "Projects", href: "#projects" },
   { label: "Skills", href: "#skills" },
-  { label: "Education", href: "#education" },
-  { label: "Awards", href: "#awards" },
-  { label: "Contact", href: "#contact" },
+  { label: "Experience", href: "#experience" },
 ] as const;
 
 export const stats = [
@@ -64,11 +57,6 @@ export const projects = [
     title: "CrisisLineAI",
     subtitle: "Voice AI Agent Crisis Support System",
     desc: "A multi-channel crisis support system that combines realtime web chat, counselor takeover controls, and voice-call AI orchestration.",
-    bullets: [
-      "Built real-time multi-party chat with Next.js and Firebase, synchronizing client, AI agent, and counselor state.",
-      "Built a FastAPI transcription service processing recorded call audio via AssemblyAI (STT).",
-      "Generated structured transcripts for dashboard visualization and GPT-4o context integration.",
-    ],
     tags: [
       "Next.js",
       "Tailwind CSS",
@@ -92,11 +80,6 @@ export const projects = [
     title: "Shape-Sign",
     subtitle: "",
     desc: "Shape-Sign is an interactive application that utilizes hand gesture recognition models to help users learn and engage with sign language.",
-    bullets: [
-      "Built an interactive frontend for sign-language learning activities using Next.js and Tailwind CSS.",
-      "Integrated hand-gesture recognition ML models for real-time shape and sign matching.",
-      "Achieved 98% detection accuracy for alphabet signs and 80% for phrase signs.",
-    ],
     tags: ["Next.js", "React.js", "Tailwind CSS", "TensorFlow", "Python"],
     color: "#00d4ff",
     image: "/projects/shape&sign.png",
@@ -110,11 +93,6 @@ export const projects = [
     title: "911 OPERATOR ASSISTANT",
     subtitle: "",
     desc: "A web application designed to assist 911 operators by providing real-time information and resources during emergency calls.",
-    bullets: [
-      "Collaborated in a team of three to design, build, and deploy a 911 operator co-pilot dashboard.",
-      "Connected a Next.js 15 (App Router) frontend to a FastAPI backend for real-time incident data.",
-      "Built an interactive incident map with the Google Maps JavaScript API; transcribed calls with Faster-Whisper and classified incidents with Google Gemini (Vertex AI).",
-    ],
     tags: [
       "Next.js",
       "React.js",
@@ -137,11 +115,6 @@ export const projects = [
     title: "QuizzRiff",
     subtitle: "",
     desc: "QuizRiff helps educators save time by automating personalized quiz creation and adding a competitive scoring system to keep students engaged in learning.",
-    bullets: [
-      "Automated personalized quiz generation to save educators time building assessments.",
-      "Built a Flask application with SQLite storage for quizzes and student results.",
-      "Added a competitive scoring system to keep students engaged.",
-    ],
     tags: ["Python", "HTML", "CSS", "SQLite3", "Flask", "WolframAlpha API"],
     color: "#f97316",
     image: "/projects/quizzriff.png",
@@ -155,10 +128,6 @@ export const projects = [
     title: "The Bookstore",
     subtitle: "",
     desc: "The Bookstore project is a MERN stack web app with full CRUD functionality for managing books, authors, and collections efficiently.",
-    bullets: [
-      "Built full CRUD workflows for managing books, authors, and collections.",
-      "Implemented a MERN stack architecture with MongoDB, Express, React, and Node.js.",
-    ],
     tags: ["MongoDB", "Express.js", "React.js", "Node.js", "Tailwind CSS"],
     color: "#00d4ff",
     image: "/projects/Bookstore.png",
@@ -172,10 +141,6 @@ export const projects = [
     title: "LLM Chatbot",
     subtitle: "",
     desc: "LLM Chatbot is an AI-powered chatbot that uses large language models to engage in natural language conversations with users.",
-    bullets: [
-      "Built a React frontend and Node/Express backend for natural-language chat.",
-      "Integrated the OpenAI API to power conversational responses.",
-    ],
     tags: [
       "React",
       "Tailwind CSS",
@@ -197,10 +162,6 @@ export const projects = [
     title: "Pickleball-Booking-Extension",
     subtitle: "",
     desc: "A Chrome Extension that automates court booking at iPickle Cerritos by instantly reserving available courts exactly 7 days in advance at 7:00 AM, streamlining a highly competitive process.",
-    bullets: [
-      "Automated court booking at iPickle Cerritos via a Chrome extension.",
-      "Reserved available courts exactly 7 days in advance at 7:00 AM.",
-    ],
     tags: ["JavaScript", "HTML", "CSS"],
     color: "#f97316",
     image: "/projects/pickleball.jpg",
@@ -214,10 +175,6 @@ export const projects = [
     title: "Pickleball Booking Automation (Playwright & GitHub Actions)",
     subtitle: "",
     desc: "Automates court booking at iPickle Cerritos using Playwright for browser automation, scheduled via Cron-Jobs.org and executed as a GitHub Action.",
-    bullets: [
-      "Automated browser interactions using Playwright for court reservations.",
-      "Scheduled recurring runs with Cron-Jobs.org, executed via GitHub Actions.",
-    ],
     tags: ["JavaScript", "Playwright", "GitHub Actions", "Cron-Jobs.org"],
     color: "#00d4ff",
     image: "/projects/pickleball_bot.png",
@@ -442,19 +399,11 @@ export const education = [
     location: "Long Beach, CA",
     activities: ["AI Club at CSULB", "ACM at CSULB"],
   },
-] as const;
-
-export const awards = [
   {
-    title: "Best Overall Award (1st Place)",
-    event: "BeachHacks 8.0",
-    year: "2025",
-    project: "Shape-Sign",
-  },
-  {
-    title: "Best Overall Award (1st Place)",
-    event: "Marina Hacks 5.0 at CSULB",
-    year: "2025",
-    project: "911 Operator Assistant",
+    school: "De Anza College",
+    degree: "Computer Science",
+    period: "2022 — 2024",
+    location: "Cupertino, CA",
+    activities: [],
   },
 ] as const;
