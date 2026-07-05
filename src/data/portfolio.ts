@@ -259,18 +259,6 @@ export const skillCategories = [
       { name: "C#", level: 65, icon: "" },
     ],
   },
-  {
-    label: "Teaching & Collaboration",
-    color: "#00d4ff",
-    skills: [
-      { name: "Code Review", level: 85, icon: "" },
-      { name: "Grading", level: 90, icon: "" },
-      { name: "Tutoring", level: 88, icon: "" },
-      { name: "Project Planning", level: 84, icon: "" },
-      { name: "Technical Communication", level: 86, icon: "" },
-      { name: "Literature Research", level: 80, icon: "" },
-    ],
-  },
 ] as const;
 
 export const professionalExperience = [

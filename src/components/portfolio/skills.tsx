@@ -20,6 +20,7 @@ function flattenSkills(): OrbSkill[] {
   const out: OrbSkill[] = [];
   for (const cat of skillCategories) {
     for (const skill of cat.skills) {
+      if (!skill.icon) continue;
       out.push({
         name: skill.name,
         level: skill.level,
@@ -30,20 +31,6 @@ function flattenSkills(): OrbSkill[] {
     }
   }
   return out;
-}
-
-/* ── Fallback label for skills without an icon asset ──────────── */
-
-function fallbackLabel(name: string) {
-  const words = name.split(/\s+/).filter(Boolean);
-  if (words.length > 1) {
-    return words
-      .slice(0, 2)
-      .map((w) => w[0])
-      .join("")
-      .toUpperCase();
-  }
-  return name.slice(0, 2).toUpperCase();
 }
 
 /* ── Fibonacci sphere distribution ────────────────────────────── */
@@ -60,15 +47,6 @@ function fibonacciSphere(count: number, radius: number) {
   return points;
 }
 
-/* ── Hex → RGBA helper ────────────────────────────────────────── */
-
-function hexToRgba(hex: string, alpha: number) {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return `rgba(${r},${g},${b},${alpha})`;
-}
-
 /* ── Preload images ───────────────────────────────────────────── */
 
 function preloadImages(skills: OrbSkill[]): Promise<Map<string, HTMLImageElement>> {
@@ -78,10 +56,6 @@ function preloadImages(skills: OrbSkill[]): Promise<Map<string, HTMLImageElement
     const total = skills.length;
 
     for (const skill of skills) {
-      if (!skill.icon) {
-        loaded++;
-        continue;
-      }
       const img = new Image();
       img.crossOrigin = "anonymous";
       img.onload = img.onerror = () => {
@@ -92,7 +66,7 @@ function preloadImages(skills: OrbSkill[]): Promise<Map<string, HTMLImageElement
       img.src = skill.icon;
     }
 
-    if (loaded >= total) resolve(map);
+    if (total === 0) resolve(map);
   });
 }
 
@@ -300,7 +274,7 @@ export function Skills() {
           foundHover = orb.skill;
         }
 
-        /* ── Draw PNG icon, or a colored fallback badge when no icon asset exists ── */
+        /* ── Draw PNG icon (no colored glare) ── */
         const img = imageMap.get(orb.skill.name);
         if (img && img.complete && img.naturalWidth > 0) {
           const iconSize = orb.r * 1.6;
@@ -313,19 +287,6 @@ export function Skills() {
             iconSize,
             iconSize
           );
-          ctx.restore();
-        } else if (!orb.skill.icon) {
-          ctx.save();
-          ctx.globalAlpha = opacity * (isHovered ? 1 : 0.88);
-          ctx.beginPath();
-          ctx.arc(orb.x, orb.y, orb.r * 0.82, 0, Math.PI * 2);
-          ctx.fillStyle = hexToRgba(orb.skill.color, 0.9);
-          ctx.fill();
-          ctx.font = `700 ${Math.max(10, orb.r * 0.55)}px sans-serif`;
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.fillStyle = "#0d0d0d";
-          ctx.fillText(fallbackLabel(orb.skill.name), orb.x, orb.y);
           ctx.restore();
         }
       }
