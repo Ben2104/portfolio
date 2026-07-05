@@ -1,8 +1,9 @@
 "use client";
 
+import { useRef } from "react";
 import Image from "next/image";
 import { Code2, Layers, Zap } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 
 import { pillars, profile, stats } from "@/data/portfolio";
 
@@ -14,15 +15,27 @@ const iconMap = {
   zap: Zap,
 } as const;
 
-const PROFILE_IMAGE = "/profile/profilepicture.JPEG";
+const PROFILE_IMAGE = "/photos/photo-about.jpg";
 
 function scrollToTarget(target: string) {
   document.querySelector(target)?.scrollIntoView({ behavior: "smooth" });
 }
 
 export function About() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const parallaxY = useTransform(scrollYProgress, [0, 1], [-24, 24]);
+
   return (
-    <section id="about" className="relative bg-(--portfolio-bg) px-6 py-28">
+    <section
+      id="about"
+      ref={sectionRef}
+      className="relative bg-(--portfolio-bg) px-6 py-28"
+    >
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -64,32 +77,43 @@ export function About() {
             </div>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.55 }}
-            className="relative w-full overflow-hidden rounded-[30px] border border-white/10"
-          >
-            <div className="relative aspect-454/506 w-full bg-[#1f1f1f]">
-              <Image
-                src={PROFILE_IMAGE}
-                alt={`${profile.name} profile photo`}
-                fill
-                className="object-cover"
-                sizes="(max-width: 900px) 100vw, 454px"
-                priority
+          <div className="md:sticky md:top-28 md:self-start">
+            <motion.div
+              initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.55 }}
+              style={{ y: prefersReducedMotion ? 0 : parallaxY }}
+              className="relative w-full overflow-hidden rounded-[30px] border border-white/10"
+            >
+              <div className="relative aspect-454/506 w-full bg-[#1f1f1f]">
+                <Image
+                  src={PROFILE_IMAGE}
+                  alt={`${profile.name} profile photo`}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 900px) 100vw, 454px"
+                  priority
+                />
+                <div
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    background: "var(--portfolio-accent)",
+                    opacity: 0.22,
+                    mixBlendMode: "multiply",
+                  }}
+                />
+              </div>
+              <div
+                className="pointer-events-none absolute left-[-20px] top-[56%] h-[178px] w-[55px] rounded-[30px] border"
+                style={{ borderColor: "rgba(255,145,66,0.7)" }}
               />
-            </div>
-            <div
-              className="pointer-events-none absolute left-[-20px] top-[56%] h-[178px] w-[55px] rounded-[30px] border"
-              style={{ borderColor: "rgba(255,145,66,0.7)" }}
-            />
-            <div
-              className="pointer-events-none absolute right-[18px] top-[8%] h-[34px] w-[110px] rounded-[30px] border"
-              style={{ borderColor: "rgba(255,145,66,0.7)" }}
-            />
-          </motion.div>
+              <div
+                className="pointer-events-none absolute right-[18px] top-[8%] h-[34px] w-[110px] rounded-[30px] border"
+                style={{ borderColor: "rgba(255,145,66,0.7)" }}
+              />
+            </motion.div>
+          </div>
         </div>
 
         <div className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -99,7 +123,7 @@ export function About() {
             return (
               <motion.article
                 key={pillar.title}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45, delay: index * 0.08 }}
