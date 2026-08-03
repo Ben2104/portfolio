@@ -219,10 +219,12 @@ git commit -m "feat(data): rewrite experience entries from new resume, drop oran
 - Consumes: shape phần tử experience từ Task 1.
 - Produces:
   - `export type TimelineCategory = "Professional" | "Teaching" | "Leadership & Research" | "Technical / Volunteer"`
-  - `export type TimelineEntry` — object với `role`, `company`, `period`, `location`, `color`, `highlights: readonly string[]`, `tags: readonly string[]`, `category: TimelineCategory`
+  - `export type TimelineEntry` — object với `role`, `company`, `period`, `location`, `color`, `description`, `highlights: readonly string[]`, `tags: readonly string[]`, `category: TimelineCategory`
   - `export function TimelineEntryCard({ entry, index }: { entry: TimelineEntry; index: number })`
   
-  Task 3 import đúng ba tên này. `index` chẵn → card bên trái, lẻ → card bên phải.
+  Task 3 import `TimelineEntryCard`. `index` chẵn → card bên trái, lẻ → card bên phải.
+
+> **Bẫy đã có tiền lệ trong repo này.** Commit `55c111f` ("ExperienceEntry type must not derive from a single literal-union array") đã sửa đúng lỗi này một lần. **Không** viết `type TimelineEntry = (typeof professionalExperience)[number]` — mảng khai báo `as const` cho ra literal type, gộp 4 mảng khác nhau sẽ không assignable. Phải khai báo type tường minh, `highlights` và `tags` là `readonly string[]`.
 
 - [ ] **Step 1: Tạo file với nội dung đầy đủ**
 
@@ -244,6 +246,7 @@ export type TimelineEntry = {
   period: string;
   location: string;
   color: string;
+  description: string;
   highlights: readonly string[];
   tags: readonly string[];
   category: TimelineCategory;
