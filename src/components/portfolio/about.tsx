@@ -84,9 +84,9 @@ export function About() {
               viewport={{ once: true }}
               transition={{ duration: 0.55 }}
               style={{ y: prefersReducedMotion ? 0 : parallaxY }}
-              className="relative w-full overflow-hidden rounded-[30px] border border-white/10"
+              className="relative mx-auto w-full max-w-[380px] overflow-hidden rounded-[30px] border border-white/10"
             >
-              <div className="relative mx-auto aspect-[2/3] w-full max-w-[380px] bg-(--portfolio-surface)">
+              <div className="relative aspect-[2/3] w-full bg-(--portfolio-surface)">
                 <div
                   className="pointer-events-none absolute inset-0"
                   style={{

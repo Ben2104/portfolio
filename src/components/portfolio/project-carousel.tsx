@@ -9,14 +9,16 @@ const DOT_ACCENT = "#00d4ff";
 
 function readMetrics(el: HTMLDivElement | null) {
   if (!el || el.clientWidth === 0) return null;
+  const count = el.children.length;
   const first = el.firstElementChild as HTMLElement | null;
-  if (!first) return null;
+  if (!first || count === 0) return null;
   const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
   const step = first.getBoundingClientRect().width + gap;
   if (step <= 0) return null;
-  const perView = Math.max(1, Math.round((el.clientWidth + gap) / step));
-  const lastIndex = Math.max(0, Math.floor((el.scrollWidth - el.clientWidth) / step));
-  return { el, step, perView, lastIndex };
+  const perView = Math.max(1, Math.floor((el.clientWidth + gap) / step));
+  const lastIndex = Math.max(0, count - perView);
+  const pages = Math.ceil(lastIndex / perView) + 1;
+  return { el, step, perView, lastIndex, pages };
 }
 
 export function ProjectCarousel({ children }: { children: ReactNode }) {
@@ -30,11 +32,10 @@ export function ProjectCarousel({ children }: { children: ReactNode }) {
   const sync = useCallback(() => {
     const m = readMetrics(trackRef.current);
     if (!m) return;
-    const { el, step, perView, lastIndex } = m;
+    const { el, step, perView, lastIndex, pages } = m;
     const index = Math.round(el.scrollLeft / step);
-    const last = Math.floor(lastIndex / perView);
-    setPageCount(last + 1);
-    setActivePage(Math.min(last, Math.round(index / perView)));
+    setPageCount(pages);
+    setActivePage(Math.min(pages - 1, Math.round(index / perView)));
     setAtStart(index <= 0);
     setAtEnd(index >= lastIndex);
   }, []);
