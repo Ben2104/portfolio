@@ -12,3 +12,5 @@ pnpm-debug.log*
 /.agent/*
 /.codex/*
 .gitnexus
+
+.superpowers/
