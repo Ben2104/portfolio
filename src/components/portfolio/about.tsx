@@ -15,7 +15,7 @@ const iconMap = {
   zap: Zap,
 } as const;
 
-const PROFILE_IMAGE = "/photos/photo-about.jpg";
+const PROFILE_IMAGE = "/photos/cutout-experience.png";
 
 function scrollToTarget(target: string) {
   document.querySelector(target)?.scrollIntoView({ behavior: "smooth" });
@@ -40,7 +40,7 @@ export function About() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 36% 24% at 18% 34%, rgba(255,145,66,0.1), transparent 70%)",
+            "radial-gradient(ellipse 36% 24% at 18% 34%, rgba(255,255,255,0.06), transparent 70%)",
         }}
       />
       <div className="relative mx-auto w-full max-w-300">
@@ -86,32 +86,32 @@ export function About() {
               style={{ y: prefersReducedMotion ? 0 : parallaxY }}
               className="relative w-full overflow-hidden rounded-[30px] border border-white/10"
             >
-              <div className="relative aspect-454/506 w-full bg-[#1f1f1f]">
-                <Image
-                  src={PROFILE_IMAGE}
-                  alt={`${profile.name} profile photo`}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 900px) 100vw, 454px"
-                  priority
-                />
+              <div className="relative aspect-[2/3] w-full bg-(--portfolio-surface)">
                 <div
                   className="pointer-events-none absolute inset-0"
                   style={{
-                    background: "var(--portfolio-accent)",
-                    opacity: 0.22,
-                    mixBlendMode: "multiply",
+                    background:
+                      "radial-gradient(ellipse 70% 55% at 50% 82%, rgba(0,212,255,0.16), transparent 72%)",
                   }}
                 />
+                <div
+                  className="pointer-events-none absolute inset-0 opacity-50"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px)",
+                    backgroundSize: "26px 26px",
+                  }}
+                />
+                <div className="pointer-events-none absolute bottom-4 left-1/2 h-px w-2/3 -translate-x-1/2 bg-white/16" />
+                <Image
+                  src={PROFILE_IMAGE}
+                  alt={`${profile.name} portrait cutout`}
+                  fill
+                  className="object-contain object-bottom"
+                  sizes="(max-width: 900px) 100vw, 454px"
+                  priority
+                />
               </div>
-              <div
-                className="pointer-events-none absolute left-[-20px] top-[56%] h-[178px] w-[55px] rounded-[30px] border"
-                style={{ borderColor: "rgba(255,145,66,0.7)" }}
-              />
-              <div
-                className="pointer-events-none absolute right-[18px] top-[8%] h-[34px] w-[110px] rounded-[30px] border"
-                style={{ borderColor: "rgba(255,145,66,0.7)" }}
-              />
             </motion.div>
           </div>
         </div>
