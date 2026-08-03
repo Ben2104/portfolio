@@ -1,8 +1,8 @@
 "use client";
 
 import { Children, useCallback, useEffect, useRef, useState } from "react";
-import type { ReactNode } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import type { PointerEvent as ReactPointerEvent, ReactNode } from "react";
+import { ChevronLeft, ChevronRight, MoveHorizontal } from "lucide-react";
 import { useReducedMotion } from "motion/react";
 
 const DOT_ACCENT = "#00d4ff";
@@ -23,11 +23,18 @@ function readMetrics(el: HTMLDivElement | null) {
 
 export function ProjectCarousel({ children }: { children: ReactNode }) {
   const trackRef = useRef<HTMLDivElement>(null);
+  const dragState = useRef({
+    active: false,
+    didDrag: false,
+    startScrollLeft: 0,
+    startX: 0,
+  });
   const prefersReducedMotion = useReducedMotion();
   const [pageCount, setPageCount] = useState(1);
   const [activePage, setActivePage] = useState(0);
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   const sync = useCallback(() => {
     const m = readMetrics(trackRef.current);
@@ -76,8 +83,53 @@ export function ProjectCarousel({ children }: { children: ReactNode }) {
     [prefersReducedMotion],
   );
 
+  const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+
+    const track = trackRef.current;
+    if (!track) return;
+
+    dragState.current = {
+      active: true,
+      didDrag: false,
+      startScrollLeft: track.scrollLeft,
+      startX: event.clientX,
+    };
+    track.setPointerCapture(event.pointerId);
+    setIsDragging(true);
+  };
+
+  const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const track = trackRef.current;
+    if (!track || !dragState.current.active) return;
+
+    const distance = event.clientX - dragState.current.startX;
+    if (Math.abs(distance) > 4) {
+      dragState.current.didDrag = true;
+      event.preventDefault();
+    }
+
+    track.scrollLeft = dragState.current.startScrollLeft - distance;
+  };
+
+  const finishDragging = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const track = trackRef.current;
+    if (!dragState.current.active) return;
+
+    dragState.current.active = false;
+    setIsDragging(false);
+
+    if (track?.hasPointerCapture(event.pointerId)) {
+      track.releasePointerCapture(event.pointerId);
+    }
+
+    window.setTimeout(() => {
+      dragState.current.didDrag = false;
+    }, 0);
+  };
+
   const arrowClass =
-    "flex h-10 w-10 items-center justify-center rounded-full border border-white/22 bg-black/50 text-white/90 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40";
+    "flex size-12 cursor-pointer items-center justify-center rounded-full border border-white/45 bg-(--portfolio-accent) text-[#171717] shadow-[0_8px_26px_rgba(255,145,66,0.34)] transition-[background-color,border-color,box-shadow,color] duration-200 hover:border-white/70 hover:bg-[#ffa661] hover:shadow-[0_10px_30px_rgba(255,145,66,0.46)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-(--portfolio-bg) disabled:cursor-not-allowed disabled:border-white/15 disabled:bg-white/8 disabled:text-white/30 disabled:shadow-none";
 
   return (
     <div className="relative mt-14">
@@ -88,7 +140,7 @@ export function ProjectCarousel({ children }: { children: ReactNode }) {
         aria-label="Previous projects"
         className={`${arrowClass} absolute -left-5 top-1/2 z-10 hidden -translate-y-1/2 lg:flex`}
       >
-        <ChevronLeft size={18} />
+        <ChevronLeft aria-hidden="true" size={26} strokeWidth={2.5} />
       </button>
       <button
         type="button"
@@ -97,15 +149,35 @@ export function ProjectCarousel({ children }: { children: ReactNode }) {
         aria-label="Next projects"
         className={`${arrowClass} absolute -right-5 top-1/2 z-10 hidden -translate-y-1/2 lg:flex`}
       >
-        <ChevronRight size={18} />
+        <ChevronRight aria-hidden="true" size={26} strokeWidth={2.5} />
       </button>
+
+      <p
+        id="projects-carousel-instructions"
+        className="font-satoshi mb-4 flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-white/60"
+      >
+        <MoveHorizontal aria-hidden="true" size={17} />
+        Drag to explore
+      </p>
 
       <div
         ref={trackRef}
         role="region"
         aria-roledescription="carousel"
         aria-label="Projects"
+        aria-describedby="projects-carousel-instructions"
         tabIndex={0}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={finishDragging}
+        onPointerCancel={finishDragging}
+        onClickCapture={(event) => {
+          if (dragState.current.didDrag) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+        }}
+        onDragStart={(event) => event.preventDefault()}
         onKeyDown={(event) => {
           if (event.key === "ArrowRight") {
             event.preventDefault();
@@ -116,7 +188,11 @@ export function ProjectCarousel({ children }: { children: ReactNode }) {
             goToPage(activePage - 1);
           }
         }}
-        className="flex snap-x snap-mandatory gap-5 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className={`flex touch-pan-y gap-5 overflow-x-auto overscroll-x-contain pb-2 [scrollbar-width:none] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--portfolio-accent) [&::-webkit-scrollbar]:hidden ${
+          isDragging
+            ? "cursor-grabbing select-none snap-none"
+            : "cursor-grab snap-x snap-mandatory"
+        }`}
       >
         {Children.map(children, (child) => (
           <div className="flex shrink-0 basis-[86%] snap-start last:snap-end sm:basis-[47%] lg:basis-[30.5%] [&>*]:w-full">
@@ -133,7 +209,7 @@ export function ProjectCarousel({ children }: { children: ReactNode }) {
           aria-label="Previous projects"
           className={`${arrowClass} lg:hidden`}
         >
-          <ChevronLeft size={18} />
+          <ChevronLeft aria-hidden="true" size={26} strokeWidth={2.5} />
         </button>
 
         <div className="flex items-center gap-1.5">
@@ -160,7 +236,7 @@ export function ProjectCarousel({ children }: { children: ReactNode }) {
           aria-label="Next projects"
           className={`${arrowClass} lg:hidden`}
         >
-          <ChevronRight size={18} />
+          <ChevronRight aria-hidden="true" size={26} strokeWidth={2.5} />
         </button>
       </div>
     </div>
