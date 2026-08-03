@@ -7,6 +7,7 @@ import { motion } from "motion/react";
 import { projects } from "@/data/portfolio";
 
 import { SectionHeading } from "./section-heading";
+import { ProjectCarousel } from "./project-carousel";
 
 function ProjectCard({
   project,
@@ -120,11 +121,11 @@ export function Projects() {
         </h2>
 
         {projects.length > 0 ? (
-          <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <ProjectCarousel>
             {projects.map((project, index) => (
               <ProjectCard key={project.title} project={project} index={index} />
             ))}
-          </div>
+          </ProjectCarousel>
         ) : (
           <p className="font-satoshi mt-12 text-center text-[15px] text-(--portfolio-muted)">
             No projects available yet.
