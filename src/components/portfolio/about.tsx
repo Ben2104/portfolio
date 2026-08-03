@@ -86,7 +86,7 @@ export function About() {
               style={{ y: prefersReducedMotion ? 0 : parallaxY }}
               className="relative w-full overflow-hidden rounded-[30px] border border-white/10"
             >
-              <div className="relative aspect-[2/3] w-full bg-(--portfolio-surface)">
+              <div className="relative mx-auto aspect-[2/3] w-full max-w-[380px] bg-(--portfolio-surface)">
                 <div
                   className="pointer-events-none absolute inset-0"
                   style={{
@@ -108,7 +108,7 @@ export function About() {
                   alt={`${profile.name} portrait cutout`}
                   fill
                   className="object-contain object-bottom"
-                  sizes="(max-width: 900px) 100vw, 454px"
+                  sizes="(min-width: 768px) 380px, 100vw"
                   priority
                 />
               </div>

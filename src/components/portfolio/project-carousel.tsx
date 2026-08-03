@@ -7,18 +7,36 @@ import { useReducedMotion } from "motion/react";
 
 const DOT_ACCENT = "#00d4ff";
 
+function readMetrics(el: HTMLDivElement | null) {
+  if (!el || el.clientWidth === 0) return null;
+  const first = el.firstElementChild as HTMLElement | null;
+  if (!first) return null;
+  const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
+  const step = first.getBoundingClientRect().width + gap;
+  if (step <= 0) return null;
+  const perView = Math.max(1, Math.round((el.clientWidth + gap) / step));
+  const lastIndex = Math.max(0, Math.floor((el.scrollWidth - el.clientWidth) / step));
+  return { el, step, perView, lastIndex };
+}
+
 export function ProjectCarousel({ children }: { children: ReactNode }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
   const [pageCount, setPageCount] = useState(1);
   const [activePage, setActivePage] = useState(0);
+  const [atStart, setAtStart] = useState(true);
+  const [atEnd, setAtEnd] = useState(false);
 
   const sync = useCallback(() => {
-    const el = trackRef.current;
-    if (!el || el.clientWidth === 0) return;
-    const pages = Math.max(1, Math.round(el.scrollWidth / el.clientWidth));
-    setPageCount(pages);
-    setActivePage(Math.min(pages - 1, Math.round(el.scrollLeft / el.clientWidth)));
+    const m = readMetrics(trackRef.current);
+    if (!m) return;
+    const { el, step, perView, lastIndex } = m;
+    const index = Math.round(el.scrollLeft / step);
+    const last = Math.floor(lastIndex / perView);
+    setPageCount(last + 1);
+    setActivePage(Math.min(last, Math.round(index / perView)));
+    setAtStart(index <= 0);
+    setAtEnd(index >= lastIndex);
   }, []);
 
   useEffect(() => {
@@ -34,30 +52,28 @@ export function ProjectCarousel({ children }: { children: ReactNode }) {
     };
 
     el.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", sync);
+    window.addEventListener("resize", onScroll);
 
     return () => {
       cancelAnimationFrame(frame);
       el.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", sync);
+      window.removeEventListener("resize", onScroll);
     };
   }, [sync]);
 
   const goToPage = useCallback(
     (page: number) => {
-      const el = trackRef.current;
-      if (!el) return;
-      const target = Math.max(0, Math.min(pageCount - 1, page));
+      const m = readMetrics(trackRef.current);
+      if (!m) return;
+      const { el, step, perView, lastIndex } = m;
+      const index = Math.max(0, Math.min(lastIndex, page * perView));
       el.scrollTo({
-        left: target * el.clientWidth,
+        left: index * step,
         behavior: prefersReducedMotion ? "auto" : "smooth",
       });
     },
-    [pageCount, prefersReducedMotion],
+    [prefersReducedMotion],
   );
-
-  const atStart = activePage <= 0;
-  const atEnd = activePage >= pageCount - 1;
 
   const arrowClass =
     "flex h-10 w-10 items-center justify-center rounded-full border border-white/22 bg-black/50 text-white/90 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40";
@@ -102,7 +118,7 @@ export function ProjectCarousel({ children }: { children: ReactNode }) {
         className="flex snap-x snap-mandatory gap-5 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {Children.map(children, (child) => (
-          <div className="shrink-0 basis-[86%] snap-start sm:basis-[47%] lg:basis-[30.5%]">
+          <div className="flex shrink-0 basis-[86%] snap-start last:snap-end sm:basis-[47%] lg:basis-[30.5%] [&>*]:w-full">
             {child}
           </div>
         ))}
@@ -126,7 +142,7 @@ export function ProjectCarousel({ children }: { children: ReactNode }) {
               type="button"
               onClick={() => goToPage(page)}
               aria-label={`Go to project page ${page + 1}`}
-              aria-current={page === activePage}
+              aria-current={page === activePage ? "page" : undefined}
               className="h-1.5 rounded-full transition-all"
               style={{
                 width: page === activePage ? 18 : 6,
