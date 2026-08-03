@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import { ArrowUpRight, CheckCircle, Download, Github, Linkedin, Mail, Twitter } from "lucide-react";
+import { AlertCircle, ArrowUpRight, CheckCircle, Github, Linkedin, LoaderCircle, Mail, Twitter } from "lucide-react";
 import { motion } from "motion/react";
 
 import { profile, socials } from "@/data/portfolio";
@@ -30,6 +30,8 @@ const initialForm: ContactForm = {
 export function Contact() {
   const [form, setForm] = useState<ContactForm>(initialForm);
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange =
     (field: keyof ContactForm) =>
@@ -37,17 +39,43 @@ export function Contact() {
         setForm((current) => ({ ...current, [field]: event.target.value }));
       };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setSubmitting(true);
+    setError("");
 
-    const subject = encodeURIComponent(`Portfolio inquiry from ${form.name}`);
-    const body = encodeURIComponent(
-      `Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`,
-    );
+    try {
+      const response = await fetch(`https://formsubmit.co/ajax/${profile.email}`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          message: form.message,
+          _subject: `Portfolio inquiry from ${form.name}`,
+          _template: "table",
+          _honey: "",
+        }),
+      });
 
-    window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
-    setSent(true);
-    setForm(initialForm);
+      const result = (await response.json()) as { success?: boolean; message?: string };
+
+      if (!response.ok || result.success === false) {
+        throw new Error(result.message || "The message could not be sent.");
+      }
+
+      setSent(true);
+      setForm(initialForm);
+    } catch {
+      setError(
+        `Your message could not be sent right now. Please email ${profile.email} directly.`,
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -74,21 +102,13 @@ export function Contact() {
             >
               {profile.email}
             </a>
-            <p className="font-satoshi m-0 max-w-115t-[16px] leading-[1.75] text-(--portfolio-muted)">
+            <p className="font-satoshi m-0 max-w-115 text-[16px] leading-[1.75] text-(--portfolio-muted)">
               {profile.opportunityBlurb}
             </p>
             <p className="font-satoshi m-0 text-[14px] text-(--portfolio-muted)">
               Typical response time:{" "}
               <span className="font-semibold text-white">{profile.responseTime}</span>
             </p>
-            <a
-              href={profile.resumeHref}
-              download
-              className="inline-flex w-fit items-center gap-2 rounded-full border border-white/28 bg-black/30 px-6 py-3 font-satoshi text-[12px] font-bold uppercase tracking-[0.11em] text-white/90 transition hover:bg-white/5"
-            >
-              <Download size={14} />
-              Download Resume
-            </a>
           </div>
 
           <div className="rounded-2xl border border-white/10 bg-(--portfolio-surface) p-6 md:p-8">
@@ -100,11 +120,10 @@ export function Contact() {
               >
                 <CheckCircle className="text-(--portfolio-accent)" size={40} />
                 <h3 className="font-clash m-0 text-3xl text-(--portfolio-text)">
-                  Email draft opened
+                  Message sent
                 </h3>
                 <p className="font-satoshi m-0 max-w-md text-[15px] text-(--portfolio-muted)">
-                  Your message was added to a new draft. If no mail app opened, you can
-                  use the direct email link below.
+                  Thanks for reaching out. Your message is on its way to {profile.email}.
                 </p>
                 <button
                   type="button"
@@ -117,7 +136,7 @@ export function Contact() {
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-6">
                 <label className="block">
-                  <span className="font-satoshi block text-[12px] font-bold uppercase tracking-widesttext-white">
+                  <span className="font-satoshi block text-[12px] font-bold uppercase tracking-widest text-white">
                     Name
                   </span>
                   <input
@@ -160,13 +179,33 @@ export function Contact() {
 
                 <button
                   type="submit"
-                  className="w-fit rounded-full bg-(--portfolio-accent) px-7 py-2.5 font-satoshi text-[12px] font-bold uppercase tracking-[0.11em] text-white"
+                  disabled={submitting}
+                  className="inline-flex w-fit items-center gap-2 rounded-full bg-(--portfolio-accent) px-7 py-2.5 font-satoshi text-[12px] font-bold uppercase tracking-[0.11em] text-white transition disabled:cursor-wait disabled:opacity-65"
                 >
-                  Send via Email
+                  {submitting ? (
+                    <LoaderCircle size={14} className="animate-spin" aria-hidden="true" />
+                  ) : null}
+                  {submitting ? "Sending..." : "Send Message"}
                 </button>
-                <p className="font-satoshi m-0 text-[12px] text-white/45">
-                  Opens a draft in your default email app.
-                </p>
+                {error ? (
+                  <p
+                    role="alert"
+                    className="font-satoshi m-0 flex items-start gap-2 text-[13px] leading-relaxed text-red-300"
+                  >
+                    <AlertCircle size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
+                    <span>
+                      Your message could not be sent right now. Please email{" "}
+                      <a className="underline underline-offset-2" href={`mailto:${profile.email}`}>
+                        {profile.email}
+                      </a>{" "}
+                      directly.
+                    </span>
+                  </p>
+                ) : (
+                  <p className="font-satoshi m-0 text-[12px] text-white/45">
+                    Sends your message directly to {profile.email}.
+                  </p>
+                )}
               </form>
             )}
           </div>
