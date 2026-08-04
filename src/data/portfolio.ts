@@ -256,7 +256,6 @@ export const skillCategories = [
       { name: "Java", level: 70, icon: "/assets/java.svg" },
       { name: "C/C++", level: 75, icon: "/assets/cplusplus.svg" },
       { name: "SQL", level: 78, icon: "" },
-      { name: "C#", level: 65, icon: "/assets/csharp.svg" },
     ],
   },
 ] as const;
