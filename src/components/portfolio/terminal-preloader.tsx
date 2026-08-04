@@ -2,6 +2,10 @@
 
 import { useState, useEffect } from "react";
 
+import { LINUX_BOOT_SEQUENCE } from "./linux-boot-sequence";
+
+const initialBootLines = LINUX_BOOT_SEQUENCE.slice(0, 3);
+
 export function TerminalPreloader() {
   const [step, setStep] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
@@ -51,23 +55,18 @@ export function TerminalPreloader() {
       }`}
     >
       <div className="flex w-full max-w-95 flex-col gap-2 font-mono text-[13px] text-white/70 sm:text-[15px]">
-        <div>
-          <span className="text-(--portfolio-accent)">{`>`}</span> initializing core systems...{" "}
-          {step >= 1 ? <span className="text-[#4ade80]">[ok]</span> : <span className="animate-pulse font-bold text-white/50">_</span>}
-        </div>
-        
-        {step >= 1 && (
-          <div>
-            <span className="text-(--portfolio-accent)">{`>`}</span> compiling geometric nodes...{" "}
-            {step >= 2 ? <span className="text-[#4ade80]">[ok]</span> : <span className="animate-pulse font-bold text-white/50">_</span>}
-          </div>
-        )}
-        
-        {step >= 2 && (
-          <div>
-            <span className="text-(--portfolio-accent)">{`>`}</span> syncing logic modules...{" "}
-            {step >= 3 ? <span className="text-[#4ade80]">[ok]</span> : <span className="animate-pulse font-bold text-white/50">_</span>}
-          </div>
+        {initialBootLines.map((line, index) =>
+          step >= index ? (
+            <div key={line.id}>
+              <span className="text-(--portfolio-accent)">{`>`}</span>{" "}
+              {line.message}{" "}
+              {step > index ? (
+                <span className="text-[#4ade80]">[ok]</span>
+              ) : (
+                <span className="animate-pulse font-bold text-white/50">_</span>
+              )}
+            </div>
+          ) : null,
         )}
         
         {step >= 3 && (
