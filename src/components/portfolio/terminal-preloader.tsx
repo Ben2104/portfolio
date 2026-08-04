@@ -27,22 +27,22 @@ const reducedBootSequence = LINUX_BOOT_SEQUENCE.filter((line) =>
 );
 
 const toneClasses: Record<BootLine["tone"], string> = {
-  kernel: "text-[#b8c1ba]",
-  service: "text-[#d4ddd6]",
-  portfolio: "text-[#c8f8d6]",
-  warning: "text-[#e7c778]",
-  login: "text-[#e3e8e4]",
-  prompt: "text-[#f2fff5]",
+  kernel: "text-[#bfb8b3]",
+  service: "text-[#ded8d4]",
+  portfolio: "text-[#ffd8bd]",
+  warning: "text-[#ffc078]",
+  login: "text-[#e8e1dc]",
+  prompt: "text-[#fff8f3]",
 };
 
 function BootLineRow({ line }: { line: BootLine }) {
   if (line.tone === "prompt") {
     return (
       <div className="boot-line mt-4 flex min-w-0 items-baseline text-[13px] font-semibold tracking-[-0.01em] sm:mt-5 sm:text-[15px]">
-        <span className="text-[#69f59a]">khoi@portfolio</span>
-        <span className="text-[#8e9a91]">:~$</span>
-        <span className="ml-2 text-[#f2fff5]">startx</span>
-        <span className="boot-cursor ml-1.5 inline-block h-[1em] w-[0.55em] translate-y-[0.15em] bg-[#69f59a]" />
+        <span className="text-(--portfolio-accent)">khoi@portfolio</span>
+        <span className="text-[#9a8d85]">:~$</span>
+        <span className="ml-2 text-[#fff8f3]">startx</span>
+        <span className="boot-cursor ml-1.5 inline-block h-[1em] w-[0.55em] translate-y-[0.15em] bg-(--portfolio-accent)" />
       </div>
     );
   }
@@ -54,13 +54,15 @@ function BootLineRow({ line }: { line: BootLine }) {
       {line.status ? (
         <span
           className={`w-[3.1rem] shrink-0 whitespace-nowrap font-semibold sm:w-[3.6rem] ${
-            line.status === "ok" ? "text-[#64ee91]" : "text-[#e7c778]"
+            line.status === "ok"
+              ? "text-(--portfolio-accent)"
+              : "text-[#ffc078]"
           }`}
         >
           [ {line.status === "ok" ? "OK" : "!!"} ]
         </span>
       ) : line.timestamp ? (
-        <span className="w-[4.7rem] shrink-0 whitespace-nowrap text-[#68736b] tabular-nums sm:w-[5.45rem]">
+        <span className="w-[4.7rem] shrink-0 whitespace-nowrap text-[#776b64] tabular-nums sm:w-[5.45rem]">
           [{line.timestamp}]
         </span>
       ) : (
@@ -187,24 +189,24 @@ export function TerminalPreloader() {
     <div
       aria-busy="true"
       aria-label="Loading portfolio."
-      className={`fixed inset-0 z-[9999] isolate overflow-hidden bg-[#020403] font-mono text-[#d4ddd6] ${
+      className={`fixed inset-0 z-[9999] isolate overflow-hidden bg-[#050302] font-mono text-[#ded8d4] ${
         phase === "exiting" ? "boot-exit" : ""
       }`}
       role="status"
     >
       <div aria-hidden="true" className="contents">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(42,120,67,0.08),transparent_58%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(255,145,66,0.09),transparent_58%)]" />
         <div className="boot-vignette pointer-events-none absolute inset-0 z-20" />
         <div className="boot-scanlines pointer-events-none absolute inset-0 z-10 opacity-35" />
         <div className="boot-bloom pointer-events-none absolute inset-0 z-30" />
 
         <div className="relative z-0 mx-auto flex h-full w-full max-w-[1120px] flex-col px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-[max(1.25rem,env(safe-area-inset-top))] sm:px-8 sm:py-8 lg:px-12 lg:py-10">
-          <header className="flex shrink-0 items-center justify-between border-b border-[#64ee91]/15 pb-3 text-[9px] uppercase tracking-[0.2em] text-[#68736b] sm:text-[10px]">
+          <header className="flex shrink-0 items-center justify-between border-b border-(--portfolio-accent)/15 pb-3 text-[9px] uppercase tracking-[0.2em] text-[#776b64] sm:text-[10px]">
             <span>
-              <span className="text-[#64ee91]">KHOI</span>/OS 6.8.12
+              <span className="text-(--portfolio-accent)">KHOI</span>/OS 6.8.12
             </span>
             <span className="hidden sm:inline">tty1 · portfolio session</span>
-            <span className="text-[#89958c]">booting</span>
+            <span className="text-[#9a8d85]">booting</span>
           </header>
 
           <div
@@ -220,10 +222,10 @@ export function TerminalPreloader() {
             </div>
           </div>
 
-          <footer className="flex shrink-0 items-center gap-3 border-t border-[#64ee91]/10 pt-3 text-[8px] uppercase tracking-[0.18em] text-[#526057] sm:text-[9px]">
-            <span className="h-px flex-1 overflow-hidden bg-[#142319]">
+          <footer className="flex shrink-0 items-center gap-3 border-t border-(--portfolio-accent)/10 pt-3 text-[8px] uppercase tracking-[0.18em] text-[#665b54] sm:text-[9px]">
+            <span className="h-px flex-1 overflow-hidden bg-[#241711]">
               <span
-                className="block h-full bg-[#64ee91]/70 transition-[width] duration-200 ease-out"
+                className="block h-full bg-(--portfolio-accent)/70 transition-[width] duration-200 ease-out"
                 style={{
                   width: `${Math.round(
                     (visibleLines.length /
@@ -248,12 +250,12 @@ export function TerminalPreloader() {
       <style jsx global>{`
         .boot-line {
           animation: boot-line-in 180ms cubic-bezier(0.22, 1, 0.36, 1) both;
-          text-shadow: 0 0 12px rgba(105, 245, 154, 0.08);
+          text-shadow: 0 0 12px rgba(255, 145, 66, 0.1);
         }
 
         .boot-cursor {
           animation: boot-cursor-blink 700ms steps(1, end) infinite;
-          box-shadow: 0 0 12px rgba(105, 245, 154, 0.45);
+          box-shadow: 0 0 12px rgba(255, 145, 66, 0.48);
         }
 
         .boot-scanlines {
@@ -287,7 +289,7 @@ export function TerminalPreloader() {
 
         .boot-exit .boot-bloom {
           animation: boot-bloom ${BOOT_EXIT_DELAY}ms ease-out forwards;
-          background: #baffce;
+          background: #ffd2b2;
         }
 
         @keyframes boot-line-in {
