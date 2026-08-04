@@ -31,35 +31,6 @@ This is not a static résumé page. The experience opens like a terminal, moves 
 - **Orbital skills system** — a canvas-rendered skill field turns a long technology list into an interactive visual.
 - **Single source of truth** — profile, project, skill, education, and experience content live in `src/data/portfolio.ts`.
 
-## Selected work
-
-<table>
-<tr>
-<td width="50%" valign="top">
-  <a href="https://devpost.com/software/crisisline-ai"><img src="./public/projects/crisislineai.png" alt="CrisisLineAI dashboard" /></a>
-</td>
-<td width="50%" valign="top">
-  <a href="https://devpost.com/software/911-operator-assistant"><img src="./public/projects/911_operator.png" alt="911 Operator Assistant dashboard" /></a>
-</td>
-</tr>
-<tr>
-<td valign="top">
-  <h3>CrisisLineAI</h3>
-  <p>A multi-channel crisis support system combining real-time web chat, counselor takeover controls, and voice-call AI orchestration.</p>
-  <p><strong>Next.js · FastAPI · Firebase · Twilio · AssemblyAI · OpenAI API</strong></p>
-  <p><a href="https://github.com/Ben2104/CrisisLineAI">Source</a> · <a href="https://devpost.com/software/crisisline-ai">Case study</a></p>
-</td>
-<td valign="top">
-  <h3>911 Operator Assistant</h3>
-  <p>A real-time emergency operations dashboard for location intelligence, live call context, and faster operator decisions.</p>
-  <p><strong>Best Overall Award — Marina Hacks 5.0</strong></p>
-  <p><a href="https://github.com/Ben2104/911-Operator-Assistant">Source</a> · <a href="https://devpost.com/software/911-operator-assistant">Case study</a></p>
-</td>
-</tr>
-</table>
-
-Also featured: [Shape-Sign](https://github.com/Ben2104/Shape-Sign), winner of the Best Overall Award at BeachHacks 8.0, plus full-stack, AI, education, and automation projects throughout the live portfolio.
-
 ## Architecture
 
 ```mermaid
