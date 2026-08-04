@@ -11,6 +11,10 @@ import {
 
 type BootPhase = "booting" | "exiting" | "complete";
 
+type TerminalPreloaderProps = {
+  onComplete: () => void;
+};
+
 // Clear this key in DevTools session storage to replay the boot locally.
 const BOOT_SESSION_KEY = "portfolio-linux-boot-complete";
 const BOOT_FAILSAFE_DELAY = BOOT_SEQUENCE_DURATION + BOOT_EXIT_DELAY + 1500;
@@ -73,7 +77,7 @@ function BootLineRow({ line }: { line: BootLine }) {
   );
 }
 
-export function TerminalPreloader() {
+export function TerminalPreloader({ onComplete }: TerminalPreloaderProps) {
   const [visibleLines, setVisibleLines] = useState<readonly BootLine[]>([]);
   const [phase, setPhase] = useState<BootPhase>("booting");
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -94,6 +98,7 @@ export function TerminalPreloader() {
       timers.forEach((timer) => window.clearTimeout(timer));
       storeCompletion();
       setPhase("complete");
+      onComplete();
     };
 
     timers.push(window.setTimeout(finish, BOOT_FAILSAFE_DELAY));
@@ -150,7 +155,7 @@ export function TerminalPreloader() {
     }
 
     return () => timers.forEach((timer) => window.clearTimeout(timer));
-  }, []);
+  }, [onComplete]);
 
   useEffect(() => {
     const viewport = viewportRef.current;
