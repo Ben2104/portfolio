@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
   BOOT_EXIT_DELAY,
@@ -9,11 +9,16 @@ import {
   LINUX_BOOT_SEQUENCE,
 } from "./linux-boot-sequence";
 
-type BootPhase = "booting" | "exiting" | "complete";
+type BootPhase = "booting" | "awaiting" | "exiting" | "complete";
+
+type TerminalPreloaderProps = {
+  onComplete: () => void;
+};
 
 // Clear this key in DevTools session storage to replay the boot locally.
 const BOOT_SESSION_KEY = "portfolio-linux-boot-complete";
-const BOOT_FAILSAFE_DELAY = BOOT_SEQUENCE_DURATION + BOOT_EXIT_DELAY + 1500;
+const BOOT_PROMPT_FAILSAFE_DELAY =
+  BOOT_SEQUENCE_DURATION + BOOT_EXIT_DELAY + 1500;
 const REDUCED_BOOT_DURATION = 650;
 const REDUCED_BOOT_EXIT_DELAY = 150;
 const reducedBootLineIds = new Set([
@@ -35,6 +40,14 @@ const toneClasses: Record<BootLine["tone"], string> = {
   prompt: "text-[#fff8f3]",
 };
 
+function storeBootCompletion() {
+  try {
+    window.sessionStorage.setItem(BOOT_SESSION_KEY, "true");
+  } catch {
+    // Storage can be unavailable in private or restricted browser contexts.
+  }
+}
+
 function BootLineRow({ line }: { line: BootLine }) {
   if (line.tone === "prompt") {
     return (
@@ -49,11 +62,11 @@ function BootLineRow({ line }: { line: BootLine }) {
 
   return (
     <div
-      className={`boot-line flex min-w-0 items-baseline gap-2 text-[11px] leading-[1.55] sm:gap-3 sm:text-[13px] ${toneClasses[line.tone]}`}
+      className={`boot-line grid w-full min-w-0 max-w-full grid-cols-[4.7rem_minmax(0,1fr)] items-baseline gap-2 text-[11px] leading-[1.55] sm:grid-cols-[5.45rem_minmax(0,1fr)] sm:gap-3 sm:text-[13px] ${toneClasses[line.tone]}`}
     >
       {line.status ? (
         <span
-          className={`w-[3.1rem] shrink-0 whitespace-nowrap font-semibold sm:w-[3.6rem] ${
+          className={`whitespace-nowrap font-semibold ${
             line.status === "ok"
               ? "text-(--portfolio-accent)"
               : "text-[#ffc078]"
@@ -62,46 +75,43 @@ function BootLineRow({ line }: { line: BootLine }) {
           [ {line.status === "ok" ? "OK" : "!!"} ]
         </span>
       ) : line.timestamp ? (
-        <span className="w-[4.7rem] shrink-0 whitespace-nowrap text-[#776b64] tabular-nums sm:w-[5.45rem]">
+        <span className="whitespace-nowrap text-[#776b64] tabular-nums">
           [{line.timestamp}]
         </span>
       ) : (
-        <span className="w-[3.1rem] shrink-0 sm:w-[3.6rem]" />
+        <span />
       )}
-      <span className="min-w-0 [overflow-wrap:anywhere]">{line.message}</span>
+      <span className="min-w-0 whitespace-normal break-words [overflow-wrap:anywhere]">
+        {line.message}
+      </span>
     </div>
   );
 }
 
-export function TerminalPreloader() {
+export function TerminalPreloader({ onComplete }: TerminalPreloaderProps) {
   const [visibleLines, setVisibleLines] = useState<readonly BootLine[]>([]);
   const [phase, setPhase] = useState<BootPhase>("booting");
   const viewportRef = useRef<HTMLDivElement>(null);
   const reducedMotionRef = useRef(false);
+  const exitTimerRef = useRef<number | null>(null);
+  const didCompleteRef = useRef(false);
+  const didContinueRef = useRef(false);
+
+  const completeBoot = useCallback(() => {
+    if (didCompleteRef.current) return;
+
+    didCompleteRef.current = true;
+    setPhase("complete");
+    onComplete();
+  }, [onComplete]);
 
   useEffect(() => {
     const timers: number[] = [];
 
-    const storeCompletion = () => {
-      try {
-        window.sessionStorage.setItem(BOOT_SESSION_KEY, "true");
-      } catch {
-        // Storage can be unavailable in private or restricted browser contexts.
-      }
-    };
-
-    const finish = () => {
-      timers.forEach((timer) => window.clearTimeout(timer));
-      storeCompletion();
-      setPhase("complete");
-    };
-
-    timers.push(window.setTimeout(finish, BOOT_FAILSAFE_DELAY));
-
     try {
       if (window.sessionStorage.getItem(BOOT_SESSION_KEY) === "true") {
-        finish();
-        return () => timers.forEach((timer) => window.clearTimeout(timer));
+        completeBoot();
+        return;
       }
     } catch {
       // Continue without session persistence when storage access is blocked.
@@ -123,9 +133,16 @@ export function TerminalPreloader() {
     const exitAt = prefersReducedMotion
       ? REDUCED_BOOT_DURATION
       : BOOT_SEQUENCE_DURATION;
-    const exitDelay = prefersReducedMotion
-      ? REDUCED_BOOT_EXIT_DELAY
-      : BOOT_EXIT_DELAY;
+
+    const showContinuePrompt = () => {
+      timers.forEach((timer) => window.clearTimeout(timer));
+      setVisibleLines(sequence);
+      setPhase("awaiting");
+    };
+
+    timers.push(
+      window.setTimeout(showContinuePrompt, BOOT_PROMPT_FAILSAFE_DELAY),
+    );
 
     try {
       sequence.forEach((line, index) => {
@@ -138,19 +155,40 @@ export function TerminalPreloader() {
         );
       });
 
-      timers.push(
-        window.setTimeout(() => {
-          storeCompletion();
-          setPhase("exiting");
-        }, exitAt),
-        window.setTimeout(finish, exitAt + exitDelay),
-      );
+      timers.push(window.setTimeout(showContinuePrompt, exitAt));
     } catch {
-      finish();
+      showContinuePrompt();
     }
 
     return () => timers.forEach((timer) => window.clearTimeout(timer));
-  }, []);
+  }, [completeBoot]);
+
+  useEffect(
+    () => () => {
+      if (exitTimerRef.current !== null) {
+        window.clearTimeout(exitTimerRef.current);
+      }
+    },
+    [],
+  );
+
+  const handleContinue = useCallback(() => {
+    if (phase !== "awaiting" || didContinueRef.current) return;
+
+    didContinueRef.current = true;
+    storeBootCompletion();
+    setPhase("exiting");
+
+    const exitDelay = reducedMotionRef.current
+      ? REDUCED_BOOT_EXIT_DELAY
+      : BOOT_EXIT_DELAY;
+
+    try {
+      exitTimerRef.current = window.setTimeout(completeBoot, exitDelay);
+    } catch {
+      completeBoot();
+    }
+  }, [completeBoot, phase]);
 
   useEffect(() => {
     const viewport = viewportRef.current;
@@ -187,64 +225,102 @@ export function TerminalPreloader() {
 
   return (
     <div
-      aria-busy="true"
-      aria-label="Loading portfolio."
       className={`fixed inset-0 z-[9999] isolate overflow-hidden bg-[#050302] font-mono text-[#ded8d4] ${
         phase === "exiting" ? "boot-exit" : ""
       }`}
-      role="status"
     >
-      <div aria-hidden="true" className="contents">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(255,145,66,0.09),transparent_58%)]" />
-        <div className="boot-vignette pointer-events-none absolute inset-0 z-20" />
-        <div className="boot-scanlines pointer-events-none absolute inset-0 z-10 opacity-35" />
-        <div className="boot-bloom pointer-events-none absolute inset-0 z-30" />
+      <span aria-live="polite" className="sr-only" role="status">
+        {phase === "awaiting"
+          ? "Portfolio ready. Click to continue."
+          : "Loading portfolio."}
+      </span>
 
-        <div className="relative z-0 mx-auto flex h-full w-full max-w-[1120px] flex-col px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-[max(1.25rem,env(safe-area-inset-top))] sm:px-8 sm:py-8 lg:px-12 lg:py-10">
-          <header className="flex shrink-0 items-center justify-between border-b border-(--portfolio-accent)/15 pb-3 text-[9px] uppercase tracking-[0.2em] text-[#776b64] sm:text-[10px]">
-            <span>
-              <span className="text-(--portfolio-accent)">KHOI</span>/OS 6.8.12
-            </span>
-            <span className="hidden sm:inline">tty1 · portfolio session</span>
-            <span className="text-[#9a8d85]">booting</span>
-          </header>
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(255,145,66,0.09),transparent_58%)]"
+      />
+      <div
+        aria-hidden="true"
+        className="boot-vignette pointer-events-none absolute inset-0 z-20"
+      />
+      <div
+        aria-hidden="true"
+        className="boot-scanlines pointer-events-none absolute inset-0 z-10 opacity-35"
+      />
+      <div
+        aria-hidden="true"
+        className="boot-bloom pointer-events-none absolute inset-0 z-30"
+      />
 
-          <div
-            className="mt-[clamp(1.5rem,6vh,4.5rem)] min-h-0 flex-1 overflow-hidden"
-            ref={viewportRef}
-          >
-            <div className="flex min-h-full flex-col justify-end pb-5 sm:pb-8">
-              <div className="space-y-[2px] sm:space-y-1">
-                {visibleLines.map((line) => (
-                  <BootLineRow key={line.id} line={line} />
-                ))}
-              </div>
+      <div className="relative z-0 mx-auto flex h-full w-full max-w-[1120px] flex-col px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-[max(1.25rem,env(safe-area-inset-top))] sm:px-8 sm:py-8 lg:px-12 lg:py-10">
+        <header
+          aria-hidden="true"
+          className="flex shrink-0 items-center justify-between border-b border-(--portfolio-accent)/15 pb-3 text-[9px] uppercase tracking-[0.2em] text-[#776b64] sm:text-[10px]"
+        >
+          <span>
+            <span className="text-(--portfolio-accent)">KHOI</span>/OS 6.8.12
+          </span>
+          <span className="hidden sm:inline">tty1 · portfolio session</span>
+          <span className="text-[#9a8d85]">
+            {phase === "booting" ? "booting" : "ready"}
+          </span>
+        </header>
+
+        <div
+          className="mt-[clamp(1.5rem,6vh,4.5rem)] min-h-0 flex-1 overflow-hidden"
+          ref={viewportRef}
+        >
+          <div className="flex min-h-full flex-col justify-end pb-5 sm:pb-8">
+            <div aria-hidden="true" className="space-y-[2px] sm:space-y-1">
+              {visibleLines.map((line) => (
+                <BootLineRow key={line.id} line={line} />
+              ))}
             </div>
-          </div>
 
-          <footer className="flex shrink-0 items-center gap-3 border-t border-(--portfolio-accent)/10 pt-3 text-[8px] uppercase tracking-[0.18em] text-[#665b54] sm:text-[9px]">
-            <span className="h-px flex-1 overflow-hidden bg-[#241711]">
-              <span
-                className="block h-full bg-(--portfolio-accent)/70 transition-[width] duration-200 ease-out"
-                style={{
-                  width: `${Math.round(
-                    (visibleLines.length /
-                      (reducedMotionRef.current
-                        ? reducedBootSequence.length
-                        : LINUX_BOOT_SEQUENCE.length)) *
-                      100,
-                  )}%`,
-                }}
-              />
-            </span>
-            <span className="tabular-nums">
-              {String(visibleLines.length).padStart(2, "0")}/
-              {reducedMotionRef.current
-                ? reducedBootSequence.length
-                : LINUX_BOOT_SEQUENCE.length}
-            </span>
-          </footer>
+            {phase === "awaiting" ? (
+              <button
+                className="boot-continue mt-5 inline-flex w-fit items-center gap-2.5 border border-(--portfolio-accent)/35 bg-(--portfolio-accent)/8 px-3.5 py-2.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-(--portfolio-accent) transition-colors hover:bg-(--portfolio-accent)/14 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--portfolio-accent)/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#050302] sm:mt-6 sm:text-[11px]"
+                onClick={handleContinue}
+                type="button"
+              >
+                <span
+                  aria-hidden="true"
+                  className="h-1.5 w-1.5 bg-(--portfolio-accent) shadow-[0_0_10px_rgba(255,145,66,0.7)]"
+                />
+                Click to continue
+                <span aria-hidden="true" className="text-[#9a8d85]">
+                  ↵
+                </span>
+              </button>
+            ) : null}
+          </div>
         </div>
+
+        <footer
+          aria-hidden="true"
+          className="flex shrink-0 items-center gap-3 border-t border-(--portfolio-accent)/10 pt-3 text-[8px] uppercase tracking-[0.18em] text-[#665b54] sm:text-[9px]"
+        >
+          <span className="h-px flex-1 overflow-hidden bg-[#241711]">
+            <span
+              className="block h-full bg-(--portfolio-accent)/70 transition-[width] duration-200 ease-out"
+              style={{
+                width: `${Math.round(
+                  (visibleLines.length /
+                    (reducedMotionRef.current
+                      ? reducedBootSequence.length
+                      : LINUX_BOOT_SEQUENCE.length)) *
+                    100,
+                )}%`,
+              }}
+            />
+          </span>
+          <span className="tabular-nums">
+            {String(visibleLines.length).padStart(2, "0")}/
+            {reducedMotionRef.current
+              ? reducedBootSequence.length
+              : LINUX_BOOT_SEQUENCE.length}
+          </span>
+        </footer>
       </div>
 
       <style jsx global>{`
@@ -256,6 +332,11 @@ export function TerminalPreloader() {
         .boot-cursor {
           animation: boot-cursor-blink 700ms steps(1, end) infinite;
           box-shadow: 0 0 12px rgba(255, 145, 66, 0.48);
+        }
+
+        .boot-continue {
+          animation: boot-continue-in 280ms cubic-bezier(0.22, 1, 0.36, 1)
+            both;
         }
 
         .boot-scanlines {
@@ -316,6 +397,17 @@ export function TerminalPreloader() {
           }
         }
 
+        @keyframes boot-continue-in {
+          from {
+            opacity: 0;
+            transform: translateY(6px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
         @keyframes boot-screen-exit {
           0% {
             opacity: 1;
@@ -351,6 +443,7 @@ export function TerminalPreloader() {
         @media (prefers-reduced-motion: reduce) {
           .boot-line,
           .boot-cursor,
+          .boot-continue,
           .boot-exit,
           .boot-exit .boot-bloom {
             animation: none;

@@ -1,3 +1,7 @@
+"use client";
+
+import { useCallback, useState } from "react";
+
 import { About } from "./about";
 import { Contact } from "./contact";
 import { Education } from "./education";
@@ -9,10 +13,9 @@ import { Projects } from "./projects";
 import { Skills } from "./skills";
 import { TerminalPreloader } from "./terminal-preloader";
 
-export function PortfolioPage() {
+function PortfolioContent() {
   return (
-    <main className="min-h-screen overflow-x-clip bg-(--portfolio-bg)">
-      <TerminalPreloader />
+    <>
       <Navbar />
       <Hero />
       <About />
@@ -22,6 +25,18 @@ export function PortfolioPage() {
       <Education />
       <Contact />
       <Footer />
+    </>
+  );
+}
+
+export function PortfolioPage() {
+  const [isBootComplete, setIsBootComplete] = useState(false);
+  const handleBootComplete = useCallback(() => setIsBootComplete(true), []);
+
+  return (
+    <main className="min-h-screen overflow-x-clip bg-(--portfolio-bg)">
+      <TerminalPreloader onComplete={handleBootComplete} />
+      {isBootComplete ? <PortfolioContent /> : null}
     </main>
   );
 }
