@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight, MoveHorizontal } from "lucide-react";
 import { useReducedMotion } from "motion/react";
 
 const DOT_ACCENT = "#00d4ff";
+const DRAG_THRESHOLD = 10;
 
 function readMetrics(el: HTMLDivElement | null) {
   if (!el || el.clientWidth === 0) return null;
@@ -95,7 +96,10 @@ export function ProjectCarousel({ children }: { children: ReactNode }) {
       startScrollLeft: track.scrollLeft,
       startX: event.clientX,
     };
-    track.setPointerCapture(event.pointerId);
+    // Pointer capture is deferred to handlePointerMove until a real drag is
+    // confirmed. Capturing here unconditionally retargets the click event
+    // that follows an ordinary tap/click to the track element instead of
+    // the link/button under the cursor, silently swallowing the click.
     setIsDragging(true);
   };
 
@@ -104,11 +108,16 @@ export function ProjectCarousel({ children }: { children: ReactNode }) {
     if (!track || !dragState.current.active) return;
 
     const distance = event.clientX - dragState.current.startX;
-    if (Math.abs(distance) > 4) {
+
+    if (!dragState.current.didDrag) {
+      // Ignore small jitter so an ordinary click on a link/button isn't
+      // misread as the start of a drag.
+      if (Math.abs(distance) <= DRAG_THRESHOLD) return;
       dragState.current.didDrag = true;
-      event.preventDefault();
+      track.setPointerCapture(event.pointerId);
     }
 
+    event.preventDefault();
     track.scrollLeft = dragState.current.startScrollLeft - distance;
   };
 
@@ -191,7 +200,7 @@ export function ProjectCarousel({ children }: { children: ReactNode }) {
         className={`flex touch-pan-y gap-5 overflow-x-auto overscroll-x-contain pb-2 [scrollbar-width:none] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--portfolio-accent) [&::-webkit-scrollbar]:hidden ${
           isDragging
             ? "cursor-grabbing select-none snap-none"
-            : "cursor-grab snap-x snap-mandatory"
+            : "cursor-grab snap-x snap-mandatory scroll-smooth"
         }`}
       >
         {Children.map(children, (child) => (
