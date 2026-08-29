@@ -62,8 +62,8 @@ jobs:
       - name: Install Vercel CLI
         run: npm install -g vercel@59.10.0
       - name: Pull Vercel environment
-        run: vercel pull --yes --environment=${{ github.event_name == 'pull_request' && 'preview' || 'production' }} --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel pull --yes --scope=khoi-dos-projects-cd46277e --environment=${{ github.event_name == 'pull_request' && 'preview' || 'production' }} --token=${{ secrets.VERCEL_TOKEN }}
       - name: Build project artifacts
-        run: vercel build ${{ github.event_name != 'pull_request' && '--prod' || '' }} --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel build --scope=khoi-dos-projects-cd46277e ${{ github.event_name != 'pull_request' && '--prod' || '' }} --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy to Vercel
-        run: vercel deploy --prebuilt ${{ github.event_name != 'pull_request' && '--prod' || '' }} --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel deploy --prebuilt --scope=khoi-dos-projects-cd46277e ${{ github.event_name != 'pull_request' && '--prod' || '' }} --token=${{ secrets.VERCEL_TOKEN }}
