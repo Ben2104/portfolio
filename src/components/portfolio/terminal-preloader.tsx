@@ -90,9 +90,24 @@ function BootLineRow({ line }: { line: BootLine }) {
 
 export function TerminalPreloader({ onComplete }: TerminalPreloaderProps) {
   const [visibleLines, setVisibleLines] = useState<readonly BootLine[]>([]);
-  const [phase, setPhase] = useState<BootPhase>("booting");
+  const [phase, setPhase] = useState<BootPhase>(() => {
+    try {
+      if (window.sessionStorage.getItem(BOOT_SESSION_KEY) === "true") {
+        return "complete";
+      }
+    } catch {
+      // Continue without session persistence when storage access is blocked.
+    }
+    return "booting";
+  });
+  const [reducedMotion] = useState(() => {
+    try {
+      return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    } catch {
+      return false;
+    }
+  });
   const viewportRef = useRef<HTMLDivElement>(null);
-  const reducedMotionRef = useRef(false);
   const exitTimerRef = useRef<number | null>(null);
   const didCompleteRef = useRef(false);
   const didContinueRef = useRef(false);
@@ -108,29 +123,16 @@ export function TerminalPreloader({ onComplete }: TerminalPreloaderProps) {
   useEffect(() => {
     const timers: number[] = [];
 
-    try {
-      if (window.sessionStorage.getItem(BOOT_SESSION_KEY) === "true") {
-        completeBoot();
-        return;
+    if (phase === "complete") {
+      if (!didCompleteRef.current) {
+        didCompleteRef.current = true;
+        onComplete();
       }
-    } catch {
-      // Continue without session persistence when storage access is blocked.
+      return;
     }
 
-    let prefersReducedMotion = false;
-    try {
-      prefersReducedMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      ).matches;
-    } catch {
-      // Default to the full sequence if media queries are unavailable.
-    }
-    reducedMotionRef.current = prefersReducedMotion;
-
-    const sequence = prefersReducedMotion
-      ? reducedBootSequence
-      : LINUX_BOOT_SEQUENCE;
-    const exitAt = prefersReducedMotion
+    const sequence = reducedMotion ? reducedBootSequence : LINUX_BOOT_SEQUENCE;
+    const exitAt = reducedMotion
       ? REDUCED_BOOT_DURATION
       : BOOT_SEQUENCE_DURATION;
 
@@ -146,7 +148,7 @@ export function TerminalPreloader({ onComplete }: TerminalPreloaderProps) {
 
     try {
       sequence.forEach((line, index) => {
-        const lineDelay = prefersReducedMotion ? index * 90 : line.at;
+        const lineDelay = reducedMotion ? index * 90 : line.at;
         timers.push(
           window.setTimeout(
             () => setVisibleLines(sequence.slice(0, index + 1)),
@@ -161,7 +163,8 @@ export function TerminalPreloader({ onComplete }: TerminalPreloaderProps) {
     }
 
     return () => timers.forEach((timer) => window.clearTimeout(timer));
-  }, [completeBoot]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- `phase` is intentionally excluded; adding it would restart this timer sequence on every phase change.
+  }, [onComplete, reducedMotion]);
 
   useEffect(
     () => () => {
@@ -179,7 +182,7 @@ export function TerminalPreloader({ onComplete }: TerminalPreloaderProps) {
     storeBootCompletion();
     setPhase("exiting");
 
-    const exitDelay = reducedMotionRef.current
+    const exitDelay = reducedMotion
       ? REDUCED_BOOT_EXIT_DELAY
       : BOOT_EXIT_DELAY;
 
@@ -188,7 +191,7 @@ export function TerminalPreloader({ onComplete }: TerminalPreloaderProps) {
     } catch {
       completeBoot();
     }
-  }, [completeBoot, phase]);
+  }, [completeBoot, phase, reducedMotion]);
 
   useEffect(() => {
     const viewport = viewportRef.current;
@@ -198,14 +201,14 @@ export function TerminalPreloader({ onComplete }: TerminalPreloaderProps) {
       viewport.scrollTo({
         top: viewport.scrollHeight,
         behavior:
-          reducedMotionRef.current || visibleLines.length <= 3
+          reducedMotion || visibleLines.length <= 3
             ? "auto"
             : "smooth",
       });
     });
 
     return () => window.cancelAnimationFrame(animationFrame);
-  }, [visibleLines]);
+  }, [visibleLines, reducedMotion]);
 
   useEffect(() => {
     if (phase === "complete") return;
@@ -306,7 +309,7 @@ export function TerminalPreloader({ onComplete }: TerminalPreloaderProps) {
               style={{
                 width: `${Math.round(
                   (visibleLines.length /
-                    (reducedMotionRef.current
+                    (reducedMotion
                       ? reducedBootSequence.length
                       : LINUX_BOOT_SEQUENCE.length)) *
                     100,
@@ -316,7 +319,7 @@ export function TerminalPreloader({ onComplete }: TerminalPreloaderProps) {
           </span>
           <span className="tabular-nums">
             {String(visibleLines.length).padStart(2, "0")}/
-            {reducedMotionRef.current
+            {reducedMotion
               ? reducedBootSequence.length
               : LINUX_BOOT_SEQUENCE.length}
           </span>
