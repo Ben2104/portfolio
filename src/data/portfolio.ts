@@ -54,6 +54,28 @@ export const pillars = [
 
 export const projects = [
   {
+    title: "Material Enhancement Assistant",
+    subtitle: "AI-Powered Course Material Workspace",
+    desc: "An AI-powered workspace that helps professors upload, analyze, and enhance course materials with retrieval-assisted Gemini workflows while keeping instructors in control of every change.",
+    tags: [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "FastAPI",
+      "Python",
+      "Gemini",
+      "Supabase",
+      "Docker",
+    ],
+    color: "#b8db80",
+    image: "/projects/material-enhancement-assistant.png",
+    liveHref: "",
+    devpostHref: "",
+    sourceHref: "https://github.com/spiderpilo/Material-Enhancement-Assistant",
+    award: "",
+    stars: "",
+  },
+  {
     title: "CrisisLineAI",
     subtitle: "Voice AI Agent Crisis Support System",
     desc: "A multi-channel crisis support system that combines realtime web chat, counselor takeover controls, and voice-call AI orchestration.",
