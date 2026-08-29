@@ -50,3 +50,21 @@ jobs:
           cache: "npm"
       - run: npm ci
       - run: npm audit --audit-level=high
+
+  deploy:
+    needs: [lint, typecheck, build, audit]
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install Vercel CLI
+        run: npm install -g vercel@59.10.0
+      - name: Pull Vercel environment
+        run: vercel pull --yes --scope=khoi-dos-projects-cd46277e --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Build project artifacts
+        run: vercel build --scope=khoi-dos-projects-cd46277e --prod --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Deploy to Vercel
+        run: vercel deploy --prebuilt --scope=khoi-dos-projects-cd46277e --prod --token=${{ secrets.VERCEL_TOKEN }}
