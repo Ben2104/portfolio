@@ -54,7 +54,7 @@ function BootLineRow({ line }: { line: BootLine }) {
       <div className="boot-line mt-4 flex min-w-0 items-baseline text-[13px] font-semibold tracking-[-0.01em] sm:mt-5 sm:text-[15px]">
         <span className="text-(--portfolio-accent)">khoi@portfolio</span>
         <span className="text-[#9a8d85]">:~$</span>
-        <span className="ml-2 text-[#fff8f3]">startx</span>
+        <span className="boot-prompt-text ml-2 text-[#fff8f3]">startx</span>
         <span className="boot-cursor ml-1.5 inline-block h-[1em] w-[0.55em] translate-y-[0.15em] bg-(--portfolio-accent)" />
       </div>
     );
@@ -229,7 +229,7 @@ export function TerminalPreloader({ onComplete }: TerminalPreloaderProps) {
   return (
     <div
       className={`fixed inset-0 z-[9999] isolate overflow-hidden bg-[#050302] font-mono text-[#ded8d4] ${
-        phase === "exiting" ? "boot-exit" : ""
+        phase === "exiting" ? "boot-exit" : "boot-flicker"
       }`}
     >
       <span aria-live="polite" className="sr-only" role="status">
@@ -249,6 +249,10 @@ export function TerminalPreloader({ onComplete }: TerminalPreloaderProps) {
       <div
         aria-hidden="true"
         className="boot-scanlines pointer-events-none absolute inset-0 z-10 opacity-35"
+      />
+      <div
+        aria-hidden="true"
+        className="boot-grille pointer-events-none absolute inset-0 z-10"
       />
       <div
         aria-hidden="true"
@@ -333,8 +337,34 @@ export function TerminalPreloader({ onComplete }: TerminalPreloaderProps) {
         }
 
         .boot-cursor {
+          position: relative;
           animation: boot-cursor-blink 700ms steps(1, end) infinite;
           box-shadow: 0 0 12px rgba(255, 145, 66, 0.48);
+        }
+
+        .boot-cursor::before,
+        .boot-cursor::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: inherit;
+          mix-blend-mode: screen;
+        }
+
+        .boot-cursor::before {
+          transform: translateX(-0.5px);
+          background: rgba(255, 200, 120, 0.55);
+        }
+
+        .boot-cursor::after {
+          transform: translateX(0.5px);
+          background: rgba(255, 90, 40, 0.55);
+        }
+
+        .boot-prompt-text {
+          text-shadow:
+            -0.5px 0 rgba(255, 200, 120, 0.6),
+            0.5px 0 rgba(255, 90, 40, 0.6);
         }
 
         .boot-continue {
@@ -353,6 +383,16 @@ export function TerminalPreloader({ onComplete }: TerminalPreloaderProps) {
           background-size: 100% 4px;
         }
 
+        .boot-grille {
+          background-image: repeating-linear-gradient(
+            to right,
+            rgba(255, 145, 66, 0.05) 0,
+            rgba(255, 145, 66, 0.05) 1px,
+            transparent 1px,
+            transparent 3px
+          );
+        }
+
         .boot-vignette {
           background: radial-gradient(
             ellipse at center,
@@ -362,13 +402,42 @@ export function TerminalPreloader({ onComplete }: TerminalPreloaderProps) {
         }
 
         .boot-bloom {
-          opacity: 0;
+          background: radial-gradient(
+            circle at 50% 45%,
+            rgba(255, 145, 66, 0.16),
+            transparent 60%
+          );
+          animation: boot-glow-idle 5s ease-in-out infinite;
         }
 
         .boot-exit {
           animation: boot-screen-exit ${BOOT_EXIT_DELAY}ms
             cubic-bezier(0.76, 0, 0.24, 1) forwards;
           transform-origin: center top;
+        }
+
+        .boot-flicker {
+          animation: boot-flicker 6.4s steps(1, end) infinite;
+        }
+
+        @keyframes boot-flicker {
+          0%,
+          91%,
+          100% {
+            opacity: 1;
+          }
+          92% {
+            opacity: 0.985;
+          }
+          93% {
+            opacity: 1;
+          }
+          96% {
+            opacity: 0.99;
+          }
+          97% {
+            opacity: 1;
+          }
         }
 
         .boot-exit .boot-bloom {
@@ -428,6 +497,16 @@ export function TerminalPreloader({ onComplete }: TerminalPreloaderProps) {
           }
         }
 
+        @keyframes boot-glow-idle {
+          0%,
+          100% {
+            opacity: 0.02;
+          }
+          50% {
+            opacity: 0.06;
+          }
+        }
+
         @keyframes boot-bloom {
           0% {
             opacity: 0;
@@ -448,8 +527,14 @@ export function TerminalPreloader({ onComplete }: TerminalPreloaderProps) {
           .boot-cursor,
           .boot-continue,
           .boot-exit,
-          .boot-exit .boot-bloom {
+          .boot-exit .boot-bloom,
+          .boot-bloom,
+          .boot-flicker {
             animation: none;
+          }
+
+          .boot-bloom {
+            opacity: 0;
           }
 
           .boot-exit {
