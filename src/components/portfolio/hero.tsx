@@ -93,14 +93,6 @@ export function Hero() {
             >
               View Projects
             </button>
-            <a
-              href={profile.resumeHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full border border-white/28 bg-black/30 px-8 py-3.5 font-satoshi text-[12px] font-bold uppercase tracking-[0.12em] text-white/90 transition hover:bg-white/5"
-            >
-              View Resume
-            </a>
             {githubHref ? (
               <a
                 href={githubHref}
