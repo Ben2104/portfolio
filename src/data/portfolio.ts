@@ -16,7 +16,6 @@ export const profile = {
     "Currently exploring Software Engineer roles, and interesting OSS collaborations.",
   responseTime: "under 24 hours",
   email: "dohoangkhoi341@gmail.com",
-  resumeHref: "/resume/Khoi_Do_Resume.pdf",
 };
 
 export const navLinks = [
