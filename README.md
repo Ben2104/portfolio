@@ -96,8 +96,7 @@ src/
 public/
 ├── assets/                      # Technology icons
 ├── photos/                      # Profile and experience photography
-├── projects/                    # Project artwork
-└── resume/                      # Downloadable résumé
+└── projects/                    # Project artwork
 ```
 
 ## Contact
