@@ -25,11 +25,6 @@ export const navLinks = [
   { label: "Experience", href: "#experience" },
 ] as const;
 
-export const stats = [
-  { value: "1.5+", label: "Years Experience" },
-  { value: "15+", label: "Projects Shipped" },
-] as const;
-
 export const pillars = [
   {
     icon: "code2",
@@ -283,6 +278,19 @@ export const skillCategories = [
 
 export const professionalExperience = [
   {
+    role: "Full Stack Developer",
+    company: "Netsservice",
+    period: "Aug 2026 — Present",
+    location: "Denmark · Remote",
+    color: "#00d4ff",
+    description: "",
+    highlights: [
+      "Designed and built an iOS ride-hailing app end-to-end using Swift, SwiftUI, and a Fastify API backend, covering the complete passenger and driver experience.",
+      "Implemented WebSocket synchronization for ride requests, trip updates, and cancellations across iOS clients and a Fastify backend.",
+    ],
+    tags: ["Swift", "SwiftUI", "iOS", "Fastify", "WebSockets"],
+  },
+  {
     role: "Software Engineering Intern",
     company: "DFM Europe",
     period: "May 2026 — Aug 2026",
@@ -290,10 +298,8 @@ export const professionalExperience = [
     color: "#00d4ff",
     description: "",
     highlights: [
-      "Designed and deployed a multi-agent system using LangGraph to automate 3D-to-2D engineering drawing conversion, eliminating manual conversion steps for the ATN Drawing system.",
-      "Partnered with mechanical and AI engineers to re-architect the technical drawing pipeline, improving processing performance by 85%.",
-      "Built a Python/FastAPI backend integrating the OpenAI API to auto-scale 2D drawing output, maximizing sketch paper utilization and improving drawing precision by 87%.",
-      "Developed an AI-powered isometric view generation feature, producing dimensionally accurate projections that cut manual layout time by 100%.",
+      "Designed and deployed a LangGraph-based multi-agent pipeline that converted 3D engineering models into 2D technical drawings, reducing manual conversion work by 90% across 500 test cases.",
+      "Re-architected the pipeline with mechanical and AI engineers, cutting processing time by 85%; built a Python/FastAPI service with OpenAI API integration that improved drawing accuracy from 60% to 87%.",
     ],
     tags: ["Python", "FastAPI", "LangGraph", "OpenAI API", "Multi-agent Systems"],
   },
@@ -305,11 +311,10 @@ export const professionalExperience = [
     color: "#00d4ff",
     description: "",
     highlights: [
-      "Led the redesign and redevelopment of the ACM at CSULB landing page using Next.js, boosting mobile usability across 1000+ monthly visitors.",
-      "Refactored the existing Next.js codebase into a more modular and scalable architecture, reducing technical debt and improving long-term maintainability.",
-      "Shipped new dashboard features for image upload and management, integrating Next.js frontend components with backend APIs to support 500 active users.",
+      "Rebuilt the ACM CSULB site in Next.js, increasing Lighthouse performance score from 58 to 94 for 1,000+ monthly visitors.",
+      "Shipped new dashboard features for image upload and management, integrating Next.js frontend components with a MongoDB-backed API to store user images, profile data, and metadata, supporting 500 active users.",
     ],
-    tags: ["Next.js", "React.js", "Tailwind CSS", "Backend APIs"],
+    tags: ["Next.js", "React.js", "Tailwind CSS", "MongoDB"],
   },
 ] as const;
 
@@ -318,14 +323,15 @@ export const leadershipExperience = [
     role: "Project Manager",
     company: "AI Club at CSULB",
     period: "Jun 2026 — Present",
-    location: "Long Beach, California, United States · Remote",
+    location: "Long Beach, California, United States · Hybrid",
     color: "#a78bfa",
     description: "",
     highlights: [
-      "Directed a faculty-mentored biometric sensor research project across a team of 4 members, defining scope, milestones, and responsibilities to keep deliverables on schedule.",
-      "Synthesized findings from 10+ papers on wearable sensor technologies and physiological data collection to guide the team's technical direction and experimental design.",
+      "Directed a faculty-mentored biometric sensor research project across a team of 4 members, defining project scope, milestones, and individual responsibilities to keep deliverables on schedule and aligned with faculty expectations.",
+      "Synthesized findings from 10+ research papers on wearable sensor technologies and physiological data collection, translating them into technical direction and experimental design decisions for the team.",
+      "Built GitHub Actions CI/CD pipelines to lint, test, containerize, and deploy backend and frontend services to Render, enabling repeatable deployments for a four-person team.",
     ],
-    tags: ["Research Coordination", "Biometric Sensors", "Wearable Technology"],
+    tags: ["Research Coordination", "Biometric Sensors", "GitHub Actions", "CI/CD", "Render"],
   },
 ] as const;
 

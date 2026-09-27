@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Code2, Layers, Zap } from "lucide-react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 
-import { pillars, profile, stats } from "@/data/portfolio";
+import { pillars, profile } from "@/data/portfolio";
 
 import { SectionHeading } from "./section-heading";
 
@@ -62,19 +62,6 @@ export function About() {
             >
               Discover More About Me
             </button>
-
-            <div className="mt-10 grid max-w-115 grid-cols-2 gap-6">
-              {stats.map((stat) => (
-                <div key={stat.label}>
-                  <p className="font-clash m-0 text-4xl font-bold leading-none text-white">
-                    {stat.value}
-                  </p>
-                  <p className="font-satoshi mb-0 mt-2 text-[12px] uppercase tracking-widest text-(--portfolio-subtle)">
-                    {stat.label}
-                  </p>
-                </div>
-              ))}
-            </div>
           </div>
 
           <div className="md:sticky md:top-28 md:self-start">
