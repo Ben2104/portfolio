@@ -33,6 +33,8 @@
 
 @utility section-y {
   padding-block: var(--section-y);
+  /* Anchor jumps land on the content, not the top padding */
+  scroll-margin-top: calc(2rem - var(--section-y));
 }
 
 html {
