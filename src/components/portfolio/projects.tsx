@@ -1,137 +1,95 @@
 "use client";
 
-import Image from "next/image";
-import { ExternalLink, Github } from "lucide-react";
-import { motion } from "motion/react";
+import dynamic from "next/dynamic";
+import { useEffect, useRef, useState } from "react";
 
 import { projects } from "@/data/portfolio";
 
 import { SectionHeading } from "./section-heading";
-import { ProjectCarousel } from "./project-carousel";
 
-function ProjectCard({
-  project,
-  index,
-}: {
-  project: (typeof projects)[number];
-  index: number;
-}) {
+/* Three.js and the shelf only download when the section nears the viewport */
+const LAZY_ROOT_MARGIN = "400px 0px";
+
+function ShelfHeader() {
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.45, delay: index * 0.06 }}
-      className="group relative flex flex-col overflow-hidden rounded-xl border border-white/12 bg-[#222222] transition-all duration-300 hover:border-white/25 hover:shadow-[0_8px_32px_rgba(255,145,66,0.08)]"
-    >
-      {project.award ? (
-        <span className="absolute left-3 top-3 z-10 rounded-full border border-(--portfolio-accent)/60 bg-black/70 px-3 py-1 font-satoshi text-[10px] font-bold uppercase tracking-[0.06em] text-(--portfolio-accent)">
-          🏆 {project.award}
-        </span>
-      ) : null}
-
-      {/* Image preview */}
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#111]">
-        <Image
-          src={project.image}
-          alt={project.title}
-          fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-        />
-      </div>
-
-      {/* Card body */}
-      <div className="flex flex-1 flex-col px-5 pb-5 pt-4">
-        <h3 className="font-clash m-0 text-[18px] font-bold leading-tight text-white">
-          {project.title}
-        </h3>
-
-        <p className="font-satoshi mb-0 mt-2 text-[13px] leading-[1.65] text-white/70">
-          {project.desc}
-        </p>
-
-        {/* Tags */}
-        <div className="mt-auto flex flex-wrap gap-1.5 pt-4">
-          {project.tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded-md border border-white/10 bg-white/8 px-2.5 py-1 font-satoshi text-[10px] font-medium text-white/75"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        {/* Links */}
-        <div className="mt-4 flex items-center gap-4 border-t border-white/10 pt-4">
-          <a
-            href={project.sourceHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 font-satoshi text-[11px] font-semibold uppercase tracking-[0.06em] text-white/70 hover:text-white"
-          >
-            <Github size={13} />
-            Code
-          </a>
-          {project.liveHref ? (
-            <a
-              href={project.liveHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 font-satoshi text-[11px] font-semibold uppercase tracking-[0.06em] text-white/70 hover:text-white"
-            >
-              <ExternalLink size={13} />
-              Live
-            </a>
-          ) : null}
-          {project.devpostHref ? (
-            <a
-              href={project.devpostHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 font-satoshi text-[11px] font-semibold uppercase tracking-[0.06em] text-white/70 hover:text-white"
-            >
-              <ExternalLink size={13} />
-              Devpost
-            </a>
-          ) : null}
-        </div>
-      </div>
-    </motion.article>
+    <div className="container-fluid">
+      <SectionHeading accent="var(--portfolio-accent)" label="Featured Work" />
+      <h2 className="font-clash m-0 text-(length:--fs-h2) font-bold leading-[1.02] tracking-[-0.02em] text-(--portfolio-text)">
+        My Projects Highlight
+      </h2>
+    </div>
   );
 }
 
-export function Projects() {
+/* Lightweight stand-in while the shelf loads: same frame, CSS-only book silhouettes */
+function ShelfPoster() {
+  const heights = [62, 56, 60, 66, 58, 61, 64];
   return (
-    <section id="projects" className="relative bg-(--portfolio-bg) section-y">
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 52% 28% at 50% 12%, rgba(255,255,255,0.12), transparent 72%)",
-        }}
-      />
+    <div className="relative h-full overflow-hidden bg-(--portfolio-bg)" aria-hidden="true">
+      <div className="absolute inset-x-0 top-[clamp(6.5rem,9vw,9rem)]">
+        <ShelfHeader />
+      </div>
+      <div className="absolute inset-x-0 bottom-[30%] flex items-end justify-center gap-[3vw]">
+        {heights.map((height, index) => (
+          <div
+            key={index}
+            className="w-[clamp(64px,9vw,150px)] animate-pulse rounded-[3px] bg-white/[0.06]"
+            style={{ height: `${height / 2}svh`, animationDelay: `${index * 90}ms` }}
+          />
+        ))}
+      </div>
+      <div className="absolute inset-x-0 bottom-[calc(30%-14px)] h-[14px] bg-[linear-gradient(180deg,#3a2118,#1c0e0a)] opacity-70" />
+    </div>
+  );
+}
 
-      <div className="container-fluid relative">
-        <SectionHeading accent="var(--portfolio-accent)" label="Featured Work" />
+const ProjectShelf = dynamic(() => import("./project-shelf/project-shelf"), {
+  ssr: false,
+  loading: () => <ShelfPoster />,
+});
 
-        <h2 className="font-clash m-0 text-center text-(length:--fs-h2) font-bold tracking-[-0.02em] text-(--portfolio-text)">
-          My Projects Highlight
-        </h2>
+export function Projects() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [nearViewport, setNearViewport] = useState(false);
 
-        {projects.length > 0 ? (
-          <ProjectCarousel>
-            {projects.map((project, index) => (
-              <ProjectCard key={project.title} project={project} index={index} />
-            ))}
-          </ProjectCarousel>
-        ) : (
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section || nearViewport) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setNearViewport(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: LAZY_ROOT_MARGIN },
+    );
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, [nearViewport]);
+
+  return (
+    <section
+      id="projects"
+      ref={sectionRef}
+      aria-label="Projects"
+      className="relative h-svh min-h-[620px] bg-(--portfolio-bg)"
+      /* html has scroll-padding-top: 110px for the floating navbar; this stage is
+         full-height, so anchor jumps should land its top edge at 0 */
+      style={{ scrollMarginTop: -110 }}
+    >
+      {(projects as readonly unknown[]).length === 0 ? (
+        <div className="section-y">
+          <ShelfHeader />
           <p className="font-satoshi mt-12 text-center text-[15px] text-(--portfolio-muted)">
             No projects available yet.
           </p>
-        )}
-      </div>
+        </div>
+      ) : nearViewport ? (
+        <ProjectShelf header={<ShelfHeader />} sectionRef={sectionRef} />
+      ) : (
+        <ShelfPoster />
+      )}
     </section>
   );
 }
