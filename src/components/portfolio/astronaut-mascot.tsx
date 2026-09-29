@@ -3,16 +3,28 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { FocusEvent, PointerEvent as ReactPointerEvent } from "react";
-import {
-  motion,
-  useAnimationControls,
-  useReducedMotion,
-  useSpring,
-} from "motion/react";
+import { motion, useAnimationControls, useReducedMotion } from "motion/react";
 
-/* Frames live in /public/astronaut, cut from one 3×3 sheet on a shared 300px box */
-const MOODS = [
-  "happy",
+/*
+ * Frames live in /public/astronaut, cut from the page-mascot astronaut's two
+ * 3×3 sheets (directions + reactions) onto one shared 300px box, so every
+ * frame is registered and swaps don't jitter. Art and head-aim logic from
+ * page-mascot (github.com/nilbuild/page-mascot), MIT © Kamran Ahmed.
+ */
+const DIRECTIONS = [
+  "up-left",
+  "up",
+  "up-right",
+  "left",
+  "center",
+  "right",
+  "down-left",
+  "down",
+  "down-right",
+] as const;
+
+const REACTIONS = [
+  "blink",
   "love",
   "sparkle",
   "surprised",
@@ -23,13 +35,36 @@ const MOODS = [
   "laugh",
 ] as const;
 
-type Mood = (typeof MOODS)[number];
+type Direction = (typeof DIRECTIONS)[number];
+type Reaction = (typeof REACTIONS)[number];
 
-const CLICK_MOODS: Mood[] = ["laugh", "starstruck", "sparkle"];
+const FRAMES = [
+  ...DIRECTIONS.map((direction) => `look-${direction}`),
+  ...REACTIONS,
+];
+
+/* Head aim, ported from page-mascot: clockwise from the right to match atan2 with y down */
+const CLOCKWISE: Direction[] = [
+  "right",
+  "down-right",
+  "down",
+  "down-left",
+  "left",
+  "up-left",
+  "up",
+  "up-right",
+];
+const SECTOR = (Math.PI * 2) / CLOCKWISE.length;
+const HYSTERESIS = 0.12;
+const DEAD_ZONE_RATIO = 0.5; // of the mascot's width
+
+const CLICK_REACTIONS: Reaction[] = ["laugh", "starstruck", "sparkle"];
 const GREET_MS = 1600;
 const REACTION_MS = 1100;
 const SURPRISE_MS = 550;
 const WAKE_MS = 700;
+const BLINK_MS = 150;
+const BLINK_EVERY_MS = [2800, 6000] as const;
 const BLUSH_AFTER_MS = 2500;
 const SLEEP_AFTER_MS = 12000;
 const DIZZY_CLICKS = 5;
@@ -37,14 +72,16 @@ const DIZZY_WINDOW_MS = 1500;
 const DIZZY_MS = 2200;
 const ACTIVITY_EVENTS = ["pointermove", "pointerdown", "keydown", "scroll", "touchstart"] as const;
 
-const clamp = (value: number) => Math.min(1, Math.max(-1, value));
+const wrap = (angle: number) => Math.atan2(Math.sin(angle), Math.cos(angle));
 
 export function AstronautMascot({ className = "" }: { className?: string }) {
   const prefersReducedMotion = useReducedMotion();
-  const [mood, setMood] = useState<Mood>("sparkle");
+  const [direction, setDirection] = useState<Direction>("center");
+  /* null shows the direction frame; a reaction overrides it */
+  const [reaction, setReaction] = useState<Reaction | null>("sparkle");
 
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const moodRef = useRef<Mood>("sparkle");
+  const reactionRef = useRef<Reaction | null>("sparkle");
   const hovering = useRef(false);
   const blushing = useRef(false);
   const keyboardFocus = useRef(false);
@@ -58,66 +95,69 @@ export function AstronautMascot({ className = "" }: { className?: string }) {
   const body = useAnimationControls();
   const pop = useAnimationControls();
 
-  /* Look toward the cursor */
-  const tilt = { stiffness: 120, damping: 16, mass: 0.6 };
-  const rotateX = useSpring(0, tilt);
-  const rotateY = useSpring(0, tilt);
-  const shiftX = useSpring(0, tilt);
-  const shiftY = useSpring(0, tilt);
-
   const show = useCallback(
-    (next: Mood) => {
-      if (moodRef.current === next) return;
-      moodRef.current = next;
-      setMood(next);
-      if (!prefersReducedMotion) {
+    (next: Reaction | null, { bounce = true } = {}) => {
+      if (reactionRef.current === next) return;
+      reactionRef.current = next;
+      setReaction(next);
+      if (bounce && next && !prefersReducedMotion) {
         pop.start({ scale: [0.95, 1], transition: { type: "spring", stiffness: 420, damping: 14 } });
       }
     },
     [pop, prefersReducedMotion],
   );
 
-  const resting = useCallback((): Mood => {
+  const resting = useCallback((): Reaction | null => {
     if (blushing.current) return "blush";
-    return hovering.current ? "love" : "happy";
+    return hovering.current ? "love" : null;
   }, []);
 
   const react = useCallback(
-    (next: Mood, ms: number) => {
+    (next: Reaction, ms: number, options?: { bounce?: boolean }) => {
       window.clearTimeout(reactionTimer.current);
       reacting.current = true;
-      show(next);
+      show(next, options);
       reactionTimer.current = window.setTimeout(() => {
         reacting.current = false;
-        show(resting());
+        show(resting(), { bounce: false });
       }, ms);
     },
     [show, resting],
   );
 
-  /* Greeting: the sparkle frame is the initial state, settle after a beat */
+  /* Greeting: sparkle is the initial frame, settle after a beat */
   useEffect(() => {
     reactionTimer.current = window.setTimeout(() => {
       reacting.current = false;
-      show(resting());
+      show(resting(), { bounce: false });
     }, GREET_MS);
     return () => window.clearTimeout(reactionTimer.current);
   }, [show, resting]);
+
+  /* Blink now and then while idle */
+  useEffect(() => {
+    let timer: number | undefined;
+    const schedule = () => {
+      const [min, max] = BLINK_EVERY_MS;
+      timer = window.setTimeout(() => {
+        if (reactionRef.current === null) react("blink", BLINK_MS, { bounce: false });
+        schedule();
+      }, min + Math.random() * (max - min));
+    };
+    schedule();
+    return () => window.clearTimeout(timer);
+  }, [react]);
 
   /* Doze off when the page goes quiet, wake up startled */
   useEffect(() => {
     const fallAsleep = () => {
       window.clearTimeout(reactionTimer.current);
       reacting.current = false;
-      rotateX.set(0);
-      rotateY.set(0);
-      shiftX.set(0);
-      shiftY.set(0);
       show("sleepy");
     };
     const onActivity = () => {
       window.clearTimeout(sleepTimer.current);
-      if (moodRef.current === "sleepy") react("surprised", WAKE_MS);
+      if (reactionRef.current === "sleepy") react("surprised", WAKE_MS);
       sleepTimer.current = window.setTimeout(fallAsleep, SLEEP_AFTER_MS);
     };
 
@@ -131,24 +171,48 @@ export function AstronautMascot({ className = "" }: { className?: string }) {
         window.removeEventListener(event, onActivity);
       }
     };
-  }, [react, show, rotateX, rotateY, shiftX, shiftY]);
+  }, [react, show]);
 
+  /* Turn the head toward the cursor; fine pointers only */
   useEffect(() => {
-    if (prefersReducedMotion) return;
-    const onMove = (event: PointerEvent) => {
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+    let sector = -1;
+    let pointer: { x: number; y: number } | null = null;
+
+    const aim = () => {
       const node = buttonRef.current;
-      if (!node || moodRef.current === "sleepy") return;
+      if (!node || !pointer) return;
       const rect = node.getBoundingClientRect();
-      const nx = clamp((event.clientX - (rect.left + rect.width / 2)) / (window.innerWidth / 2));
-      const ny = clamp((event.clientY - (rect.top + rect.height / 2)) / (window.innerHeight / 2));
-      rotateY.set(nx * 16);
-      rotateX.set(-ny * 10);
-      shiftX.set(nx * 10);
-      shiftY.set(ny * 6);
+      const dx = pointer.x - (rect.left + rect.width / 2);
+      const dy = pointer.y - (rect.top + rect.height / 2);
+
+      if (Math.hypot(dx, dy) < rect.width * DEAD_ZONE_RATIO) {
+        sector = -1;
+        setDirection("center");
+        return;
+      }
+
+      // Hold the current sector until the pointer is well past its edge
+      const angle = Math.atan2(dy, dx);
+      if (sector !== -1 && Math.abs(wrap(angle - sector * SECTOR)) < SECTOR / 2 + HYSTERESIS) {
+        return;
+      }
+      sector = (Math.round(angle / SECTOR) + CLOCKWISE.length) % CLOCKWISE.length;
+      setDirection(CLOCKWISE[sector]);
     };
-    window.addEventListener("pointermove", onMove, { passive: true });
-    return () => window.removeEventListener("pointermove", onMove);
-  }, [prefersReducedMotion, rotateX, rotateY, shiftX, shiftY]);
+    const onPointerMove = (event: PointerEvent) => {
+      pointer = { x: event.clientX, y: event.clientY };
+      aim();
+    };
+
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("scroll", aim, { passive: true });
+    return () => {
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("scroll", aim);
+    };
+  }, []);
 
   useEffect(() => () => window.clearTimeout(blushTimer.current), []);
 
@@ -169,7 +233,7 @@ export function AstronautMascot({ className = "" }: { className?: string }) {
     hovering.current = false;
     blushing.current = false;
     window.clearTimeout(blushTimer.current);
-    if (!reacting.current) show("happy");
+    if (!reacting.current) show(null);
   }, [show]);
 
   const onPointerEnter = (event: ReactPointerEvent<HTMLButtonElement>) => {
@@ -202,14 +266,15 @@ export function AstronautMascot({ className = "" }: { className?: string }) {
       return;
     }
 
-    react(CLICK_MOODS[clickIndex.current % CLICK_MOODS.length], REACTION_MS);
+    react(CLICK_REACTIONS[clickIndex.current % CLICK_REACTIONS.length], REACTION_MS);
     clickIndex.current += 1;
     if (!prefersReducedMotion) {
       body.start({ y: [0, -22, 0], scale: [1, 1.06, 1], transition: { duration: 0.5, ease: "easeOut" } });
     }
   };
 
-  const sleepy = mood === "sleepy";
+  const sleepy = reaction === "sleepy";
+  const visibleFrame = reaction ?? `look-${direction}`;
 
   return (
     <button
@@ -221,7 +286,7 @@ export function AstronautMascot({ className = "" }: { className?: string }) {
       onPointerLeave={onPointerLeave}
       onFocus={onFocus}
       onBlur={onBlur}
-      className={`relative block cursor-pointer rounded-full bg-transparent p-0 outline-none [perspective:900px] focus-visible:ring-2 focus-visible:ring-(--portfolio-accent)/60 ${className}`}
+      className={`relative block cursor-pointer rounded-full bg-transparent p-0 outline-none focus-visible:ring-2 focus-visible:ring-(--portfolio-accent)/60 ${className}`}
     >
       <div
         aria-hidden="true"
@@ -231,9 +296,10 @@ export function AstronautMascot({ className = "" }: { className?: string }) {
         }}
       />
 
-      {/* Idle float — slower and tilted while asleep */}
+      {/* Idle float — slower and tilted while asleep. Children ignore the pointer so
+          only the round button face counts as hover, not the square's empty corners */}
       <motion.div
-        className="h-full w-full"
+        className="pointer-events-none h-full w-full"
         animate={
           prefersReducedMotion
             ? undefined
@@ -243,29 +309,24 @@ export function AstronautMascot({ className = "" }: { className?: string }) {
         }
         transition={{ duration: sleepy ? 5 : 4.2, repeat: Infinity, ease: "easeInOut" }}
       >
-        <motion.div
-          className="h-full w-full"
-          style={{ rotateX, rotateY, x: shiftX, y: shiftY }}
-        >
-          <motion.div className="h-full w-full" animate={body}>
-            <motion.div className="relative h-full w-full" animate={pop}>
-              {/* All frames stay mounted and decoded; swapping opacity avoids flicker */}
-              {MOODS.map((frame) => (
-                <Image
-                  key={frame}
-                  src={`/astronaut/${frame}.webp`}
-                  alt=""
-                  width={300}
-                  height={300}
-                  unoptimized
-                  loading="eager"
-                  fetchPriority={frame === "sparkle" ? "high" : "auto"}
-                  draggable={false}
-                  className="absolute inset-0 h-full w-full select-none"
-                  style={{ opacity: frame === mood ? 1 : 0 }}
-                />
-              ))}
-            </motion.div>
+        <motion.div className="h-full w-full" animate={body}>
+          <motion.div className="relative h-full w-full" animate={pop}>
+            {/* All frames stay mounted and decoded; swapping opacity avoids flicker */}
+            {FRAMES.map((frame) => (
+              <Image
+                key={frame}
+                src={`/astronaut/${frame}.webp`}
+                alt=""
+                width={300}
+                height={300}
+                unoptimized
+                loading="eager"
+                fetchPriority={frame === "sparkle" ? "high" : "auto"}
+                draggable={false}
+                className="absolute inset-0 h-full w-full select-none"
+                style={{ opacity: frame === visibleFrame ? 1 : 0 }}
+              />
+            ))}
           </motion.div>
         </motion.div>
       </motion.div>
