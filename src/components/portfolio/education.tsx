@@ -8,11 +8,11 @@ import { SectionHeading } from "./section-heading";
 
 export function Education() {
   return (
-    <section id="education" className="relative bg-(--portfolio-bg) px-6 py-28">
-      <div className="relative mx-auto w-full max-w-300">
+    <section id="education" className="relative bg-(--portfolio-bg) section-y">
+      <div className="container-fluid relative">
         <SectionHeading accent="var(--portfolio-accent)" label="Education" />
 
-        <h2 className="font-clash m-0 text-[clamp(36px,5vw,56px)] font-bold leading-[1.08] tracking-[-0.02em] text-(--portfolio-text)">
+        <h2 className="font-clash m-0 text-(length:--fs-h2) font-bold leading-[1.08] tracking-[-0.02em] text-(--portfolio-text)">
           Education
         </h2>
 

@@ -54,12 +54,12 @@ export function Experience() {
     <section
       id="experience"
       ref={sectionRef}
-      className="relative bg-(--portfolio-bg) px-6 py-28"
+      className="relative bg-(--portfolio-bg) section-y"
     >
-      <div className="relative mx-auto w-full max-w-300">
+      <div className="container-fluid relative">
         <SectionHeading accent={SPINE_ACCENT} label="Experience" />
 
-        <h2 className="font-clash m-0 text-[clamp(36px,5vw,56px)] font-bold leading-[1.08] tracking-[-0.02em] text-(--portfolio-text)">
+        <h2 className="font-clash m-0 text-(length:--fs-h2) font-bold leading-[1.08] tracking-[-0.02em] text-(--portfolio-text)">
           Experience
         </h2>
 

@@ -79,14 +79,14 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" className="relative bg-(--portfolio-bg) px-6 py-28">
-      <div className="relative mx-auto w-full max-w-300">
+    <section id="contact" className="relative bg-(--portfolio-bg) section-y">
+      <div className="container-fluid relative">
         <SectionHeading accent="var(--portfolio-accent)" label="Contact" />
 
-        <h2 className="font-clash m-0 text-[clamp(40px,6vw,72px)] font-bold leading-[1.08] tracking-[-0.02em] text-(--portfolio-text)">
+        <h2 className="font-clash m-0 text-(length:--fs-h2) font-bold leading-[1.08] tracking-[-0.02em] text-(--portfolio-text)">
           {profile.contactHeading}
         </h2>
-        <p className="font-satoshi mt-3 text-[17px] text-(--portfolio-subtle)">
+        <p className="font-satoshi mt-3 max-w-[60ch] text-(length:--fs-body) text-(--portfolio-subtle)">
           {profile.contactBlurb}
         </p>
         <div className="mt-7 h-px w-full bg-white/20" />
@@ -102,7 +102,7 @@ export function Contact() {
             >
               {profile.email}
             </a>
-            <p className="font-satoshi m-0 max-w-115 text-[16px] leading-[1.75] text-(--portfolio-muted)">
+            <p className="font-satoshi m-0 max-w-[60ch] text-(length:--fs-body) leading-[1.75] text-(--portfolio-muted)">
               {profile.opportunityBlurb}
             </p>
             <p className="font-satoshi m-0 text-[14px] text-(--portfolio-muted)">
