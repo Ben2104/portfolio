@@ -7,9 +7,6 @@ import { projects } from "@/data/portfolio";
 
 import { SectionHeading } from "./section-heading";
 
-/* Three.js and the shelf only download when the section nears the viewport */
-const LAZY_ROOT_MARGIN = "400px 0px";
-
 function ShelfHeader() {
   return (
     <div className="container-fluid">
@@ -48,48 +45,54 @@ const ProjectShelf = dynamic(() => import("./project-shelf/project-shelf"), {
   loading: () => <ShelfPoster />,
 });
 
+/* Scroll distance the pinned shelf spends on each book after the first */
+const SCROLL_PER_BOOK = "70svh";
+
 export function Projects() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [nearViewport, setNearViewport] = useState(false);
+  const [shelfRequested, setShelfRequested] = useState(false);
 
+  /* Projects only mounts once the boot screen has finished; start pulling in Three.js and
+     the shelf then, off the critical path of the hero's first paint */
   useEffect(() => {
-    const section = sectionRef.current;
-    if (!section || nearViewport) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setNearViewport(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: LAZY_ROOT_MARGIN },
-    );
-    observer.observe(section);
-    return () => observer.disconnect();
-  }, [nearViewport]);
+    if (typeof window.requestIdleCallback === "function") {
+      const handle = window.requestIdleCallback(() => setShelfRequested(true), { timeout: 1500 });
+      return () => window.cancelIdleCallback(handle);
+    }
+    const handle = window.setTimeout(() => setShelfRequested(true), 200);
+    return () => window.clearTimeout(handle);
+  }, []);
+
+  const bookCount = (projects as readonly unknown[]).length;
 
   return (
     <section
       id="projects"
       ref={sectionRef}
       aria-label="Projects"
-      className="relative h-svh min-h-[620px] bg-(--portfolio-bg)"
-      /* html has scroll-padding-top: 110px for the floating navbar; this stage is
+      className="relative bg-(--portfolio-bg)"
+      /* Runway: one pinned screen plus scroll distance per extra book. html has
+         scroll-padding-top: 110px for the floating navbar; the pinned stage is
          full-height, so anchor jumps should land its top edge at 0 */
-      style={{ scrollMarginTop: -110 }}
+      style={{
+        scrollMarginTop: -110,
+        height: bookCount > 1 ? `calc(max(100svh, 620px) + ${bookCount - 1} * ${SCROLL_PER_BOOK})` : undefined,
+      }}
     >
-      {(projects as readonly unknown[]).length === 0 ? (
-        <div className="section-y">
-          <ShelfHeader />
-          <p className="font-satoshi mt-12 text-center text-[15px] text-(--portfolio-muted)">
-            No projects available yet.
-          </p>
-        </div>
-      ) : nearViewport ? (
-        <ProjectShelf header={<ShelfHeader />} sectionRef={sectionRef} />
-      ) : (
-        <ShelfPoster />
-      )}
+      <div className="sticky top-0 h-svh min-h-[620px] overflow-hidden">
+        {bookCount === 0 ? (
+          <div className="section-y">
+            <ShelfHeader />
+            <p className="font-satoshi mt-12 text-center text-[15px] text-(--portfolio-muted)">
+              No projects available yet.
+            </p>
+          </div>
+        ) : shelfRequested ? (
+          <ProjectShelf header={<ShelfHeader />} sectionRef={sectionRef} />
+        ) : (
+          <ShelfPoster />
+        )}
+      </div>
     </section>
   );
 }

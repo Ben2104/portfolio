@@ -19,7 +19,7 @@ function Chevron({ direction }: { direction: "left" | "right" }) {
 type ProjectShelfProps = {
   /** Section header, rendered inside the shelf so it dims while a book is open */
   header: ReactNode;
-  /** The <section>, used to line wheel stepping up with the viewport */
+  /** The tall runway <section>; scroll progress through it drives the selection */
   sectionRef: RefObject<HTMLElement | null>;
 };
 
@@ -71,7 +71,7 @@ export default function ProjectShelf({ header, sectionRef }: ProjectShelfProps) 
 
         <nav className="index-nav" aria-label="Project index">
           <div className="markers" data-shelf="markers" role="tablist" aria-label="Choose a project" />
-          <p className="microcopy">Scroll · arrows · select</p>
+          <p className="microcopy">Scroll · drag · arrows</p>
         </nav>
       </div>
 

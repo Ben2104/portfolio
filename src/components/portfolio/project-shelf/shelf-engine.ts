@@ -5,7 +5,7 @@
  * (public/landing-pages/complete-shelf-v2.html, sha256 606f200f…), MIT © 2026 Meng To,
  * github.com/MengTo/threeui. Structure, materials, motion and interactions follow the
  * original; changes are: portfolio projects as books, dark/orange retint, bounded shelf
- * with scroll hand-off at both ends, render-on-demand + visibility gating, shared and
+ * with scroll-driven selection over a pinned runway, render-on-demand + visibility gating, shared and
  * lazily-built textures, fewer lights, and quality tiers.
  */
 import * as THREE from "three";
@@ -67,12 +67,12 @@ const WOOD_TEXTURE_URL = "/projects/shelf/walnut.webp";
 const TITLE_FONT = '"Clash Display", "Satoshi", "Helvetica Neue", Arial, sans-serif';
 const LABEL_FONT = 'Satoshi, "Helvetica Neue", Arial, sans-serif';
 
-/* Scroll hand-off: accumulated wheel delta that counts as one step, and the quiet gap
-   that ends a gesture (trackpad momentum included) */
-const WHEEL_STEP_THRESHOLD = 24;
-const WHEEL_GESTURE_GAP_MS = 140;
-const WHEEL_MIN_LOCK_MS = 280;
-const SWIPE_MIN_PX = 48;
+/* Touch drag: distance before a horizontal drag takes over, how far a flick carries the
+   shelf (ms of release velocity), and the pause after scrolling stops before the shelf
+   settles on the nearest book */
+const DRAG_START_PX = 8;
+const FLICK_PROJECTION_MS = 120;
+const SCROLL_SETTLE_MS = 140;
 
 const pad = (value) => String(value).padStart(2, "0");
 
@@ -294,8 +294,19 @@ export function createShelf({
 
   /* Books visible either side of the view centre; set from the camera on resize */
   let halfVisibleBooks = 2.5;
-  const wheel = { accumulated: 0, locked: false, lockedAt: 0, lastTime: 0, lastAbs: 0 };
-  const swipe = { active: false, pointerId: null, startX: 0, startY: 0, consumed: false };
+  const swipe = {
+    active: false,
+    dragging: false,
+    pointerId: null,
+    startX: 0,
+    startY: 0,
+    startPosition: 0,
+    lastX: 0,
+    lastTime: 0,
+    velocity: 0,
+    consumed: false,
+  };
+  let scrollSettleTimer = 0;
 
   const roomMaterials = {
     floor: null,
@@ -2582,7 +2593,46 @@ export function createShelf({
     targetPosition = clamp(index, 0, lastIndex);
     focusReturnTarget = origin;
     updateSelection(targetPosition, true);
+    scrollToIndex(targetPosition);
     requestFrame();
+  }
+
+  /*
+   * The section is a tall runway with the stage pinned inside it (position: sticky), so
+   * page scroll is the single source of truth: progress through the runway maps to a
+   * fractional shelf position. Buttons, markers, keys and drags all move the page, and the
+   * shelf follows.
+   */
+  function runwayLength() {
+    return section.getBoundingClientRect().height - viewHeight;
+  }
+
+  function scrollOffsetFor(index) {
+    const length = runwayLength();
+    if (length <= 0 || lastIndex <= 0) return window.scrollY;
+    return window.scrollY + section.getBoundingClientRect().top + (index / lastIndex) * length;
+  }
+
+  function scrollToIndex(index, behavior = reducedMotion ? "instant" : "smooth") {
+    window.scrollTo({ top: scrollOffsetFor(clamp(index, 0, lastIndex)), behavior });
+  }
+
+  function scrollProgressPosition() {
+    const length = runwayLength();
+    if (length <= 0) return 0;
+    return clamp(-section.getBoundingClientRect().top / length, 0, 1) * lastIndex;
+  }
+
+  function onScroll() {
+    if (mode !== "hero" || swipe.dragging || disposed) return;
+    targetPosition = scrollProgressPosition();
+    requestFrame();
+    window.clearTimeout(scrollSettleTimer);
+    scrollSettleTimer = window.setTimeout(() => {
+      if (mode !== "hero" || swipe.dragging || disposed) return;
+      targetPosition = clamp(Math.round(targetPosition), 0, lastIndex);
+      requestFrame();
+    }, SCROLL_SETTLE_MS);
   }
 
   /* Bounded shelf: the first and last books are real ends, so scroll can hand off */
@@ -2593,6 +2643,7 @@ export function createShelf({
     targetPosition = next;
     focusReturnTarget = origin;
     updateSelection(next, true);
+    scrollToIndex(next);
     requestFrame();
     return true;
   }
@@ -2986,87 +3037,58 @@ export function createShelf({
   }
 
   /*
-   * Wheel / trackpad: when the section is lined up with the viewport, one gesture steps
-   * one project. On the first project scrolling up, or the last scrolling down, the event
-   * is left alone so the page keeps scrolling. Arriving from above or below snaps the
-   * section into line once instead of skipping over it.
+   * Touch: a horizontal drag slides the shelf under the finger (vertical swipes stay
+   * native page scroll via pan-y, which scrolls through the pinned runway). On release the
+   * page scrolls to the nearest book, carrying a flick a little further.
    */
-  function onWheel(event) {
-    if (event.ctrlKey || mode !== "hero" || disposed) return;
-    const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? viewHeight : 1;
-    const horizontal = Math.abs(event.deltaX) > Math.abs(event.deltaY);
-    const delta = (horizontal ? event.deltaX : event.deltaY) * unit;
-    const direction = Math.sign(delta);
-    if (!direction) return;
-
-    const now = event.timeStamp || performance.now();
-    const absolute = Math.abs(delta);
-    if (wheel.locked) {
-      const quiet = now - wheel.lastTime > WHEEL_GESTURE_GAP_MS;
-      const freshFlick = now - wheel.lockedAt > WHEEL_MIN_LOCK_MS && absolute > wheel.lastAbs * 1.8 && absolute > 10;
-      if (quiet || freshFlick) wheel.locked = false;
-    }
-    wheel.lastTime = now;
-    wheel.lastAbs = absolute;
-
-    const top = section.getBoundingClientRect().top;
-    const aligned = Math.abs(top) <= 2;
-
-    if (!aligned) {
-      if (horizontal) return;
-      const crossingDown = direction > 0 && top > 0 && top - delta <= 0;
-      const crossingUp = direction < 0 && top < 0 && top - delta >= 0;
-      if (crossingDown || crossingUp) {
-        event.preventDefault();
-        window.scrollBy({ top, behavior: "instant" });
-        wheel.locked = true;
-        wheel.lockedAt = now;
-        wheel.accumulated = 0;
-      }
-      return;
-    }
-
-    if (wheel.locked) {
-      event.preventDefault();
-      return;
-    }
-
-    const atStart = selectedIndex === 0 && direction < 0;
-    const atEnd = selectedIndex === lastIndex && direction > 0;
-    if ((atStart || atEnd) && !horizontal) {
-      wheel.accumulated = 0;
-      return;
-    }
-
-    event.preventDefault();
-    wheel.accumulated += delta;
-    if (Math.abs(wheel.accumulated) >= WHEEL_STEP_THRESHOLD) {
-      navigate(Math.sign(wheel.accumulated), document.activeElement);
-      wheel.accumulated = 0;
-      wheel.locked = true;
-      wheel.lockedAt = now;
-    }
-  }
-
-  /* Touch: horizontal swipe steps; vertical swipes stay native page scroll (pan-y) */
   function onSwipeDown(event) {
     if (event.pointerType !== "touch" || mode !== "hero") return;
     swipe.active = true;
+    swipe.dragging = false;
     swipe.pointerId = event.pointerId;
     swipe.startX = event.clientX;
     swipe.startY = event.clientY;
+    swipe.startPosition = targetPosition;
+    swipe.lastX = event.clientX;
+    swipe.lastTime = event.timeStamp;
+    swipe.velocity = 0;
+  }
+
+  function onSwipeMove(event) {
+    if (!swipe.active || event.pointerId !== swipe.pointerId || mode !== "hero") return;
+    const deltaX = event.clientX - swipe.startX;
+    const deltaY = event.clientY - swipe.startY;
+    if (!swipe.dragging) {
+      if (Math.abs(deltaX) < DRAG_START_PX || Math.abs(deltaX) <= Math.abs(deltaY) * 1.3) return;
+      swipe.dragging = true;
+      swipe.consumed = true;
+      window.clearTimeout(scrollSettleTimer);
+      setHovered(-1);
+    }
+    const elapsed = Math.max(event.timeStamp - swipe.lastTime, 1);
+    swipe.velocity = swipe.velocity * 0.6 + ((event.clientX - swipe.lastX) / elapsed) * 0.4;
+    swipe.lastX = event.clientX;
+    swipe.lastTime = event.timeStamp;
+    targetPosition = clamp(swipe.startPosition - deltaX / pixelsPerBook(), 0, lastIndex);
+    requestFrame();
   }
 
   function onSwipeEnd(event) {
     if (!swipe.active || event.pointerId !== swipe.pointerId) return;
+    const wasDragging = swipe.dragging;
     swipe.active = false;
-    if (event.type !== "pointerup") return;
-    const deltaX = event.clientX - swipe.startX;
-    const deltaY = event.clientY - swipe.startY;
-    if (Math.abs(deltaX) >= SWIPE_MIN_PX && Math.abs(deltaX) > Math.abs(deltaY) * 1.3) {
-      swipe.consumed = true;
-      navigate(deltaX < 0 ? 1 : -1, canvas);
-    }
+    swipe.dragging = false;
+    if (!wasDragging) return;
+    const flick = event.type === "pointerup" ? (swipe.velocity * FLICK_PROJECTION_MS) / pixelsPerBook() : 0;
+    const settled = clamp(Math.round(targetPosition - flick), 0, lastIndex);
+    targetPosition = settled;
+    updateSelection(settled, true);
+    scrollToIndex(settled);
+    requestFrame();
+  }
+
+  function pixelsPerBook() {
+    return Math.max(viewWidth / (halfVisibleBooks * 2), 60);
   }
 
   function openDetail(origin = inspectButton) {
@@ -3172,6 +3194,9 @@ export function createShelf({
     transitionCameraTarget.copy(closingCameraTarget);
     root.classList.remove("is-opening");
     alignShelfToSelection();
+    /* Page scroll may have moved while the book was open; pull it back if still in view */
+    const runway = section.getBoundingClientRect();
+    if (runway.top < window.innerHeight && runway.bottom > 0) scrollToIndex(selectedIndex, "instant");
     closingBookPosition.set(
       shelfSlot(selectedIndex, selectedIndex).x,
       shelfBoardTop + activeBook.base.height * 0.5 + 0.15,
@@ -3535,11 +3560,13 @@ export function createShelf({
     canvas.removeEventListener("pointercancel", onPagePointerEnd, true);
     canvas.removeEventListener("lostpointercapture", onPagePointerEnd, true);
     canvas.removeEventListener("pointerdown", onSwipeDown);
+    canvas.removeEventListener("pointermove", onSwipeMove);
     canvas.removeEventListener("pointerup", onSwipeEnd);
     canvas.removeEventListener("pointercancel", onSwipeEnd);
     window.removeEventListener("pointerup", onWindowPagePointerEnd);
     window.removeEventListener("pointercancel", onWindowPagePointerEnd);
-    window.removeEventListener("wheel", onWheel);
+    window.removeEventListener("scroll", onScroll);
+    window.clearTimeout(scrollSettleTimer);
     canvas.removeEventListener("webglcontextlost", handleContextLost);
     window.removeEventListener("keydown", onKeyDown);
     window.removeEventListener("blur", onWindowBlur);
@@ -3706,12 +3733,15 @@ export function createShelf({
     canvas.addEventListener("pointercancel", onPagePointerEnd, { capture: true });
     canvas.addEventListener("lostpointercapture", onPagePointerEnd, { capture: true });
     canvas.addEventListener("pointerdown", onSwipeDown);
+    canvas.addEventListener("pointermove", onSwipeMove);
     canvas.addEventListener("pointerup", onSwipeEnd);
     canvas.addEventListener("pointercancel", onSwipeEnd);
     window.addEventListener("pointerup", onWindowPagePointerEnd);
     window.addEventListener("pointercancel", onWindowPagePointerEnd);
-    /* On window so the section-alignment snap also works when the wheel starts above it */
-    window.addEventListener("wheel", onWheel, { passive: false });
+    window.addEventListener("scroll", onScroll, { passive: true });
+    /* Start where the page already is (reload mid-runway, anchor jump) */
+    position = targetPosition = scrollProgressPosition();
+    updateSelection(clamp(Math.round(targetPosition), 0, lastIndex), false, true);
     canvas.addEventListener("webglcontextlost", handleContextLost);
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("blur", onWindowBlur);
