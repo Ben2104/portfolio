@@ -17,7 +17,7 @@ export function Hero() {
   return (
     <section
       id="hero"
-      className="relative overflow-hidden bg-(--portfolio-bg) px-6 pb-20 pt-36 md:pb-32 md:pt-44"
+      className="relative overflow-hidden bg-(--portfolio-bg)"
     >
       {/* Ambient background glow effects */}
       <div
@@ -42,15 +42,15 @@ export function Hero() {
         }}
       />
 
-      {/* Side-by-side layout: text left, robot right */}
-      <div className="relative mx-auto flex w-full max-w-300 flex-col items-center gap-8 lg:flex-row lg:items-center lg:gap-4">
+      {/* 12-col grid: text spans 7, robot spans 5 */}
+      <div className="container-fluid relative grid min-h-svh grid-cols-1 content-center items-center gap-y-12 pb-[clamp(4rem,6vw,8rem)] pt-[clamp(7rem,8vw,10rem)] md:grid-cols-12 md:gap-x-[clamp(1rem,2vw,3rem)]">
         {/* Left side — text content */}
-        <div className="flex flex-1 flex-col items-center text-center lg:items-start lg:text-left">
+        <div className="flex min-w-0 flex-col items-center text-center md:col-span-7 md:items-start md:text-left">
           <motion.span
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
-            className="rounded-full border border-white/5 bg-white/5 px-4 py-2 font-satoshi text-[11px] font-semibold uppercase tracking-[0.14em] text-(--portfolio-muted)"
+            className="rounded-full border border-white/5 bg-white/5 px-[1.45em] py-[0.75em] font-satoshi text-(length:--fs-label) font-semibold uppercase tracking-[0.14em] text-(--portfolio-muted)"
           >
             {profile.availability}
           </motion.span>
@@ -59,7 +59,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="font-clash mt-8 max-w-150 text-[clamp(36px,5.5vw,68px)] font-bold leading-[1.08] tracking-[-0.02em] text-(--portfolio-text)"
+            className="font-clash mt-[clamp(1.5rem,2.5vw,3rem)] text-(length:--fs-hero) font-bold leading-[0.95] tracking-[-0.035em] text-(--portfolio-text)"
           >
             {profile.title}
           </motion.h1>
@@ -68,12 +68,12 @@ export function Hero() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mt-8 flex flex-wrap items-center justify-center gap-3 lg:justify-start"
+            className="mt-[clamp(1.5rem,2.5vw,3rem)] flex flex-wrap items-center justify-center gap-[0.9em] text-(length:--fs-label) md:justify-start"
           >
             {profile.roles.map((role) => (
               <span
                 key={role}
-                className="rounded-full border border-white/12 px-4 py-1.5 font-satoshi text-[11px] font-medium uppercase tracking-[0.11em] text-white/70"
+                className="rounded-full border border-white/12 px-[1.45em] py-[0.55em] font-satoshi font-medium uppercase tracking-[0.11em] text-white/70"
               >
                 {role}
               </span>
@@ -84,12 +84,12 @@ export function Hero() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="mt-10 flex flex-wrap items-center justify-center gap-3 lg:justify-start"
+            className="mt-[clamp(2rem,3vw,3.5rem)] flex flex-wrap items-center justify-center gap-[clamp(0.6rem,0.8vw,1rem)] md:justify-start xl:flex-nowrap"
           >
             <button
               type="button"
               onClick={() => scrollToTarget("#projects")}
-              className="rounded-full bg-(--portfolio-accent) px-8 py-3.5 font-satoshi text-[12px] font-bold uppercase tracking-[0.12em] text-(--portfolio-text) shadow-[0_20px_60px_rgba(255,145,66,0.25)] transition hover:brightness-105"
+              className="rounded-full bg-(--portfolio-accent) px-[2.6em] py-[1.2em] font-satoshi text-(length:--fs-label) font-bold uppercase tracking-[0.12em] whitespace-nowrap text-(--portfolio-text) shadow-[0_20px_60px_rgba(255,145,66,0.25)] transition hover:brightness-105"
             >
               View Projects
             </button>
@@ -98,9 +98,9 @@ export function Hero() {
                 href={githubHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 rounded-full border border-white/28 bg-black/30 px-8 py-3.5 font-satoshi text-[12px] font-bold uppercase tracking-[0.12em] text-white/90 transition hover:bg-white/5"
+                className="flex items-center gap-[0.6em] rounded-full border border-white/28 bg-black/30 px-[2.6em] py-[1.2em] font-satoshi text-(length:--fs-label) font-bold uppercase tracking-[0.12em] whitespace-nowrap text-white/90 transition hover:bg-white/5"
               >
-                <Github size={14} />
+                <Github aria-hidden="true" className="size-[1.2em]" />
                 GitHub
               </a>
             ) : null}
@@ -109,16 +109,16 @@ export function Hero() {
                 href={linkedinHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 rounded-full border border-white/28 bg-black/30 px-8 py-3.5 font-satoshi text-[12px] font-bold uppercase tracking-[0.12em] text-white/90 transition hover:bg-white/5"
+                className="flex items-center gap-[0.6em] rounded-full border border-white/28 bg-black/30 px-[2.6em] py-[1.2em] font-satoshi text-(length:--fs-label) font-bold uppercase tracking-[0.12em] whitespace-nowrap text-white/90 transition hover:bg-white/5"
               >
-                <Linkedin size={14} />
+                <Linkedin aria-hidden="true" className="size-[1.2em]" />
                 LinkedIn
               </a>
             ) : null}
             <button
               type="button"
               onClick={() => scrollToTarget("#contact")}
-              className="rounded-full border border-white/28 bg-black/30 px-8 py-3.5 font-satoshi text-[12px] font-bold uppercase tracking-[0.12em] text-white/90 transition hover:bg-white/5"
+              className="rounded-full border border-white/28 bg-black/30 px-[2.6em] py-[1.2em] font-satoshi text-(length:--fs-label) font-bold uppercase tracking-[0.12em] whitespace-nowrap text-white/90 transition hover:bg-white/5"
             >
               Contact Me
             </button>
@@ -130,9 +130,9 @@ export function Hero() {
            initial={{ opacity: 0, scale: 0.9 }}
            animate={{ opacity: 1, scale: 1 }}
            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-           className="relative flex w-full flex-1 items-center justify-center lg:justify-end"
+           className="relative flex w-full items-center justify-center md:col-span-5 md:justify-end"
         >
-          <div className="mx-auto aspect-square w-full max-w-125 lg:mx-0 lg:max-w-none">
+          <div className="aspect-square w-(--robot-size) max-w-full">
             <SplineScene
               scene="https://prod.spline.design/nr48L-rggf90uxqF/scene.splinecode"
               className="h-full w-full"

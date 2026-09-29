@@ -70,7 +70,7 @@ export function Navbar() {
       className="pointer-events-none fixed inset-x-0 top-5 z-50 md:top-6"
     >
       <div
-        className={`pointer-events-auto mx-auto hidden w-fit items-start gap-[3px] rounded-[13px] border p-1 shadow-[0_18px_45px_rgba(0,0,0,0.48),inset_0_1px_0_rgba(255,255,255,0.045)] backdrop-blur-[10px] transition-[background-color,border-color,box-shadow] duration-300 md:flex ${
+        className={`pointer-events-auto mx-auto hidden w-fit items-start gap-[0.27em] rounded-[1.16em] border p-[0.36em] text-(length:--fs-label) shadow-[0_18px_45px_rgba(0,0,0,0.48),inset_0_1px_0_rgba(255,255,255,0.045)] backdrop-blur-[10px] transition-[background-color,border-color,box-shadow] duration-300 md:flex ${
           scrolled
             ? "border-white/[0.13] bg-[#0b0b0b]/94 shadow-[0_20px_48px_rgba(0,0,0,0.54),inset_0_1px_0_rgba(255,255,255,0.055)]"
             : "border-white/[0.10] bg-[#0b0b0b]/88"
@@ -80,17 +80,18 @@ export function Navbar() {
           type="button"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           aria-label="Back to top"
-          whileHover={shouldReduceMotion ? undefined : { height: 39 }}
-          whileFocus={shouldReduceMotion ? undefined : { height: 39 }}
+          style={{ width: "3.04em", height: "3.04em" }}
+          whileHover={shouldReduceMotion ? undefined : { height: "3.48em" }}
+          whileFocus={shouldReduceMotion ? undefined : { height: "3.48em" }}
           transition={{ type: "spring", stiffness: 460, damping: 32, mass: 0.42 }}
-          className="flex size-[34px] shrink-0 items-center justify-center overflow-hidden rounded-[8px] border border-white/[0.10] bg-white/[0.065] shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] transition-colors hover:border-white/[0.18] hover:bg-white/[0.10] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/65 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0b0b] motion-reduce:transition-none"
+          className="flex shrink-0 items-center justify-center overflow-hidden rounded-[0.71em] border border-white/[0.10] bg-white/[0.065] shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] transition-colors hover:border-white/[0.18] hover:bg-white/[0.10] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/65 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0b0b] motion-reduce:transition-none"
         >
           <Image
             src="/profile/favicon.png"
             alt=""
             width={24}
             height={24}
-            className="size-6 rounded-[5px] object-cover"
+            className="size-[2.14em] rounded-[0.45em] object-cover"
             priority
           />
         </motion.button>
@@ -104,15 +105,16 @@ export function Navbar() {
               type="button"
               onClick={() => handleNav(link.href)}
               initial={false}
+              style={{ height: "3.04em", paddingLeft: "0.8em", paddingRight: "0.8em" }}
               whileHover={
                 shouldReduceMotion
                   ? undefined
-                  : { height: 39, paddingLeft: 12, paddingRight: 12 }
+                  : { height: "3.48em", paddingLeft: "1.07em", paddingRight: "1.07em" }
               }
               whileFocus={
                 shouldReduceMotion
                   ? undefined
-                  : { height: 39, paddingLeft: 12, paddingRight: 12 }
+                  : { height: "3.48em", paddingLeft: "1.07em", paddingRight: "1.07em" }
               }
               transition={{
                 type: "spring",
@@ -120,11 +122,11 @@ export function Navbar() {
                 damping: 32,
                 mass: 0.42,
               }}
-              className="group flex h-[34px] shrink-0 items-center gap-1.5 rounded-[8px] border border-white/[0.08] bg-white/[0.055] px-[9px] font-satoshi text-[9.5px] font-medium uppercase tracking-[0.15em] text-[#aaa49c] shadow-[inset_0_1px_0_rgba(255,255,255,0.025)] transition-[color,background-color,border-color,box-shadow] duration-200 hover:border-white/[0.17] hover:bg-white/[0.095] hover:text-[#f2eee8] hover:shadow-[0_8px_18px_rgba(0,0,0,0.32),inset_0_1px_0_rgba(255,255,255,0.055)] focus-visible:border-white/[0.22] focus-visible:bg-white/[0.10] focus-visible:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/65 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0b0b] motion-reduce:transition-colors"
+              className="group flex shrink-0 items-center gap-[0.55em] rounded-[0.71em] border border-white/[0.08] bg-white/[0.055] font-satoshi font-medium uppercase tracking-[0.15em] text-[#aaa49c] shadow-[inset_0_1px_0_rgba(255,255,255,0.025)] transition-[color,background-color,border-color,box-shadow] duration-200 hover:border-white/[0.17] hover:bg-white/[0.095] hover:text-[#f2eee8] hover:shadow-[0_8px_18px_rgba(0,0,0,0.32),inset_0_1px_0_rgba(255,255,255,0.055)] focus-visible:border-white/[0.22] focus-visible:bg-white/[0.10] focus-visible:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/65 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0b0b] motion-reduce:transition-colors"
             >
               <Icon
                 aria-hidden="true"
-                className="size-[13px] shrink-0 stroke-[1.7]"
+                className="size-[1.16em] shrink-0 stroke-[1.7]"
               />
               <span>{link.label}</span>
             </motion.button>
