@@ -25,27 +25,6 @@ export const navLinks = [
   { label: "Experience", href: "#experience" },
 ] as const;
 
-export const pillars = [
-  {
-    icon: "code2",
-    title: "Clean Code",
-    desc: "Writing maintainable, scalable systems that stand the test of time.",
-    color: "#00d4ff",
-  },
-  {
-    icon: "layers",
-    title: "Full Stack",
-    desc: "Owning the entire product, from pixel-perfect UI to distributed backend.",
-    color: "#7c3aed",
-  },
-  {
-    icon: "zap",
-    title: "Performance",
-    desc: "Obsessed with speed. Every millisecond counts in the user experience.",
-    color: "#f97316",
-  },
-] as const;
-
 export const projects = [
   {
     title: "Material Enhancement Assistant",

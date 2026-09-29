@@ -4,8 +4,8 @@ import { profile } from "@/data/portfolio";
 
 export function Footer() {
   return (
-    <footer className="relative bg-(--portfolio-surface) px-6 pb-12 pt-20">
-      <div className="mx-auto w-full max-w-[1200px]">
+    <footer className="relative bg-(--portfolio-surface) pb-[clamp(3rem,4vw,5rem)] pt-[clamp(5rem,7vw,9rem)]">
+      <div className="container-fluid">
         <p className="font-clash m-0 text-center text-[24px] font-bold text-(--portfolio-accent)">
           Get in Touch With Me
         </p>

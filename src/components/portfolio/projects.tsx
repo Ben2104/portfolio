@@ -104,7 +104,7 @@ function ProjectCard({
 
 export function Projects() {
   return (
-    <section id="projects" className="relative bg-(--portfolio-bg) px-6 py-28">
+    <section id="projects" className="relative bg-(--portfolio-bg) section-y">
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -113,10 +113,10 @@ export function Projects() {
         }}
       />
 
-      <div className="relative mx-auto w-full max-w-[1200px]">
+      <div className="container-fluid relative">
         <SectionHeading accent="var(--portfolio-accent)" label="Featured Work" />
 
-        <h2 className="font-clash m-0 text-center text-[clamp(40px,6vw,64px)] font-bold tracking-[-0.02em] text-(--portfolio-text)">
+        <h2 className="font-clash m-0 text-center text-(length:--fs-h2) font-bold tracking-[-0.02em] text-(--portfolio-text)">
           My Projects Highlight
         </h2>
 

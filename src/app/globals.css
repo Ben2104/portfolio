@@ -11,6 +11,31 @@
   --portfolio-subtle: #949494;
   --portfolio-line: #323232;
   --portfolio-accent: #ff9142;
+
+  /* Fluid layout + type scale — tweak here */
+  --layout-max: 2400px;
+  --layout-gutter: clamp(1.5rem, 4vw, 5rem);
+  --section-y: clamp(6rem, 12vw, 14rem);
+  --fs-hero: clamp(3.5rem, 5.5vw, 8rem);
+  --fs-h2: clamp(2.5rem, 4.5vw, 5.5rem);
+  --fs-body: clamp(1rem, 0.9vw, 1.25rem);
+  --fs-label: clamp(0.7rem, 0.6vw, 0.875rem);
+  /* Capped by height too so the hero fits one screen */
+  --astronaut-size: min(clamp(176px, 26vw, 520px), 56svh);
+  --orb-size: clamp(320px, 34vw, 760px);
+}
+
+@utility container-fluid {
+  width: 100%;
+  max-width: var(--layout-max);
+  margin-inline: auto;
+  padding-inline: var(--layout-gutter);
+}
+
+@utility section-y {
+  padding-block: var(--section-y);
+  /* Anchor jumps land on the content, not the top padding */
+  scroll-margin-top: calc(2rem - var(--section-y));
 }
 
 html {
