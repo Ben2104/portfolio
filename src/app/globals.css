@@ -20,7 +20,8 @@
   --fs-h2: clamp(2.5rem, 4.5vw, 5.5rem);
   --fs-body: clamp(1rem, 0.9vw, 1.25rem);
   --fs-label: clamp(0.7rem, 0.6vw, 0.875rem);
-  --robot-size: clamp(280px, 26vw, 580px);
+  /* Capped by height too so the hero fits one screen */
+  --astronaut-size: min(clamp(176px, 26vw, 520px), 56svh);
   --orb-size: clamp(320px, 34vw, 760px);
 }
 

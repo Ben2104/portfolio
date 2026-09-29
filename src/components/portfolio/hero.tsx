@@ -3,7 +3,7 @@
 import { motion } from "motion/react";
 
 import { profile } from "@/data/portfolio";
-import { SplineScene } from "./spline-scene";
+import { AstronautMascot } from "./astronaut-mascot";
 
 export function Hero() {
   return (
@@ -34,8 +34,8 @@ export function Hero() {
         }}
       />
 
-      {/* 12-col grid: text spans 7, robot spans 5 */}
-      <div className="container-fluid relative grid min-h-svh grid-cols-1 content-center items-center gap-y-12 pb-[clamp(4rem,6vw,8rem)] pt-[clamp(7rem,8vw,10rem)] md:grid-cols-12 md:gap-x-[clamp(1rem,2vw,3rem)]">
+      {/* 12-col grid: text spans 7, astronaut spans 5 */}
+      <div className="container-fluid relative grid min-h-svh grid-cols-1 content-center items-center gap-y-6 pb-[clamp(2.5rem,6vw,8rem)] pt-[clamp(5.5rem,8vw,10rem)] md:gap-y-12 md:grid-cols-12 md:gap-x-[clamp(1rem,2vw,3rem)]">
         {/* Left side — text content */}
         <div className="flex min-w-0 flex-col items-center text-center md:col-span-7 md:items-start md:text-left">
           <motion.span
@@ -73,19 +73,14 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* Right side — Spline 3D Robot */}
+        {/* Right side — interactive astronaut */}
         <motion.div
            initial={{ opacity: 0, scale: 0.9 }}
            animate={{ opacity: 1, scale: 1 }}
            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-           className="relative flex w-full items-center justify-center md:col-span-5 md:justify-end"
+           className="relative order-first flex w-full items-center justify-center md:order-none md:col-span-5 md:justify-end"
         >
-          <div className="aspect-square w-(--robot-size) max-w-full">
-            <SplineScene
-              scene="https://prod.spline.design/nr48L-rggf90uxqF/scene.splinecode"
-              className="h-full w-full"
-            />
-          </div>
+          <AstronautMascot className="aspect-square w-(--astronaut-size) max-w-full" />
         </motion.div>
       </div>
     </section>
