@@ -156,8 +156,8 @@ export function Skills() {
 
     const data = skills.current;
     const count = data.length;
-    const baseRadius = Math.min(canvasNode.width / dpr, canvasNode.height / dpr) * 0.34;
-    const positions = fibonacciSphere(count, baseRadius);
+    /* Unit sphere; scaled to the canvas each frame so resizes stay in proportion */
+    const positions = fibonacciSphere(count, 1);
 
     /* Per-orb animation offsets */
     const offsets = data.map(() => ({
@@ -179,6 +179,9 @@ export function Skills() {
       const h = canvasNode.height / dpr;
       const cx = w / 2;
       const cy = h / 2;
+      const radius = Math.min(w, h) * 0.34;
+      /* Grow icons, depth and drift past the original 560px canvas; unchanged below it */
+      const grow = Math.max(1, radius / 190);
 
       ctx.clearRect(0, 0, w, h);
 
@@ -211,7 +214,10 @@ export function Skills() {
       }[] = [];
 
       for (let i = 0; i < count; i++) {
-        const [px, py, pz] = positions[i];
+        const [ux, uy, uz] = positions[i];
+        const px = ux * radius;
+        const py = uy * radius;
+        const pz = uz * radius;
         const off = offsets[i];
 
         /* Rotate Y then X */
@@ -221,18 +227,18 @@ export function Skills() {
         z = py * sinX + z * cosX;
 
         /* Floating animation */
-        const floatX = Math.sin(time * off.speed + off.phase) * off.amplitude;
-        const floatY = Math.cos(time * off.speed * 0.8 + off.phase) * off.amplitude;
+        const floatX = Math.sin(time * off.speed + off.phase) * off.amplitude * grow;
+        const floatY = Math.cos(time * off.speed * 0.8 + off.phase) * off.amplitude * grow;
 
         /* Perspective */
-        const perspective = 800;
+        const perspective = 800 * grow;
         const scale = perspective / (perspective + z);
 
         const screenX = cx + (x + floatX) * scale;
         const screenY = cy + (y + floatY) * scale;
 
         /* Orb size: uniform for all skills, only scaled by perspective */
-        const orbRadius = 40 * scale;
+        const orbRadius = 40 * grow * scale;
 
         projected.push({
           x: screenX,
@@ -262,7 +268,7 @@ export function Skills() {
 
       /* Draw orbs */
       for (const orb of projected) {
-        const depth = (orb.z + baseRadius) / (baseRadius * 2); // 0 (back) → 1 (front)
+        const depth = (orb.z + radius) / (radius * 2); // 0 (back) → 1 (front)
         const opacity = 0.45 + depth * 0.55; // higher minimum so back icons stay visible
 
         /* Check hover */
@@ -317,10 +323,10 @@ export function Skills() {
         </p>
 
         {/* ── 3D Orb Cloud ───────────────────────────── */}
-        <div className="mt-10 flex flex-col items-center gap-8 lg:flex-row lg:items-start">
+        <div className="mt-[clamp(2.5rem,4vw,5rem)] grid grid-cols-1 items-center justify-items-center gap-8 lg:grid-cols-12 lg:gap-x-[clamp(2rem,4vw,6rem)]">
           <div
             ref={wrapperRef}
-            className="relative aspect-square w-full max-w-[560px] flex-shrink-0 lg:w-[55%]"
+            className="relative aspect-square w-full max-w-[560px] lg:col-span-5 lg:max-w-(--orb-size)"
           >
             <canvas
               ref={canvasRef}
@@ -364,7 +370,7 @@ export function Skills() {
           </div>
 
           {/* ── Category legend ──────────────────────── */}
-          <div className="grid w-full grid-cols-1 gap-2.5 sm:grid-cols-2 lg:w-[42%] lg:pt-6">
+          <div className="grid w-full grid-cols-1 gap-[clamp(0.625rem,0.8vw,1rem)] text-[clamp(0.75rem,0.75vw,1rem)] sm:grid-cols-2 lg:col-span-7">
             {skillCategories.map((cat, ci) => (
               <motion.div
                 key={cat.label}
@@ -372,25 +378,25 @@ export function Skills() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: ci * 0.08 }}
-                className="rounded-xl border border-white/10 bg-(--portfolio-surface) p-3.5"
+                className="rounded-[1.1em] border border-white/10 bg-(--portfolio-surface) p-[1.3em]"
               >
-                <div className="mb-2 flex items-center gap-2">
+                <div className="mb-[0.8em] flex items-center gap-[0.7em]">
                   <span
-                    className="h-2 w-2 shrink-0 rounded-full"
+                    className="size-[0.7em] shrink-0 rounded-full"
                     style={{ background: cat.color }}
                   />
-                  <span className="font-satoshi text-[10.5px] font-bold uppercase tracking-[0.09em] text-white">
+                  <span className="font-satoshi text-[0.95em] font-bold uppercase tracking-[0.09em] text-white">
                     {cat.label}
                   </span>
                 </div>
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-[0.5em]">
                   {cat.skills.map((skill) => (
                     <span
                       key={skill.name}
-                      className="inline-flex items-center gap-1 rounded-full border border-white/12 px-2 py-1 font-satoshi text-[11px] text-white/75"
+                      className="inline-flex items-center gap-[0.4em] rounded-full border border-white/12 px-[0.75em] py-[0.4em] font-satoshi text-[1.02em] text-white/75"
                     >
                       <span
-                        className="inline-block h-1.5 w-1.5 rounded-full"
+                        className="inline-block size-[0.5em] rounded-full"
                         style={{
                           background: cat.color,
                           opacity: skill.level / 100,
