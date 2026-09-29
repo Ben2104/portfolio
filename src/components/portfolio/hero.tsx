@@ -1,19 +1,11 @@
 "use client";
 
-import { Github, Linkedin } from "lucide-react";
 import { motion } from "motion/react";
 
-import { profile, socials } from "@/data/portfolio";
+import { profile } from "@/data/portfolio";
 import { SplineScene } from "./spline-scene";
 
-function scrollToTarget(target: string) {
-  document.querySelector(target)?.scrollIntoView({ behavior: "smooth" });
-}
-
 export function Hero() {
-  const githubHref = socials.find((social) => social.icon === "github")?.href ?? "";
-  const linkedinHref = socials.find((social) => social.icon === "linkedin")?.href ?? "";
-
   return (
     <section
       id="hero"
@@ -78,50 +70,6 @@ export function Hero() {
                 {role}
               </span>
             ))}
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="mt-[clamp(2rem,3vw,3.5rem)] flex flex-wrap items-center justify-center gap-[clamp(0.6rem,0.8vw,1rem)] md:justify-start xl:flex-nowrap"
-          >
-            <button
-              type="button"
-              onClick={() => scrollToTarget("#projects")}
-              className="rounded-full bg-(--portfolio-accent) px-[2.6em] py-[1.2em] font-satoshi text-(length:--fs-label) font-bold uppercase tracking-[0.12em] whitespace-nowrap text-(--portfolio-text) shadow-[0_20px_60px_rgba(255,145,66,0.25)] transition hover:brightness-105"
-            >
-              View Projects
-            </button>
-            {githubHref ? (
-              <a
-                href={githubHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-[0.6em] rounded-full border border-white/28 bg-black/30 px-[2.6em] py-[1.2em] font-satoshi text-(length:--fs-label) font-bold uppercase tracking-[0.12em] whitespace-nowrap text-white/90 transition hover:bg-white/5"
-              >
-                <Github aria-hidden="true" className="size-[1.2em]" />
-                GitHub
-              </a>
-            ) : null}
-            {linkedinHref ? (
-              <a
-                href={linkedinHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-[0.6em] rounded-full border border-white/28 bg-black/30 px-[2.6em] py-[1.2em] font-satoshi text-(length:--fs-label) font-bold uppercase tracking-[0.12em] whitespace-nowrap text-white/90 transition hover:bg-white/5"
-              >
-                <Linkedin aria-hidden="true" className="size-[1.2em]" />
-                LinkedIn
-              </a>
-            ) : null}
-            <button
-              type="button"
-              onClick={() => scrollToTarget("#contact")}
-              className="rounded-full border border-white/28 bg-black/30 px-[2.6em] py-[1.2em] font-satoshi text-(length:--fs-label) font-bold uppercase tracking-[0.12em] whitespace-nowrap text-white/90 transition hover:bg-white/5"
-            >
-              Contact Me
-            </button>
           </motion.div>
         </div>
 
