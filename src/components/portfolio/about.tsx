@@ -2,18 +2,11 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { Code2, Layers, Zap } from "lucide-react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 
-import { pillars, profile } from "@/data/portfolio";
+import { profile } from "@/data/portfolio";
 
 import { SectionHeading } from "./section-heading";
-
-const iconMap = {
-  code2: Code2,
-  layers: Layers,
-  zap: Zap,
-} as const;
 
 const PROFILE_IMAGE = "/photos/cutout-experience.png";
 
@@ -101,33 +94,6 @@ export function About() {
               </div>
             </motion.div>
           </div>
-        </div>
-
-        <div className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-3">
-          {pillars.map((pillar, index) => {
-            const Icon = iconMap[pillar.icon];
-
-            return (
-              <motion.article
-                key={pillar.title}
-                initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.45, delay: index * 0.08 }}
-                className="rounded-2xl border border-white/10 bg-(--portfolio-surface) p-6"
-              >
-                <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/6">
-                  <Icon size={18} style={{ color: pillar.color }} />
-                </div>
-                <h3 className="font-clash m-0 text-[24px] font-bold text-(--portfolio-text)">
-                  {pillar.title}
-                </h3>
-                <p className="font-satoshi mb-0 mt-3 text-[15px] leading-[1.65] text-(--portfolio-muted)">
-                  {pillar.desc}
-                </p>
-              </motion.article>
-            );
-          })}
         </div>
       </div>
     </section>
