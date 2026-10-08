@@ -5,43 +5,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { FocusEvent, PointerEvent as ReactPointerEvent } from "react";
 import { motion, useAnimationControls, useReducedMotion } from "motion/react";
 
-/*
- * Frames live in /public/astronaut, cut from the page-mascot astronaut's two
- * 3×3 sheets (directions + reactions) onto one shared 300px box, so every
- * frame is registered and swaps don't jitter. Art and head-aim logic from
- * page-mascot (github.com/nilbuild/page-mascot), MIT © Kamran Ahmed.
- */
-const DIRECTIONS = [
-  "up-left",
-  "up",
-  "up-right",
-  "left",
-  "center",
-  "right",
-  "down-left",
-  "down",
-  "down-right",
-] as const;
-
-const REACTIONS = [
-  "blink",
-  "love",
-  "sparkle",
-  "surprised",
-  "starstruck",
-  "blush",
-  "sleepy",
-  "dizzy",
-  "laugh",
-] as const;
-
-type Direction = (typeof DIRECTIONS)[number];
-type Reaction = (typeof REACTIONS)[number];
-
-const FRAMES = [
-  ...DIRECTIONS.map((direction) => `look-${direction}`),
-  ...REACTIONS,
-];
+import { FRAMES } from "./astronaut-frames";
+import type { Direction, Reaction } from "./astronaut-frames";
 
 /* Head aim, ported from page-mascot: clockwise from the right to match atan2 with y down */
 const CLOCKWISE: Direction[] = [
