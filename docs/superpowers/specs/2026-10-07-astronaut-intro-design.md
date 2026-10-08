@@ -40,9 +40,9 @@ so this is an intro, not a loader. It must stay short.
 | --- | --- |
 | 0ms | Solid `--portfolio-bg` (`#1a1a1a`) with a soft amber radial glow at centre. |
 | 0–250ms | Astronaut (`/astronaut/sparkle.webp`) fades in and scales 0.9 → 1 at centre. |
-| 250–900ms | Astronaut floats. A thin amber ring draws once around it. |
-| 900–1500ms | Astronaut glides and resizes into the hero mascot slot while the overlay fades and the hero text staggers in. |
-| 1500ms | Overlay removed. The real `AstronautMascot` is visible, already on its `sparkle` greeting frame. |
+| 250–1400ms | Astronaut floats. A thin amber ring draws once around it. |
+| 1400–2200ms | Astronaut glides and resizes into the hero mascot slot while the overlay fades and the hero text staggers in. |
+| 2200ms | Overlay removed. The real `AstronautMascot` is visible, already on its `sparkle` greeting frame. |
 
 - Any `pointerdown`, `keydown`, `wheel`, or `touchstart` during the intro
   starts the exit immediately.
@@ -57,18 +57,18 @@ so this is an intro, not a loader. It must stay short.
 
 A `fixed inset-0` overlay above everything. It renders its own `<img>` of the
 sparkle frame rather than a second `AstronautMascot`, which would mount 18
-frames and several window listeners for a 1.5s appearance.
+frames and several window listeners for a ~2.2s appearance.
 
 Props: `onExitStart: () => void`, `onComplete: () => void`.
 
 Phases: `holding` → `exiting` → `done`.
 
-- `holding` → `exiting` when all of: component hydrated, 900ms elapsed since
+- `holding` → `exiting` when all of: component hydrated, 1400ms elapsed since
   navigation start (`performance.now()`, so slow hydration adds no extra
   wait), sparkle image settled. A skip input forces it immediately, and a JS
-  timer forces it at 3s.
+  timer forces it at 3.6s.
 - On entering `exiting`, the overlay calls `onExitStart`, then performs the
-  glide (below) over 600ms while fading its background.
+  glide (below) over 800ms while fading its background.
 - When the glide ends it writes the session key and calls `onComplete`. The
   overlay astronaut then stays in place for 350ms to cover the real mascot's
   fade-in before the overlay renders `null`.
@@ -155,13 +155,13 @@ landing misaligns.
 ## Failure handling
 
 - **JS never runs or hydration stalls:** a CSS-only animation on the overlay
-  fades it out and sets `pointer-events: none` at 3s, so the overlay itself
+  fades it out and sets `pointer-events: none` at 3.6s, so the overlay itself
   can never block the page. The scroll lock is applied by JS, so it cannot
   outlive a JS failure. Known limitation, unchanged from today: the hero's
   `motion` entrance starts at `opacity: 0` in server HTML, so the hero stays
   hidden without JS; sections below it are unaffected by this change.
 - **Sparkle image fails to load:** the image `error` event counts as
-  "settled" for the exit condition. If it neither loads nor errors, the 3s JS
+  "settled" for the exit condition. If it neither loads nor errors, the 3.6s JS
   timer exits anyway so the hero is never left hidden.
 - **`sessionStorage` blocked:** reads and writes are wrapped in `try/catch`;
   the intro simply shows on every load.
@@ -174,12 +174,12 @@ The repo has no test runner (`package.json` has only `lint`), and this change
 does not add one. Verification:
 
 1. `npm run lint` and `npm run build` pass.
-2. Fresh session: intro plays, exits on its own in about 1.5s, astronaut lands
+2. Fresh session: intro plays, exits on its own in about 2.2s, astronaut lands
    on the hero mascot with no visible jump.
 3. Reload in the same session: no intro, no flash of the overlay.
 4. `prefers-reduced-motion: reduce`: no intro.
 5. Mobile viewport: glide lands on the top-positioned mascot.
 6. Key press, click, and scroll during the hold each trigger the exit.
-7. JS disabled: overlay fades at 3s and no longer intercepts input.
+7. JS disabled: overlay fades at 3.6s and no longer intercepts input.
 8. View-source of `/` contains the hero title text.
 9. No three.js chunk is requested until the astronaut has landed.

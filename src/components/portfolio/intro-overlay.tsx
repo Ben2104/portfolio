@@ -23,12 +23,12 @@ type IntroOverlayProps = {
 
 /* Measured from navigation start (performance.now), not from mount, so a slow
    hydration doesn't add to the wait */
-const HOLD_MS = 900;
-const EXIT_MS = 600;
+const HOLD_MS = 1400;
+const EXIT_MS = 800;
 /* The overlay astronaut stays put this long after landing to cover the real mascot's fade-in */
 const LINGER_MS = 350;
 /* Matches the CSS failsafe delay on .intro-overlay in globals.css */
-const FAILSAFE_MS = 3000;
+const FAILSAFE_MS = 3600;
 const SKIP_EVENTS = ["pointerdown", "keydown", "wheel", "touchstart"] as const;
 const GLIDE_EASE = [0.65, 0, 0.35, 1] as const;
 const REST: Glide = { x: 0, y: 0, scale: 1 };
