@@ -87,18 +87,21 @@ viewport, skip the glide and fade the overlay only.
 ### `portfolio-page.tsx`
 
 - Always render `PortfolioContent`.
-- Hold `introDone` state, set by the overlay's `onExitStart`.
-- Pass `introDone` to `Hero`.
+- Hold `introPhase` state: `"holding"` initially, `"exiting"` on the
+  overlay's `onExitStart`, `"done"` on its `onComplete`.
+- Pass `introPhase` to `Hero`.
 - Render `<IntroOverlay />` in place of `<TerminalPreloader />`.
 
 ### `hero.tsx`
 
-- Accept `introDone: boolean`.
-- Entrance animations currently fire on mount; gate them so they run when
-  `introDone` becomes true. Otherwise they finish hidden under the overlay.
+- Accept `introPhase: "holding" | "exiting" | "done"`.
+- Entrance animations currently fire on mount; gate the text animations so
+  they run once `introPhase` leaves `"holding"`. Otherwise they finish hidden
+  under the overlay.
 - The mascot wrapper gets `data-intro-target` and stays at `opacity: 0` until
-  the overlay calls `onComplete`, so the overlay astronaut and the real one
-  are never visible together.
+  `introPhase` is `"done"`, then appears instantly (no entrance animation), so
+  the overlay astronaut and the real one are never visible together. Its
+  layout box is unchanged while hidden so the glide can measure it.
 
 `PortfolioContent` passes the prop through; no context needed for one
 consumer.
@@ -127,8 +130,11 @@ The inline-script mechanism must be checked against
 ## Failure handling
 
 - **JS never runs or hydration stalls:** a CSS-only animation on the overlay
-  fades it out and sets `pointer-events: none` at 3s. The scroll lock is
-  applied by JS, so it cannot outlive a JS failure.
+  fades it out and sets `pointer-events: none` at 3s, so the overlay itself
+  can never block the page. The scroll lock is applied by JS, so it cannot
+  outlive a JS failure. Known limitation, unchanged from today: the hero's
+  `motion` entrance starts at `opacity: 0` in server HTML, so the hero stays
+  hidden without JS; sections below it are unaffected by this change.
 - **Sparkle image fails to load:** the image `error` event counts as
   "decoded" for the exit condition; the intro exits with a plain fade.
 - **`sessionStorage` blocked:** reads and writes are wrapped in `try/catch`;
@@ -148,5 +154,5 @@ does not add one. Verification:
 4. `prefers-reduced-motion: reduce`: no intro.
 5. Mobile viewport: glide lands on the top-positioned mascot.
 6. Key press, click, and scroll during the hold each trigger the exit.
-7. JS disabled: overlay fades at 3s and the hero is readable.
+7. JS disabled: overlay fades at 3s and no longer intercepts input.
 8. View-source of `/` contains the hero title text.
