@@ -8,10 +8,11 @@ import { Education } from "./education";
 import { Experience } from "./experience";
 import { Footer } from "./footer";
 import { Hero } from "./hero";
+import { IntroOverlay, useIntroSkip } from "./intro-overlay";
+import type { IntroPhase } from "./intro-state";
 import { Navbar } from "./navbar";
 import { Projects } from "./projects";
 import { Skills } from "./skills";
-import { TerminalPreloader } from "./terminal-preloader";
 
 function PortfolioContent() {
   return (
@@ -30,13 +31,19 @@ function PortfolioContent() {
 }
 
 export function PortfolioPage() {
-  const [isBootComplete, setIsBootComplete] = useState(false);
-  const handleBootComplete = useCallback(() => setIsBootComplete(true), []);
+  const skipIntro = useIntroSkip();
+  const [, setIntroPhase] = useState<IntroPhase>("holding");
+  const handleIntroExitStart = useCallback(() => setIntroPhase("exiting"), []);
+  const handleIntroComplete = useCallback(() => setIntroPhase("done"), []);
 
   return (
     <main className="min-h-screen overflow-x-clip bg-(--portfolio-bg)">
-      <TerminalPreloader onComplete={handleBootComplete} />
-      {isBootComplete ? <PortfolioContent /> : null}
+      <IntroOverlay
+        skip={skipIntro}
+        onExitStart={handleIntroExitStart}
+        onComplete={handleIntroComplete}
+      />
+      <PortfolioContent />
     </main>
   );
 }
