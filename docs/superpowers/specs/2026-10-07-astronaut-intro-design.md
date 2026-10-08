@@ -64,11 +64,14 @@ Props: `onExitStart: () => void`, `onComplete: () => void`.
 Phases: `holding` → `exiting` → `done`.
 
 - `holding` → `exiting` when all of: component hydrated, 900ms elapsed since
-  mount, sparkle image decoded. A skip input forces it immediately.
+  navigation start (`performance.now()`, so slow hydration adds no extra
+  wait), sparkle image settled. A skip input forces it immediately, and a JS
+  timer forces it at 3s.
 - On entering `exiting`, the overlay calls `onExitStart`, then performs the
   glide (below) over 600ms while fading its background.
-- When the glide ends it writes the session key, calls `onComplete`, and
-  renders `null`.
+- When the glide ends it writes the session key and calls `onComplete`. The
+  overlay astronaut then stays in place for 350ms to cover the real mascot's
+  fade-in before the overlay renders `null`.
 
 ### Glide (manual FLIP)
 
@@ -98,10 +101,18 @@ viewport, skip the glide and fade the overlay only.
 - Entrance animations currently fire on mount; gate the text animations so
   they run once `introPhase` leaves `"holding"`. Otherwise they finish hidden
   under the overlay.
-- The mascot wrapper gets `data-intro-target` and stays at `opacity: 0` until
-  `introPhase` is `"done"`, then appears instantly (no entrance animation), so
-  the overlay astronaut and the real one are never visible together. Its
-  layout box is unchanged while hidden so the glide can measure it.
+- A fixed-size box carrying `data-intro-target` holds the mascot slot. The
+  real `AstronautMascot` mounts inside it only when `introPhase` is `"done"`,
+  with a 300ms fade. Mounting on landing means its idle float and sparkle
+  greeting start from rest at the landing position; mounting earlier would
+  leave it mid-float and cause a visible jump at handoff.
+
+### `projects.tsx`
+
+`Projects` used to mount only after the boot screen, which kept three.js off
+the hero's critical path. Now that content is always rendered, it accepts
+`introDone: boolean` and waits for it before requesting the shelf, so parsing
+three.js cannot stutter the glide.
 
 `PortfolioContent` passes the prop through; no context needed for one
 consumer.
@@ -112,13 +123,27 @@ The server cannot know whether this session has already seen the intro, so it
 always renders the overlay. A small inline script in `<head>` runs before
 first paint and sets `data-intro="skip"` on `<html>` when the session key is
 present or reduced motion is requested. CSS hides the overlay under
-`[data-intro="skip"]`. After hydration the overlay reads the same attribute in
-an effect and goes straight to `done`, calling `onExitStart` and `onComplete`.
+`[data-intro="skip"]`. Reduced motion is also handled by a plain CSS media
+query, so it needs no script.
 
-This keeps server and client markup identical on first render.
+After hydration a `useIntroSkip()` hook (`useSyncExternalStore`, server
+snapshot `false`) re-reads the session key and motion preference directly.
+It does not read the attribute, because React clears script-set `<html>`
+attributes on the Strict Mode remount in development. When it reports a skip,
+the overlay renders `null` and the page treats the intro as `"done"`.
 
-The inline-script mechanism must be checked against
-`node_modules/next/dist/docs/` before implementation (per `AGENTS.md`).
+This keeps server and client markup identical on first render. `<html>` gets
+`suppressHydrationWarning` for the script-set attribute.
+
+Pattern verified against
+`node_modules/next/dist/docs/01-app/02-guides/preventing-flash-before-hydration.md`.
+
+### Scroll lock and layout width
+
+The overlay sets `overflow: hidden` on `<html>` until the astronaut lands.
+`html { scrollbar-gutter: stable }` keeps the layout width constant when the
+lock is released; without it the hero shifts by the scrollbar width and the
+landing misaligns.
 
 ### Removed
 
@@ -136,7 +161,8 @@ The inline-script mechanism must be checked against
   `motion` entrance starts at `opacity: 0` in server HTML, so the hero stays
   hidden without JS; sections below it are unaffected by this change.
 - **Sparkle image fails to load:** the image `error` event counts as
-  "decoded" for the exit condition; the intro exits with a plain fade.
+  "settled" for the exit condition. If it neither loads nor errors, the 3s JS
+  timer exits anyway so the hero is never left hidden.
 - **`sessionStorage` blocked:** reads and writes are wrapped in `try/catch`;
   the intro simply shows on every load.
 - **Unmount mid-intro:** timers and listeners are cleared and the scroll lock
@@ -156,3 +182,4 @@ does not add one. Verification:
 6. Key press, click, and scroll during the hold each trigger the exit.
 7. JS disabled: overlay fades at 3s and no longer intercepts input.
 8. View-source of `/` contains the hero title text.
+9. No three.js chunk is requested until the astronaut has landed.
