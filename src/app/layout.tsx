@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
 import "./globals.css";
+import { INTRO_SKIP_SCRIPT } from "@/components/portfolio/intro-state";
 
 export const metadata: Metadata = {
   title: "Khoi Do | Portfolio",
@@ -20,8 +21,9 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: INTRO_SKIP_SCRIPT }} />
         {/* Fontshare: Clash Display (headlines) + Satoshi (body) */}
         <link
           href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=satoshi@300,400,500,600,700,900&display=swap"

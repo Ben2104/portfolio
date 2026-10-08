@@ -23,9 +23,9 @@ An interactive portfolio that turns my projects, experience, and engineering pra
 
 ## Built to feel alive
 
-This is not a static résumé page. The experience opens like a terminal, moves through a focused project narrative, and closes with a direct path to connect.
+This is not a static résumé page. The experience opens with an astronaut drifting into place, moves through a focused project narrative, and closes with a direct path to connect.
 
-- **Terminal-first arrival** — a one-shot boot sequence sets the visual language.
+- **Astronaut arrival** — a brief, no-click intro hands the mascot off to the hero.
 - **Motion-led storytelling** — restrained transitions guide attention without blocking content.
 - **Project carousel** — draggable, scroll-snapping work samples make exploration tactile.
 - **Orbital skills system** — a canvas-rendered skill field turns a long technology list into an interactive visual.
@@ -37,7 +37,7 @@ This is not a static résumé page. The experience opens like a terminal, moves 
 flowchart TD
     A["src/app/page.tsx"] --> B["PortfolioPage"]
     A --> C["Vercel Analytics"]
-    B --> D["Terminal preloader"]
+    B --> D["Astronaut intro"]
     B --> E["Navigation · Hero · About"]
     B --> F["Experience · Projects"]
     B --> G["Skills · Education · Contact"]
@@ -87,7 +87,7 @@ src/
 ├── app/                         # App Router entrypoint, metadata, global styles
 ├── components/portfolio/        # Page sections and interactive experiences
 │   ├── portfolio-page.tsx       # Section composition
-│   ├── terminal-preloader.tsx   # Opening terminal sequence
+│   ├── intro-overlay.tsx        # Opening astronaut intro
 │   ├── project-carousel.tsx     # Draggable, snapping project navigation
 │   └── skills.tsx               # Canvas skill visualization
 ├── data/portfolio.ts            # Portfolio content and links

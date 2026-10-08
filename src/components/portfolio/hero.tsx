@@ -4,8 +4,12 @@ import { motion } from "motion/react";
 
 import { profile } from "@/data/portfolio";
 import { AstronautMascot } from "./astronaut-mascot";
+import type { IntroPhase } from "./intro-state";
 
-export function Hero() {
+export function Hero({ introPhase }: { introPhase: IntroPhase }) {
+  /* Text enters as the intro overlay starts to leave, not on mount, or it would finish unseen */
+  const revealed = introPhase !== "holding";
+
   return (
     <section
       id="hero"
@@ -40,7 +44,7 @@ export function Hero() {
         <div className="flex min-w-0 flex-col items-center text-center md:col-span-7 md:items-start md:text-left">
           <motion.span
             initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={revealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
             transition={{ duration: 0.45 }}
             className="rounded-full border border-white/5 bg-white/5 px-[1.45em] py-[0.75em] font-satoshi text-(length:--fs-label) font-semibold uppercase tracking-[0.14em] text-(--portfolio-muted)"
           >
@@ -49,7 +53,7 @@ export function Hero() {
 
           <motion.h1
             initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={revealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             className="font-clash mt-[clamp(1.5rem,2.5vw,3rem)] text-(length:--fs-hero) font-bold leading-[0.95] tracking-[-0.035em] text-(--portfolio-text)"
           >
@@ -58,7 +62,7 @@ export function Hero() {
 
           <motion.div
             initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={revealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mt-[clamp(1.5rem,2.5vw,3rem)] flex flex-wrap items-center justify-center gap-[0.9em] text-(length:--fs-label) md:justify-start"
           >
@@ -74,14 +78,25 @@ export function Hero() {
         </div>
 
         {/* Right side — interactive astronaut */}
-        <motion.div
-           initial={{ opacity: 0, scale: 0.9 }}
-           animate={{ opacity: 1, scale: 1 }}
-           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-           className="relative order-first flex w-full items-center justify-center md:order-none md:col-span-5 md:justify-end"
-        >
-          <AstronautMascot className="aspect-square w-(--astronaut-size) max-w-full" />
-        </motion.div>
+        <div className="relative order-first flex w-full items-center justify-center md:order-none md:col-span-5 md:justify-end">
+          {/* The intro overlay glides its astronaut onto this box, so it keeps its size
+              while empty. The mascot mounts on landing so its float and greeting start there */}
+          <div
+            data-intro-target
+            className="aspect-square w-(--astronaut-size) max-w-full"
+          >
+            {introPhase === "done" ? (
+              <motion.div
+                className="h-full w-full"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                <AstronautMascot className="h-full w-full" />
+              </motion.div>
+            ) : null}
+          </div>
+        </div>
       </div>
     </section>
   );
