@@ -40,9 +40,12 @@ so this is an intro, not a loader. It must stay short.
 | --- | --- |
 | 0ms | Solid `--portfolio-bg` (`#1a1a1a`) with a soft amber radial glow at centre. |
 | 0–250ms | Astronaut (`/astronaut/sparkle.webp`) fades in and scales 0.9 → 1 at centre. |
-| 250–1400ms | Astronaut floats. A thin amber ring draws once around it. |
-| 1400–2200ms | Astronaut glides and resizes into the hero mascot slot while the overlay fades and the hero text staggers in. |
-| 2200ms | Overlay removed. The real `AstronautMascot` is visible, already on its `sparkle` greeting frame. |
+| 250ms–loaded | Astronaut floats. A percentage under it counts up with the real page load, and a thin amber ring around it fills to match. Never shorter than 1800ms. |
+| loaded + 1000ms | Astronaut glides and resizes into the hero mascot slot while the overlay fades and the hero text staggers in. |
+| after the glide | Overlay removed. The real `AstronautMascot` is visible, already on its `sparkle` greeting frame. |
+
+Times are for a fast connection, where the whole intro takes about 2.8s. A slow
+connection holds the count at whatever has really loaded, up to a 10s cap.
 
 - Any `pointerdown`, `keydown`, `wheel`, or `touchstart` during the intro
   starts the exit immediately.
@@ -57,18 +60,31 @@ so this is an intro, not a loader. It must stay short.
 
 A `fixed inset-0` overlay above everything. It renders its own `<img>` of the
 sparkle frame rather than a second `AstronautMascot`, which would mount 18
-frames and several window listeners for a ~2.2s appearance.
+frames and several window listeners for a ~2.8s appearance.
 
 Props: `onExitStart: () => void`, `onComplete: () => void`.
 
 Phases: `holding` → `exiting` → `done`.
 
-- `holding` → `exiting` when all of: component hydrated, 1400ms elapsed since
-  navigation start (`performance.now()`, so slow hydration adds no extra
-  wait), sparkle image settled. A skip input forces it immediately, and a JS
-  timer forces it at 3.6s.
+- The count is owned by an inline script in `<head>` (`INTRO_SCRIPT` in
+  `intro-state.ts`), not by React, so it runs from the moment the HTML arrives
+  and keeps moving while the JS bundle downloads. The script writes only to
+  `<html>`: `data-intro="tracking"` (cancels the CSS failsafe) and the
+  `--intro-progress` custom property (0–100), which `globals.css` turns into
+  the number (a CSS counter on `.intro-percent::after`) and the ring's
+  `stroke-dashoffset`. Nothing React hydrates is touched.
+- The percentage is the settled share of: each of the 18 mascot frames
+  (preloaded at low fetch priority), `document.fonts.ready`, the window `load`
+  event, and hydration itself, which the overlay reports on mount through
+  `window.__portfolioIntro.hydrate()`. It therefore cannot reach 100 before the
+  page is interactive. The displayed value follows that share but climbs no
+  faster than 0 → 100 across the 1800ms hold, measured from navigation start;
+  once the hold has passed, a count held back by the network catches up at
+  0 → 100 per 500ms.
+- `holding` → `exiting` 200ms after the count reaches 100. A skip input forces
+  the exit immediately, and a JS timer in the overlay forces it at 10s.
 - On entering `exiting`, the overlay calls `onExitStart`, then performs the
-  glide (below) over 800ms while fading its background.
+  glide (below) over 1000ms while fading its background.
 - When the glide ends it writes the session key and calls `onComplete`. The
   overlay astronaut then stays in place for 350ms to cover the real mascot's
   fade-in before the overlay renders `null`.
@@ -155,14 +171,19 @@ landing misaligns.
 ## Failure handling
 
 - **JS never runs or hydration stalls:** a CSS-only animation on the overlay
-  fades it out and sets `pointer-events: none` at 3.6s, so the overlay itself
+  fades it out and sets `pointer-events: none` at 4.2s, so the overlay itself
   can never block the page. The scroll lock is applied by JS, so it cannot
   outlive a JS failure. Known limitation, unchanged from today: the hero's
   `motion` entrance starts at `opacity: 0` in server HTML, so the hero stays
   hidden without JS; sections below it are unaffected by this change.
-- **Sparkle image fails to load:** the image `error` event counts as
-  "settled" for the exit condition. If it neither loads nor errors, the 3.6s JS
-  timer exits anyway so the hero is never left hidden.
+- **An asset fails to load:** an `error` event counts as settled, so the count
+  still reaches 100. If something neither loads nor errors, the 10s JS timer
+  exits anyway so the hero is never left hidden.
+- **Hydration never arrives (bundle fails or takes over 10s):** the intro script
+  sets `data-intro="timeout"`, which fades the overlay out. If the page hydrates
+  after that, the overlay hands over at once with no glide.
+- **Inline script never runs (JS disabled):** the CSS failsafe below still
+  applies.
 - **`sessionStorage` blocked:** reads and writes are wrapped in `try/catch`;
   the intro simply shows on every load.
 - **Unmount mid-intro:** timers and listeners are cleared and the scroll lock
@@ -174,12 +195,14 @@ The repo has no test runner (`package.json` has only `lint`), and this change
 does not add one. Verification:
 
 1. `npm run lint` and `npm run build` pass.
-2. Fresh session: intro plays, exits on its own in about 2.2s, astronaut lands
-   on the hero mascot with no visible jump.
+2. Fresh session: intro plays, counts to 100%, exits on its own in about 2.8s,
+   astronaut lands on the hero mascot with no visible jump.
 3. Reload in the same session: no intro, no flash of the overlay.
 4. `prefers-reduced-motion: reduce`: no intro.
 5. Mobile viewport: glide lands on the top-positioned mascot.
 6. Key press, click, and scroll during the hold each trigger the exit.
-7. JS disabled: overlay fades at 3.6s and no longer intercepts input.
+7. JS disabled: overlay fades at 4.2s and no longer intercepts input.
+   Throttled network (DevTools "Slow 4G"): the count stalls with the load and
+   the intro lasts longer, never past 10s.
 8. View-source of `/` contains the hero title text.
 9. No three.js chunk is requested until the astronaut has landed.
