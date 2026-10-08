@@ -14,14 +14,14 @@ import { Navbar } from "./navbar";
 import { Projects } from "./projects";
 import { Skills } from "./skills";
 
-function PortfolioContent() {
+function PortfolioContent({ introPhase }: { introPhase: IntroPhase }) {
   return (
     <>
       <Navbar />
-      <Hero />
+      <Hero introPhase={introPhase} />
       <About />
       <Experience />
-      <Projects />
+      <Projects introDone={introPhase === "done"} />
       <Skills />
       <Education />
       <Contact />
@@ -32,9 +32,13 @@ function PortfolioContent() {
 
 export function PortfolioPage() {
   const skipIntro = useIntroSkip();
-  const [, setIntroPhase] = useState<IntroPhase>("holding");
+  const [introPhase, setIntroPhase] = useState<IntroPhase>("holding");
   const handleIntroExitStart = useCallback(() => setIntroPhase("exiting"), []);
   const handleIntroComplete = useCallback(() => setIntroPhase("done"), []);
+
+  /* A skipped intro never reports back, so treat it as already finished */
+  const effectivePhase: IntroPhase =
+    skipIntro && introPhase === "holding" ? "done" : introPhase;
 
   return (
     <main className="min-h-screen overflow-x-clip bg-(--portfolio-bg)">
@@ -43,7 +47,7 @@ export function PortfolioPage() {
         onExitStart={handleIntroExitStart}
         onComplete={handleIntroComplete}
       />
-      <PortfolioContent />
+      <PortfolioContent introPhase={effectivePhase} />
     </main>
   );
 }

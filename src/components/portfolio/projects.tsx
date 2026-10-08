@@ -48,20 +48,22 @@ const ProjectShelf = dynamic(() => import("./project-shelf/project-shelf"), {
 /* Scroll distance the pinned shelf spends on each book after the first */
 const SCROLL_PER_BOOK = "70svh";
 
-export function Projects() {
+export function Projects({ introDone }: { introDone: boolean }) {
   const sectionRef = useRef<HTMLElement>(null);
   const [shelfRequested, setShelfRequested] = useState(false);
 
-  /* Projects only mounts once the boot screen has finished; start pulling in Three.js and
-     the shelf then, off the critical path of the hero's first paint */
+  /* Wait for the intro to finish before pulling in Three.js and the shelf, so parsing
+     it can't stutter the astronaut's glide or the hero's first paint */
   useEffect(() => {
+    if (!introDone) return;
+
     if (typeof window.requestIdleCallback === "function") {
       const handle = window.requestIdleCallback(() => setShelfRequested(true), { timeout: 1500 });
       return () => window.cancelIdleCallback(handle);
     }
     const handle = window.setTimeout(() => setShelfRequested(true), 200);
     return () => window.clearTimeout(handle);
-  }, []);
+  }, [introDone]);
 
   const bookCount = (projects as readonly unknown[]).length;
 
