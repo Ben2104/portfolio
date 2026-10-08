@@ -41,6 +41,8 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 110px;
+  /* Keep layout width fixed while the intro locks scrolling */
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -95,4 +97,85 @@ textarea::placeholder {
 a,
 button {
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Intro overlay. CSS-driven so it behaves correctly before hydration. */
+
+/* Failsafe: the overlay removes itself even if JS never runs */
+.intro-overlay {
+  animation: intro-failsafe 400ms ease-out 3s forwards;
+}
+
+.intro-overlay:not([data-phase="holding"]) {
+  pointer-events: none;
+}
+
+/* Repeat session (set by the inline script in layout.tsx) */
+[data-intro="skip"] .intro-overlay {
+  display: none;
+}
+
+.intro-backdrop {
+  transition: opacity 600ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.intro-overlay:not([data-phase="holding"]) .intro-backdrop {
+  opacity: 0;
+}
+
+.intro-astronaut {
+  transition: opacity 600ms ease-out;
+}
+
+/* No measurable hero target: fade the astronaut with the backdrop instead of gliding */
+.intro-overlay[data-glide="false"]:not([data-phase="holding"]) .intro-astronaut {
+  opacity: 0;
+}
+
+.intro-enter {
+  animation: intro-enter 250ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.intro-ring {
+  transition: opacity 200ms ease-out;
+}
+
+.intro-ring circle {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: intro-ring 650ms ease-in-out 250ms forwards;
+}
+
+.intro-overlay:not([data-phase="holding"]) .intro-ring {
+  opacity: 0;
+}
+
+@keyframes intro-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes intro-ring {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes intro-failsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-overlay {
+    display: none;
+  }
 }
