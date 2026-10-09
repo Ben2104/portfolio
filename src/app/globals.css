@@ -103,7 +103,17 @@ button {
 
 /* Failsafe: the overlay removes itself even if JS never runs */
 .intro-overlay {
-  animation: intro-failsafe 400ms ease-out 3.6s forwards;
+  animation: intro-failsafe 400ms ease-out 4.2s forwards;
+}
+
+/* The inline intro script is counting: it decides when to leave, however slow the network */
+[data-intro="tracking"] .intro-overlay {
+  animation: none;
+}
+
+/* The script gave up waiting for the page to hydrate */
+[data-intro="timeout"] .intro-overlay {
+  animation: intro-failsafe 400ms ease-out forwards;
 }
 
 .intro-overlay:not([data-phase="holding"]) {
@@ -116,7 +126,7 @@ button {
 }
 
 .intro-backdrop {
-  transition: opacity 800ms cubic-bezier(0.65, 0, 0.35, 1);
+  transition: opacity 1000ms cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 .intro-overlay:not([data-phase="holding"]) .intro-backdrop {
@@ -124,7 +134,7 @@ button {
 }
 
 .intro-astronaut {
-  transition: opacity 800ms ease-out;
+  transition: opacity 1000ms ease-out;
 }
 
 /* No measurable hero target: fade the astronaut with the backdrop instead of gliding */
@@ -136,17 +146,25 @@ button {
   animation: intro-enter 250ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.intro-ring {
+.intro-ring,
+.intro-percent {
   transition: opacity 200ms ease-out;
 }
 
+/* The ring is the progress bar. The intro script sets --intro-progress (0 to 100) on <html> */
 .intro-ring circle {
   stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  animation: intro-ring 1000ms ease-in-out 250ms forwards;
+  stroke-dashoffset: calc(1 - var(--intro-progress, 0) / 100);
+  transition: stroke-dashoffset 120ms linear;
 }
 
-.intro-overlay:not([data-phase="holding"]) .intro-ring {
+.intro-percent::after {
+  counter-reset: intro-progress var(--intro-progress, 0);
+  content: counter(intro-progress) "%";
+}
+
+.intro-overlay:not([data-phase="holding"]) .intro-ring,
+.intro-overlay:not([data-phase="holding"]) .intro-percent {
   opacity: 0;
 }
 
@@ -158,12 +176,6 @@ button {
   to {
     opacity: 1;
     transform: scale(1);
-  }
-}
-
-@keyframes intro-ring {
-  to {
-    stroke-dashoffset: 0;
   }
 }
 

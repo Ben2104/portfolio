@@ -10,7 +10,7 @@ import {
 } from "react";
 import { motion } from "motion/react";
 
-import { INTRO_SESSION_KEY } from "./intro-state";
+import { INTRO_MAX_WAIT_MS, INTRO_SESSION_KEY } from "./intro-state";
 
 type OverlayPhase = "holding" | "exiting" | "landed" | "done";
 type Glide = { x: number; y: number; scale: number };
@@ -21,14 +21,11 @@ type IntroOverlayProps = {
   onComplete: () => void;
 };
 
-/* Measured from navigation start (performance.now), not from mount, so a slow
-   hydration doesn't add to the wait */
-const HOLD_MS = 1400;
-const EXIT_MS = 800;
+/* Lets 100% and the closed ring register before the astronaut leaves */
+const FULL_BEAT_MS = 200;
+const EXIT_MS = 1000;
 /* The overlay astronaut stays put this long after landing to cover the real mascot's fade-in */
 const LINGER_MS = 350;
-/* Matches the CSS failsafe delay on .intro-overlay in globals.css */
-const FAILSAFE_MS = 3600;
 const SKIP_EVENTS = ["pointerdown", "keydown", "wheel", "touchstart"] as const;
 const GLIDE_EASE = [0.65, 0, 0.35, 1] as const;
 const REST: Glide = { x: 0, y: 0, scale: 1 };
@@ -99,14 +96,16 @@ export function IntroOverlay({ skip, onExitStart, onComplete }: IntroOverlayProp
   const [glide, setGlide] = useState<Glide | null>(null);
   const astronautRef = useRef<HTMLDivElement>(null);
   const started = useRef(false);
+  /* False when hydration arrived after the intro script had given up and hidden the overlay */
+  const owned = useRef(false);
   const exitTimers = useRef<number[]>([]);
 
   const startExit = useCallback(() => {
     if (started.current) return;
     started.current = true;
 
-    /* Past the CSS failsafe the overlay is already invisible; just hand over */
-    const late = performance.now() >= FAILSAFE_MS;
+    /* The overlay is already hidden; just hand over */
+    const late = !owned.current;
     const astronaut = astronautRef.current;
     setGlide(late || !astronaut ? null : measureGlide(astronaut));
     setPhase("exiting");
@@ -127,37 +126,24 @@ export function IntroOverlay({ skip, onExitStart, onComplete }: IntroOverlayProp
     );
   }, [onComplete, onExitStart]);
 
-  /* Leave once the hold has elapsed and the astronaut frame has settled; any input skips ahead */
+  /* The inline intro script (intro-state.ts) has been counting since the HTML arrived.
+     Report hydration to it and leave when its count reaches 100; any input skips ahead */
   useEffect(() => {
     if (skip) return;
 
-    const image = astronautRef.current?.querySelector("img");
-    let ready = !image || image.complete;
-    let held = false;
+    const intro = window.__portfolioIntro;
+    owned.current = !!intro && intro.state !== "timeout";
 
-    const maybeExit = () => {
-      if (ready && held) startExit();
-    };
-    const onReady = () => {
-      ready = true;
-      maybeExit();
-    };
+    let beatTimer = 0;
+    if (owned.current) {
+      intro?.hydrate(() => {
+        beatTimer = window.setTimeout(startExit, FULL_BEAT_MS);
+      });
+    }
 
-    image?.addEventListener("load", onReady);
-    image?.addEventListener("error", onReady);
-
-    const now = performance.now();
-    const holdTimer = window.setTimeout(
-      () => {
-        held = true;
-        maybeExit();
-      },
-      Math.max(0, HOLD_MS - now),
-    );
-    /* A frame that neither loads nor errors must not strand the visitor */
-    const failsafeTimer = window.setTimeout(
+    const maxTimer = window.setTimeout(
       startExit,
-      Math.max(0, FAILSAFE_MS - now),
+      owned.current ? Math.max(0, INTRO_MAX_WAIT_MS - performance.now()) : 0,
     );
 
     for (const event of SKIP_EVENTS) {
@@ -165,10 +151,9 @@ export function IntroOverlay({ skip, onExitStart, onComplete }: IntroOverlayProp
     }
 
     return () => {
-      image?.removeEventListener("load", onReady);
-      image?.removeEventListener("error", onReady);
-      window.clearTimeout(holdTimer);
-      window.clearTimeout(failsafeTimer);
+      intro?.hydrate(null);
+      window.clearTimeout(beatTimer);
+      window.clearTimeout(maxTimer);
       for (const event of SKIP_EVENTS) {
         window.removeEventListener(event, startExit);
       }
@@ -268,6 +253,13 @@ export function IntroOverlay({ skip, onExitStart, onComplete }: IntroOverlayProp
           </motion.div>
         </div>
       </motion.div>
+
+      {/* Sits just under the ring; stays behind when the astronaut glides away.
+          The number itself is drawn by CSS from --intro-progress (globals.css) */}
+      <p
+        aria-hidden="true"
+        className="intro-percent absolute left-1/2 top-1/2 m-0 mt-[calc(var(--astronaut-size)*0.41_+_1rem)] -translate-x-1/2 font-satoshi text-sm font-medium tabular-nums tracking-[0.11em] text-white/70"
+      />
     </div>
   );
 }

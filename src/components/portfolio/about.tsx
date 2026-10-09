@@ -9,7 +9,7 @@ import { profile, socials } from "@/data/portfolio";
 
 import { SectionHeading } from "./section-heading";
 
-const PROFILE_IMAGE = "/photos/cutout-experience.png";
+const PROFILE_IMAGE = "/photos/portrait.jpg";
 
 function scrollToTarget(target: string) {
   document.querySelector(target)?.scrollIntoView({ behavior: "smooth" });
@@ -107,27 +107,11 @@ export function About() {
               className="relative mx-auto w-full max-w-[min(100%,calc((100svh-9rem)*2/3))] overflow-hidden rounded-[clamp(24px,2vw,40px)] border border-white/10 md:mr-0"
             >
               <div className="relative aspect-[2/3] w-full bg-(--portfolio-surface)">
-                <div
-                  className="pointer-events-none absolute inset-0"
-                  style={{
-                    background:
-                      "radial-gradient(ellipse 70% 55% at 50% 82%, rgba(0,212,255,0.16), transparent 72%)",
-                  }}
-                />
-                <div
-                  className="pointer-events-none absolute inset-0 opacity-50"
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px)",
-                    backgroundSize: "26px 26px",
-                  }}
-                />
-                <div className="pointer-events-none absolute bottom-4 left-1/2 h-px w-2/3 -translate-x-1/2 bg-white/16" />
                 <Image
                   src={PROFILE_IMAGE}
-                  alt={`${profile.name} portrait cutout`}
+                  alt={`${profile.name} portrait`}
                   fill
-                  className="object-contain object-bottom"
+                  className="object-cover"
                   sizes="(min-width: 768px) 40vw, 100vw"
                   priority
                 />
