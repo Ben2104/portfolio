@@ -47,7 +47,7 @@ export const SHELF_CLOTHS = [
 ];
 
 export const SHELF_QUALITY = {
-  high: { pixelRatioCap: 1.5, shadowMapSize: 1024, shadows: true, antialias: true, areaLights: true, physical: true, textureScale: 1, anisotropy: 8 },
+  high: { pixelRatioCap: 2, shadowMapSize: 1024, shadows: true, antialias: true, areaLights: true, physical: true, textureScale: 1, anisotropy: 8 },
   low: { pixelRatioCap: 1.25, shadowMapSize: 0, shadows: false, antialias: false, areaLights: false, physical: false, textureScale: 0.67, anisotropy: 4 },
 };
 
@@ -109,6 +109,7 @@ type ShelfProject = {
   readonly liveHref?: string;
   readonly sourceHref?: string;
   readonly devpostHref?: string;
+  readonly image?: string;
 };
 
 export type ShelfBook = {
@@ -121,6 +122,8 @@ export type ShelfBook = {
   award: string;
   links: { label: string; href: string }[];
   image: string;
+  cover: string;
+  screenshot: string;
   motifKey: string;
   color: string;
   foil: string;
@@ -132,6 +135,143 @@ export type ShelfBook = {
 };
 
 export type ShelfQuality = keyof typeof SHELF_QUALITY;
+
+/* Generated covers use the ids buildShelfBooks already produces. Missing ids have no art. */
+const SHELF_COVERS: Record<string, string> = {
+  "material-enhancement-assistant": "/projects/shelf/covers/material-enhancement-assistant.webp",
+  "crisislineai": "/projects/shelf/covers/crisislineai.webp",
+  "shape-sign": "/projects/shelf/covers/shape-sign.webp",
+  "911-operator-assistant": "/projects/shelf/covers/911-operator-assistant.webp",
+  "quizzriff": "/projects/shelf/covers/quizzriff.webp",
+  "the-bookstore": "/projects/shelf/covers/the-bookstore.webp",
+  "llm-chatbot": "/projects/shelf/covers/llm-chatbot.webp",
+  "pickleball-booking-extension": "/projects/shelf/covers/pickleball-booking-extension.webp",
+  "pickleball-booking-automation-playwright-github-actions": "/projects/shelf/covers/pickleball-booking-automation-playwright-github-actions.webp",
+};
+
+const DENSITY_WINDOW = 30;
+const DENSITY_SLOW_MS = 19;
+const DENSITY_FAST_MS = 17;
+const DENSITY_IDLE_GAP_MS = 250;
+const DENSITY_STEP = 0.25;
+const DENSITY_FLOOR = 1;
+const TEXTURE_MAP_KEYS = ["map", "alphaMap", "bumpMap", "normalMap", "roughnessMap", "metalnessMap", "emissiveMap", "aoMap"];
+
+function shelfCoverSrc(id: string) {
+  return SHELF_COVERS[id] || "";
+}
+
+function shelfTexturePixels(role: "cover" | "interior", quality: ShelfQuality) {
+  if (role === "cover") {
+    return quality === "low" ? { width: 768, height: 1152 } : { width: 1024, height: 1536 };
+  }
+  return quality === "low" ? { width: 512, height: 768 } : { width: 768, height: 1152 };
+}
+
+/* Fit the whole source in the plate. Both interior pages share this full frame. */
+export function frameScreenshot(imageWidth, imageHeight, boxX, boxY, boxWidth, boxHeight) {
+  if (!(imageWidth > 0) || !(imageHeight > 0) || !(boxWidth > 0) || !(boxHeight > 0)) return null;
+  const scale = Math.min(boxWidth / imageWidth, boxHeight / imageHeight);
+  const dw = imageWidth * scale;
+  const dh = imageHeight * scale;
+  return {
+    sx: 0,
+    sy: 0,
+    sw: imageWidth,
+    sh: imageHeight,
+    dx: boxX + (boxWidth - dw) / 2,
+    dy: boxY + (boxHeight - dh) / 2,
+    dw,
+    dh,
+  };
+}
+
+export function stepShelfDensity(state, frameMs) {
+  if (!(frameMs >= 0) || frameMs >= DENSITY_IDLE_GAP_MS) {
+    return { pixelRatio: state.pixelRatio, cap: state.cap, samples: [] };
+  }
+  const samples = state.samples.concat(frameMs);
+  if (samples.length < DENSITY_WINDOW) {
+    return { pixelRatio: state.pixelRatio, cap: state.cap, samples };
+  }
+  const average = samples.reduce((sum, sample) => sum + sample, 0) / samples.length;
+  let pixelRatio = state.pixelRatio;
+  if (average > DENSITY_SLOW_MS) pixelRatio = Math.max(DENSITY_FLOOR, pixelRatio - DENSITY_STEP);
+  else if (average < DENSITY_FAST_MS) pixelRatio = Math.min(state.cap, pixelRatio + DENSITY_STEP);
+  return { pixelRatio, cap: state.cap, samples: [] };
+}
+
+export function openShelfDensity(devicePixelRatio, tierCap) {
+  const deviceRatio = Number.isFinite(devicePixelRatio) && devicePixelRatio > 0 ? devicePixelRatio : 1;
+  const cap = Math.min(deviceRatio, tierCap);
+  return { pixelRatio: cap, cap, samples: [] };
+}
+
+/* One redraw restores the device cap after motion stops. Animation frames do not request it. */
+export function applyShelfDensity(state, frameMs, animating) {
+  const stepped = stepShelfDensity(state, frameMs);
+  if (animating || stepped.pixelRatio >= stepped.cap) return { ...stepped, redraw: false };
+  return { pixelRatio: stepped.cap, cap: stepped.cap, samples: [], redraw: true };
+}
+
+export function resizeShelfDensity(state) {
+  return {
+    pixelRatio: Math.min(state.cap, Math.max(DENSITY_FLOOR, state.pixelRatio)),
+    cap: state.cap,
+    samples: [],
+  };
+}
+
+/* Resize clears the canvas, so the effects run size, then paint, then at most one schedule. */
+export function commitShelfFrame(density, frameMs, shouldContinue, effects) {
+  const next = applyShelfDensity(density, frameMs, shouldContinue);
+  if (next.pixelRatio !== density.pixelRatio) effects.resize(next.pixelRatio);
+  effects.render();
+  if (shouldContinue || next.redraw) effects.schedule();
+  return { pixelRatio: next.pixelRatio, cap: next.cap, samples: next.samples, redraw: next.redraw };
+}
+
+/* Null only textures this book created. Shared paper and cloth maps stay put. */
+function detachTextureMaps(material, owned) {
+  const keep = owned instanceof Set ? owned : new Set(owned || []);
+  const removed = [];
+  const seen = new Set();
+  for (const key of TEXTURE_MAP_KEYS) {
+    const value = material?.[key];
+    if (!value || !keep.has(value)) continue;
+    material[key] = null;
+    if (!seen.has(value)) {
+      seen.add(value);
+      removed.push(value);
+    }
+  }
+  return removed;
+}
+
+export function releaseShelfDetails(rigs, inspectedId) {
+  const drop = new Set(
+    rigs.filter((rig) => rig.detailed && rig.id !== inspectedId).map((rig) => rig.id)
+  );
+  for (const rig of rigs) {
+    if (!drop.has(rig.id)) continue;
+    rig.hide?.();
+    const doomed = [];
+    const seen = new Set();
+    for (const material of rig.materials) {
+      for (const texture of detachTextureMaps(material, rig.owned)) {
+        if (seen.has(texture)) continue;
+        seen.add(texture);
+        doomed.push(texture);
+      }
+    }
+    for (const texture of doomed) texture.dispose();
+    for (const material of rig.materials) {
+      rig.restore?.(material);
+      material.needsUpdate = true;
+    }
+    rig.detailed = false;
+  }
+}
 
 /* Map portfolio projects onto shelf volumes. Missing fields stay empty, never invented. */
 export function buildShelfBooks(projects: readonly ShelfProject[]): ShelfBook[] {
@@ -146,6 +286,7 @@ export function buildShelfBooks(projects: readonly ShelfProject[]): ShelfBook[] 
     ].filter(Boolean);
     const paper = mixHex(SHELF_THEME.background, cloth.color, SHELF_THEME.roomTint);
     const wall = mixHex(SHELF_THEME.roomWall, cloth.color, SHELF_THEME.roomTint);
+    const screenshot = project.image || "";
 
     return {
       id,
@@ -156,7 +297,9 @@ export function buildShelfBooks(projects: readonly ShelfProject[]): ShelfBook[] 
       tags: [...(project.tags || [])],
       award: project.award || "",
       links,
-      image: `/projects/shelf/${id}.webp`,
+      image: screenshot,
+      cover: shelfCoverSrc(id),
+      screenshot,
       motifKey: MOTIFS[index % MOTIFS.length],
       color: cloth.color,
       foil: cloth.foil,
@@ -247,6 +390,7 @@ export function createShelf({
   const lastIndex = BOOKS.length - 1;
 
   const coverImages = new Map();
+  const screenshotImages = new Map();
   let woodImage = null;
 
   let reducedMotion = reducedMotionQuery.matches;
@@ -285,8 +429,9 @@ export function createShelf({
   let themeMoving = false;
   let intersectionObserver = null;
   /* Dynamic resolution: drop the pixel ratio in steps (never below 1) if frames stay slow */
-  let pixelRatio = Math.min(window.devicePixelRatio || 1, tier.pixelRatioCap);
-  const frameBudget = { totalMs: 0, sampled: 0 };
+  const densityQuality: ShelfQuality = SHELF_QUALITY[quality] ? quality : "high";
+  let density = openShelfDensity(window.devicePixelRatio, tier.pixelRatioCap);
+  let pixelRatio = density.pixelRatio;
   /* MSAA only while the canvas is small enough for it to be cheap; above ~4M pixels the
      density already hides edges and 4x samples dominate the frame */
   const MSAA_PIXEL_LIMIT = 4_000_000;
@@ -480,13 +625,21 @@ export function createShelf({
     };
   }
 
-  function makeCanvas(width, height) {
+  function makeCanvas(width, height, pixels = null) {
     const element = document.createElement("canvas");
-    element.width = Math.round(width * tier.textureScale);
-    element.height = Math.round(height * tier.textureScale);
+    const pixelWidth = pixels ? pixels.width : Math.round(width * tier.textureScale);
+    const pixelHeight = pixels ? pixels.height : Math.round(height * tier.textureScale);
+    element.width = pixelWidth;
+    element.height = pixelHeight;
     const ctx = element.getContext("2d");
-    if (tier.textureScale !== 1) ctx.scale(tier.textureScale, tier.textureScale);
+    const scaleX = pixelWidth / width;
+    const scaleY = pixelHeight / height;
+    if (scaleX !== 1 || scaleY !== 1) ctx.scale(scaleX, scaleY);
     return { element, ctx, width, height };
+  }
+
+  function plateCanvas(width, height, role) {
+    return makeCanvas(width, height, shelfTexturePixels(role, densityQuality));
   }
 
   function drawMotif(ctx, book, width, height) {
@@ -616,14 +769,20 @@ export function createShelf({
     ctx.restore();
   }
 
-  /* Screenshot as a tipped-in plate: cover-fit into the box, with a hairline border */
-  function drawPlate(ctx, book, x, y, width, height, { border = book.foil, shadow = true } = {}) {
-    const image = coverImages.get(book.id);
-    if (!image) {
-      ctx.save();
-      ctx.translate(x, y);
-      drawMotif(ctx, book, width, height * 2.2);
-      ctx.restore();
+  function drawMotifPlate(ctx, book, x, y, width, height) {
+    ctx.save();
+    ctx.translate(x, y);
+    drawMotif(ctx, book, width, height * 2.2);
+    ctx.restore();
+  }
+
+  /* Full source, fitted inside the plate. Cover art and screenshots never share a crop. */
+  function drawPlate(ctx, book, x, y, width, height, { border = book.foil, shadow = true, image = null } = {}) {
+    const frame = image
+      ? frameScreenshot(image.naturalWidth, image.naturalHeight, x, y, width, height)
+      : null;
+    if (!frame) {
+      drawMotifPlate(ctx, book, x, y, width, height);
       return false;
     }
     if (shadow) {
@@ -632,20 +791,7 @@ export function createShelf({
       ctx.fillRect(x + 6, y + 9, width, height);
       ctx.restore();
     }
-    const scale = Math.max(width / image.naturalWidth, height / image.naturalHeight);
-    const sourceWidth = width / scale;
-    const sourceHeight = height / scale;
-    ctx.drawImage(
-      image,
-      (image.naturalWidth - sourceWidth) * 0.5,
-      (image.naturalHeight - sourceHeight) * 0.35,
-      sourceWidth,
-      sourceHeight,
-      x,
-      y,
-      width,
-      height
-    );
+    ctx.drawImage(image, frame.sx, frame.sy, frame.sw, frame.sh, frame.dx, frame.dy, frame.dw, frame.dh);
     ctx.save();
     ctx.strokeStyle = border;
     ctx.globalAlpha = 0.7;
@@ -723,7 +869,7 @@ export function createShelf({
   }
 
   function makeCoverTexture(book) {
-    const { element, ctx, width, height } = makeCanvas(768, 1152);
+    const { element, ctx, width, height } = plateCanvas(768, 1152, "cover");
     const random = seededRandom(hashSeed(book.id) + book.seed);
 
     ctx.fillStyle = book.color;
@@ -757,8 +903,9 @@ export function createShelf({
     ctx.strokeRect(55, 55, width - 110, height - 110);
     ctx.globalAlpha = 1;
 
-    /* The project's screenshot takes the place of the original cover artwork */
-    drawPlate(ctx, book, 96, 168, width - 192, 430);
+    drawPlate(ctx, book, 96, 168, width - 192, 430, {
+      image: coverImages.get(book.id),
+    });
 
     const edgeShade = ctx.createLinearGradient(0, 0, width, 0);
     edgeShade.addColorStop(0, "rgba(0,0,0,0.16)");
@@ -772,7 +919,7 @@ export function createShelf({
   }
 
   function makeFoilTexture(book) {
-    const { element, ctx, width, height } = makeCanvas(768, 1152);
+    const { element, ctx, width, height } = plateCanvas(768, 1152, "cover");
 
     ctx.clearRect(0, 0, width, height);
     ctx.fillStyle = "#ffffff";
@@ -995,7 +1142,7 @@ export function createShelf({
   }
 
   function makeEndpaperTexture(book) {
-    const { element, ctx, width, height } = makeCanvas(512, 768);
+    const { element, ctx, width, height } = plateCanvas(512, 768, "interior");
     drawPaperStock(ctx, width, height);
 
     ctx.save();
@@ -1037,11 +1184,12 @@ export function createShelf({
     return Array.from({ length: pageCount }, (_, pageIndex) => {
       const logicalWidth = 512;
       const logicalHeight = 768;
+      const pixels = shelfTexturePixels("interior", densityQuality);
       const pageCanvas = document.createElement("canvas");
-      pageCanvas.width = Math.round(384 * tier.textureScale);
-      pageCanvas.height = Math.round(576 * tier.textureScale);
+      pageCanvas.width = pixels.width;
+      pageCanvas.height = pixels.height;
       const ctx = pageCanvas.getContext("2d");
-      ctx.scale(0.75 * tier.textureScale, 0.75 * tier.textureScale);
+      ctx.scale(pixels.width / logicalWidth, pixels.height / logicalHeight);
       const random = seededRandom(hashSeed(`${book.id}-leaf-${pageIndex}`) + book.seed);
       drawPaperStock(ctx, logicalWidth, logicalHeight);
       ctx.fillStyle = ink;
@@ -1090,7 +1238,11 @@ export function createShelf({
       } else if (pageIndex === 2 || pageIndex === 6) {
         label(pageIndex === 2 ? "PLATE 01  /  INTERFACE" : "PLATE 02  /  DETAIL", 146);
         const plateHeight = pageIndex === 2 ? 300 : 420;
-        if (!drawPlate(ctx, book, 54, 190, logicalWidth - 108, plateHeight, { border: ink, shadow: false })) {
+        if (!drawPlate(ctx, book, 54, 190, logicalWidth - 108, plateHeight, {
+          border: ink,
+          shadow: false,
+          image: screenshotImages.get(book.id),
+        })) {
           ctx.save();
           ctx.globalAlpha = 0.58;
           drawMotif(ctx, { ...book, foil: ink }, logicalWidth, logicalHeight * 0.92);
@@ -1375,7 +1527,7 @@ export function createShelf({
   }
 
   function makeBackCoverTexture(book) {
-    const { element, ctx, width, height } = makeCanvas(768, 1152);
+    const { element, ctx, width, height } = plateCanvas(768, 1152, "cover");
     const random = seededRandom(hashSeed(`${book.id}-back-cloth`) + book.seed);
 
     ctx.fillStyle = book.color;
@@ -1420,7 +1572,7 @@ export function createShelf({
   }
 
   function makeBackFoilTexture(book) {
-    const { element, ctx, width, height } = makeCanvas(768, 1152);
+    const { element, ctx, width, height } = plateCanvas(768, 1152, "cover");
 
     ctx.clearRect(0, 0, width, height);
     ctx.fillStyle = "#ffffff";
@@ -1981,22 +2133,65 @@ export function createShelf({
     if (rig.detailed) return;
     rig.detailed = true;
     const book = rig.data;
+    const owned = [];
     makeInteriorPageTextures(book).forEach((texture, index) => {
       const material = rig.interiorPageMaterials[index];
       material.map = texture;
       material.needsUpdate = true;
+      owned.push(texture);
     });
-    rig.endpaperMaterial.map = makeEndpaperTexture(book);
+    const endpaper = makeEndpaperTexture(book);
+    rig.endpaperMaterial.map = endpaper;
     rig.endpaperMaterial.needsUpdate = true;
-    rig.backArt.map = makeBackCoverTexture(book);
+    owned.push(endpaper);
+    const back = makeBackCoverTexture(book);
+    rig.backArt.map = back;
     rig.backArt.color.set(0xffffff);
     rig.backArt.needsUpdate = true;
+    owned.push(back);
     const backFoil = makeBackFoilTexture(book);
     rig.backFoilArt.map = backFoil;
     rig.backFoilArt.alphaMap = backFoil;
     rig.backFoilArt.bumpMap = backFoil;
     rig.backFoilArt.needsUpdate = true;
+    owned.push(backFoil);
+    rig.detailTextures = owned;
     rig.backFoilPlane.visible = rig.internalsVisible;
+  }
+
+  function restoreDetailMaterial(rig, material) {
+    if (material === rig.backArt) {
+      material.map = null;
+      material.color.set(rig.data.color);
+      return;
+    }
+    if (material === rig.backFoilArt) {
+      material.map = null;
+      material.alphaMap = null;
+      material.bumpMap = null;
+      return;
+    }
+    if (!material.map) material.map = makePaperFaceTexture();
+  }
+
+  function releaseUninspectedDetails(inspectedId) {
+    releaseShelfDetails(bookRigs.map((rig) => ({
+      id: rig.data.id,
+      get detailed() { return rig.detailed; },
+      set detailed(value) {
+        rig.detailed = value;
+        if (!value) rig.detailTextures = [];
+      },
+      owned: rig.detailTextures || [],
+      materials: [
+        rig.endpaperMaterial,
+        rig.backArt,
+        rig.backFoilArt,
+        ...rig.interiorPageMaterials,
+      ],
+      hide() { setInternalsVisible(rig, false); },
+      restore(material) { restoreDetailMaterial(rig, material); },
+    })), inspectedId);
   }
 
   function setInternalsVisible(rig, visible) {
@@ -3105,6 +3300,7 @@ export function createShelf({
         ? origin
         : inspectButton;
     activeBook = bookRigs[selectedIndex];
+    releaseUninspectedDetails(activeBook.data.id);
     ensureDetailTextures(activeBook);
     setInternalsVisible(activeBook, true);
     activeBook.root.visible = true;
@@ -3244,6 +3440,7 @@ export function createShelf({
     mode = "hero";
     transitionTime = 0;
     activeBook = null;
+    releaseUninspectedDetails(null);
     liveRegion.textContent = `${BOOKS[selectedIndex].title} returned to the shelf.`;
     requestAnimationFrame(() => focusReturnTarget?.focus?.({ preventScroll: true }));
   }
@@ -3366,28 +3563,11 @@ export function createShelf({
     return 1;
   }
 
-  /* Render on demand: a frame is scheduled only while something is still moving */
-  function adaptResolution(frameMs) {
-    if (pixelRatio <= 1) return;
-    frameBudget.sampled += 1;
-    frameBudget.totalMs += frameMs;
-    if (frameBudget.sampled < 30) return;
-    if (frameBudget.totalMs / frameBudget.sampled > 19) {
-      pixelRatio = Math.max(1, pixelRatio - 0.25);
-      renderer.setPixelRatio(pixelRatio);
-      renderer.setSize(viewWidth, viewHeight, false);
-    }
-    frameBudget.sampled = 0;
-    frameBudget.totalMs = 0;
-  }
-
   function frame(time) {
     rafId = 0;
     const frameMs = time - lastTime;
     const delta = Math.min(frameMs / 1000, 0.05);
     lastTime = time;
-    /* Only consecutive animation frames say anything about GPU cost */
-    if (frameMs < 250) adaptResolution(frameMs);
     needsAnotherFrame = false;
 
     if (pointerDirty) updateHover();
@@ -3403,20 +3583,35 @@ export function createShelf({
       updatePaginatedBook(activeBook, delta, getDetailOpenAmount());
     }
 
-    renderer.render(scene, camera);
-
     const shouldContinue = mode === "opening"
       || mode === "closing"
       || pageDrag.active
       || themeIsMoving
       || needsAnotherFrame;
-    if (shouldContinue) requestFrame();
+    const outcome = commitShelfFrame(density, frameMs, shouldContinue, {
+      resize(ratio) {
+        pixelRatio = ratio;
+        if (!renderer) return;
+        renderer.setPixelRatio(ratio);
+        renderer.setSize(viewWidth, viewHeight, false);
+      },
+      render() {
+        renderer.render(scene, camera);
+      },
+      schedule() {
+        requestFrame();
+      },
+    });
+    density = { pixelRatio: outcome.pixelRatio, cap: outcome.cap, samples: outcome.samples };
+    pixelRatio = outcome.pixelRatio;
   }
 
   function resize() {
     if (!renderer) return;
     viewWidth = Math.max(1, root.clientWidth);
     viewHeight = Math.max(1, root.clientHeight);
+    density = resizeShelfDensity(density);
+    pixelRatio = density.pixelRatio;
     configureResponsiveTargets();
     renderer.setPixelRatio(pixelRatio);
     renderer.setSize(viewWidth, viewHeight, false);
@@ -3628,15 +3823,19 @@ export function createShelf({
       ]).catch(() => null),
       new Promise((resolve) => setTimeout(resolve, 2000)),
     ]);
-    const [, wood, ...covers] = await Promise.all([
+    const [, wood, loadedBooks] = await Promise.all([
       fontsReady,
       loadImage(WOOD_TEXTURE_URL),
-      ...BOOKS.map((book) => loadImage(book.image)),
+      Promise.all(BOOKS.map(async (book) => ({
+        cover: book.cover ? await loadImage(book.cover) : null,
+        screenshot: book.screenshot ? await loadImage(book.screenshot) : null,
+      }))),
     ]);
     if (disposed) return;
     woodImage = wood;
-    covers.forEach((image, index) => {
-      if (image) coverImages.set(BOOKS[index].id, image);
+    loadedBooks.forEach((entry, index) => {
+      if (entry.cover) coverImages.set(BOOKS[index].id, entry.cover);
+      if (entry.screenshot) screenshotImages.set(BOOKS[index].id, entry.screenshot);
     });
 
     try {
