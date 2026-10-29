@@ -28,7 +28,7 @@ Final scoped shelf results and remaining baseline issues are recorded below.
 - Production build: first `npm run build` compiled and generated pages, then exited 1 for the existing Next.js security upgrade notice. Retrying `npm run build` exited 0, retaining the vulnerability warning. This does not resolve the audit finding or make the CI audit job green.
 - Generated `next-env.d.ts` changes were restored; the user's pre-existing `package-lock.json` edit remains excluded from task commits.
 - The lead added only a source comment after browser captures to document eager image loading; runtime behavior is unchanged from the captured version.
-- No merge or deployment is authorized by this work. Push and PR creation require GitHub authentication, which is absent in this environment.
+- GitHub authentication was supplied after QA. Branch pushed and draft PR opened: https://github.com/Ben2104/portfolio/pull/28. No merge or deployment.
 
 ## Reproduction commands
 

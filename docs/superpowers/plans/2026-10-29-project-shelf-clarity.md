@@ -86,9 +86,9 @@
 - [x] Review QA's Playwright results, desktop/mobile screenshots, and GIF. Confirm captures use the final generated art and record performance/readability limits honestly.
 - [x] Fix blocking defects with focused regression proof. Run the final focused checks, lint, TypeScript check, and production build. Record failures rather than declaring a pass.
 - [x] Stage task files explicitly, excluding the user's lockfile edit; commit local work.
-- [ ] Push `debug/project-shelf-clarity` after GitHub authentication is available.
-- [ ] Create a PR to `main` with the problem, resulting behavior, checks, image evidence, and material limits. Requires a working GitHub login; never claim a PR exists without its returned URL. Do not merge.
+- [x] Push `debug/project-shelf-clarity` after GitHub authentication is available.
+- [x] Create a PR to `main` with the problem, resulting behavior, checks, image evidence, and material limits: https://github.com/Ben2104/portfolio/pull/28. Draft pending the documented baseline blockers. Do not merge.
 
 ## Delivery status
 
-Local implementation, scoped QA, PNG captures, and a labeled reduced-motion GIF walkthrough are complete. Production build passed on retry after the existing Next.js security notice. Whole-page console validation still reports the baseline hydration warning, and the existing critical dependency audit fails. Push and PR creation remain pending GitHub authentication. No merge or deployment.
+Local implementation, scoped QA, PNG captures, and a labeled reduced-motion GIF walkthrough are complete. Production build passed on retry after the existing Next.js security notice. Whole-page console validation still reports the baseline hydration warning, and the existing critical dependency audit fails. Branch pushed; draft PR: https://github.com/Ben2104/portfolio/pull/28. No merge or deployment.
