@@ -1,0 +1,764 @@
+{
+ "env": {
+  "tier": "low",
+  "dpr": 2,
+  "mobile": true,
+  "reduced": false
+ },
+ "checks": [
+  {
+   "name": "idle: no draws after load settle",
+   "pass": true
+  },
+  {
+   "name": "prewarmed open: 0 detail canvases",
+   "pass": true,
+   "detail": {
+    "phase": "warm-open-prewarmed",
+    "canvases": 0,
+    "uploads": 0,
+    "texCreated": 0,
+    "texDeleted": 0,
+    "linkProgram": 0,
+    "draws": 5,
+    "sceneAssignments": 0,
+    "sceneAssignSame": 0,
+    "prepTasks": 0,
+    "maxTaskMs": 0,
+    "tasksOver50": [],
+    "taskMs": [],
+    "taskCanvases": [],
+    "longTasksOverlappingPrep": 0
+   }
+  },
+  {
+   "name": "prewarmed open: 0 texture uploads",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "name": "page turns: no new detail canvases/uploads",
+   "pass": true,
+   "detail": {
+    "canvases": 0,
+    "uploads": 0
+   }
+  },
+  {
+   "name": "close returns focus to the opener (inspect button)",
+   "pass": true,
+   "detail": "inspect"
+  },
+  {
+   "name": "same-book reopen: 0 canvases",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "name": "same-book reopen: 0 uploads",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "name": "same-book reopen: 0 texture creations",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "name": "cold: preparing state shown synchronously",
+   "pass": true,
+   "detail": {
+    "busyText": "Preparing",
+    "busyAria": "true",
+    "busyLive": "Preparing 911 OPERATOR ASSISTANT."
+   }
+  },
+  {
+   "name": "cold: 11 detail canvases, one per task",
+   "pass": true,
+   "detail": {
+    "canvases": 11,
+    "taskCanvases": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "name": "cold: busy state cleared after open",
+   "pass": true
+  },
+  {
+   "name": "switch back to book 0: set was evicted so it re-prepares (one set retained)",
+   "pass": true,
+   "detail": {
+    "canvases": 11,
+    "deleted": 11
+   }
+  },
+  {
+   "name": "Escape during prep: cancelled, not opened later, busy cleared, focus on inspect",
+   "pass": true,
+   "detail": {
+    "pendingText": "Preparing",
+    "afterEsc": {
+     "text": "Open",
+     "busy": null,
+     "live": "Preparation cancelled.",
+     "focus": "inspect",
+     "detail": false,
+     "mode": "pshelf webgl-ready"
+    },
+    "stillClosed": true
+   }
+  },
+  {
+   "name": "reselect while pending never opens the stale book",
+   "pass": true,
+   "detail": {
+    "live": "Selected project 3 of 9: Shape-Sign."
+   }
+  },
+  {
+   "name": "triple activation coalesces to one preparation (<=11 canvases)",
+   "pass": false,
+   "detail": 19
+  },
+  {
+   "name": "Escape closes detail; focus returns",
+   "pass": true,
+   "detail": "inspect"
+  },
+  {
+   "name": "keyboard Enter opens; focus moves into dialog; Escape returns",
+   "pass": true,
+   "detail": "close-detail"
+  },
+  {
+   "name": "resize: no unchanged-value canvas resets",
+   "pass": true,
+   "detail": {
+    "phase": "resize",
+    "canvases": 0,
+    "uploads": 0,
+    "texCreated": 0,
+    "texDeleted": 0,
+    "linkProgram": 0,
+    "draws": 5,
+    "sceneAssignments": 4,
+    "sceneAssignSame": 0,
+    "prepTasks": 0,
+    "maxTaskMs": 0,
+    "tasksOver50": [],
+    "taskMs": [],
+    "taskCanvases": [],
+    "longTasksOverlappingPrep": 0
+   }
+  },
+  {
+   "name": "resize: final buffer matches CSS x DPR",
+   "pass": true,
+   "detail": {
+    "w": 487,
+    "h": 1055,
+    "cw": 390,
+    "ch": 844
+   }
+  },
+  {
+   "name": "idle: no draws after resize settles",
+   "pass": true
+  },
+  {
+   "name": "rest buffer ratio equals rest cap after motion",
+   "pass": true,
+   "detail": {
+    "duringScroll": {
+     "w": 487,
+     "cw": 390
+    },
+    "afterScroll": {
+     "w": 487,
+     "cw": 390
+    },
+    "restRatio": 1.2487179487179487
+   }
+  },
+  {
+   "name": "idle: no draws after scroll settles",
+   "pass": true
+  },
+  {
+   "name": "injected failure: error announced, busy cleared, shelf usable, not opened",
+   "pass": false,
+   "detail": {
+    "thrown": 0,
+    "text": "Open",
+    "busy": null,
+    "live": "Opening LLM Chatbot. Drag the cover, click the book, or use Open book to begin reading.",
+    "detail": true,
+    "focus": "close-detail"
+   }
+  }
+ ],
+ "phases": {
+  "startup-ready": {
+   "phase": "startup-ready",
+   "canvases": 11,
+   "uploads": 26,
+   "texCreated": 13,
+   "texDeleted": 0,
+   "linkProgram": 0,
+   "draws": 2,
+   "sceneAssignments": 0,
+   "sceneAssignSame": 0,
+   "prepTasks": 11,
+   "maxTaskMs": 37.29999998211861,
+   "tasksOver50": [],
+   "taskMs": [
+    8.9,
+    6.7,
+    35.1,
+    7.2,
+    6.3,
+    8.1,
+    6.4,
+    7.3,
+    6.5,
+    37.3,
+    11.5
+   ],
+   "taskCanvases": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "longTasksOverlappingPrep": 1
+  },
+  "idle-load": {
+   "phase": "idle-load",
+   "canvases": 0,
+   "uploads": 0,
+   "texCreated": 0,
+   "texDeleted": 0,
+   "linkProgram": 0,
+   "draws": 0,
+   "sceneAssignments": 0,
+   "sceneAssignSame": 0,
+   "prepTasks": 0,
+   "maxTaskMs": 0,
+   "tasksOver50": [],
+   "taskMs": [],
+   "taskCanvases": [],
+   "longTasksOverlappingPrep": 0
+  },
+  "warm-open-prewarmed": {
+   "phase": "warm-open-prewarmed",
+   "canvases": 0,
+   "uploads": 0,
+   "texCreated": 0,
+   "texDeleted": 0,
+   "linkProgram": 0,
+   "draws": 5,
+   "sceneAssignments": 0,
+   "sceneAssignSame": 0,
+   "prepTasks": 0,
+   "maxTaskMs": 0,
+   "tasksOver50": [],
+   "taskMs": [],
+   "taskCanvases": [],
+   "longTasksOverlappingPrep": 0
+  },
+  "page-turns": {
+   "phase": "page-turns",
+   "canvases": 0,
+   "uploads": 0,
+   "texCreated": 0,
+   "texDeleted": 0,
+   "linkProgram": 0,
+   "draws": 58,
+   "sceneAssignments": 0,
+   "sceneAssignSame": 0,
+   "prepTasks": 0,
+   "maxTaskMs": 0,
+   "tasksOver50": [],
+   "taskMs": [],
+   "taskCanvases": [],
+   "longTasksOverlappingPrep": 0
+  },
+  "close-1": {
+   "phase": "close-1",
+   "canvases": 0,
+   "uploads": 0,
+   "texCreated": 0,
+   "texDeleted": 0,
+   "linkProgram": 0,
+   "draws": 9,
+   "sceneAssignments": 0,
+   "sceneAssignSame": 0,
+   "prepTasks": 0,
+   "maxTaskMs": 0,
+   "tasksOver50": [],
+   "taskMs": [],
+   "taskCanvases": [],
+   "longTasksOverlappingPrep": 0
+  },
+  "same-book-reopen": {
+   "phase": "same-book-reopen",
+   "canvases": 0,
+   "uploads": 0,
+   "texCreated": 0,
+   "texDeleted": 0,
+   "linkProgram": 0,
+   "draws": 3,
+   "sceneAssignments": 0,
+   "sceneAssignSame": 0,
+   "prepTasks": 0,
+   "maxTaskMs": 0,
+   "tasksOver50": [],
+   "taskMs": [],
+   "taskCanvases": [],
+   "longTasksOverlappingPrep": 0
+  },
+  "other-book-cold": {
+   "phase": "other-book-cold",
+   "canvases": 11,
+   "uploads": 22,
+   "texCreated": 11,
+   "texDeleted": 11,
+   "linkProgram": 0,
+   "draws": 22,
+   "sceneAssignments": 0,
+   "sceneAssignSame": 0,
+   "prepTasks": 11,
+   "maxTaskMs": 41.099999994039536,
+   "tasksOver50": [],
+   "taskMs": [
+    7,
+    6.8,
+    9.4,
+    6.2,
+    5.4,
+    5.8,
+    5.7,
+    12.3,
+    6,
+    41.1,
+    11.3
+   ],
+   "taskCanvases": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "longTasksOverlappingPrep": 11
+  },
+  "back-to-book-0": {
+   "phase": "back-to-book-0",
+   "canvases": 11,
+   "uploads": 22,
+   "texCreated": 11,
+   "texDeleted": 11,
+   "linkProgram": 0,
+   "draws": 27,
+   "sceneAssignments": 0,
+   "sceneAssignSame": 0,
+   "prepTasks": 11,
+   "maxTaskMs": 38.400000005960464,
+   "tasksOver50": [],
+   "taskMs": [
+    5.1,
+    5.4,
+    9.2,
+    12.3,
+    5.2,
+    8.4,
+    9.7,
+    5.5,
+    14.7,
+    38.4,
+    10.7
+   ],
+   "taskCanvases": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "longTasksOverlappingPrep": 11
+  },
+  "rapid-escape": {
+   "phase": "rapid-escape",
+   "canvases": 2,
+   "uploads": 4,
+   "texCreated": 2,
+   "texDeleted": 12,
+   "linkProgram": 0,
+   "draws": 26,
+   "sceneAssignments": 0,
+   "sceneAssignSame": 0,
+   "prepTasks": 2,
+   "maxTaskMs": 5.699999988079071,
+   "tasksOver50": [],
+   "taskMs": [
+    5.7,
+    5.3
+   ],
+   "taskCanvases": [
+    1,
+    1
+   ],
+   "longTasksOverlappingPrep": 1
+  },
+  "rapid-reselect": {
+   "phase": "rapid-reselect",
+   "canvases": 16,
+   "uploads": 32,
+   "texCreated": 16,
+   "texDeleted": 18,
+   "linkProgram": 0,
+   "draws": 28,
+   "sceneAssignments": 0,
+   "sceneAssignSame": 0,
+   "prepTasks": 16,
+   "maxTaskMs": 45.20000001788139,
+   "tasksOver50": [],
+   "taskMs": [
+    11.9,
+    5.8,
+    5.3,
+    5.5,
+    5.7,
+    5.6,
+    5.3,
+    45.2,
+    11.1,
+    5.8,
+    6.5,
+    16.4,
+    5.6,
+    5.2,
+    5.5,
+    5.5
+   ],
+   "taskCanvases": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "longTasksOverlappingPrep": 9
+  },
+  "coalesce": {
+   "phase": "coalesce",
+   "canvases": 19,
+   "uploads": 38,
+   "texCreated": 19,
+   "texDeleted": 8,
+   "linkProgram": 0,
+   "draws": 26,
+   "sceneAssignments": 0,
+   "sceneAssignSame": 0,
+   "prepTasks": 19,
+   "maxTaskMs": 44.60000002384186,
+   "tasksOver50": [],
+   "taskMs": [
+    5.5,
+    10.6,
+    44.6,
+    5.3,
+    5.5,
+    5.4,
+    5.6,
+    5.4,
+    5.3,
+    5.1,
+    5.9,
+    4.9,
+    4.9,
+    8.3,
+    6.9,
+    5.4,
+    5.5,
+    37.9,
+    10.7
+   ],
+   "taskCanvases": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "longTasksOverlappingPrep": 19
+  },
+  "keyboard": {
+   "phase": "keyboard",
+   "canvases": 0,
+   "uploads": 0,
+   "texCreated": 0,
+   "texDeleted": 0,
+   "linkProgram": 0,
+   "draws": 6,
+   "sceneAssignments": 0,
+   "sceneAssignSame": 0,
+   "prepTasks": 0,
+   "maxTaskMs": 0,
+   "tasksOver50": [],
+   "taskMs": [],
+   "taskCanvases": [],
+   "longTasksOverlappingPrep": 0
+  },
+  "resize": {
+   "phase": "resize",
+   "canvases": 0,
+   "uploads": 0,
+   "texCreated": 0,
+   "texDeleted": 0,
+   "linkProgram": 0,
+   "draws": 5,
+   "sceneAssignments": 4,
+   "sceneAssignSame": 0,
+   "prepTasks": 0,
+   "maxTaskMs": 0,
+   "tasksOver50": [],
+   "taskMs": [],
+   "taskCanvases": [],
+   "longTasksOverlappingPrep": 0
+  },
+  "idle-post-resize": {
+   "phase": "idle-post-resize",
+   "canvases": 0,
+   "uploads": 0,
+   "texCreated": 0,
+   "texDeleted": 0,
+   "linkProgram": 0,
+   "draws": 0,
+   "sceneAssignments": 0,
+   "sceneAssignSame": 0,
+   "prepTasks": 0,
+   "maxTaskMs": 0,
+   "tasksOver50": [],
+   "taskMs": [],
+   "taskCanvases": [],
+   "longTasksOverlappingPrep": 0
+  },
+  "scroll": {
+   "phase": "scroll",
+   "canvases": 11,
+   "uploads": 22,
+   "texCreated": 11,
+   "texDeleted": 11,
+   "linkProgram": 0,
+   "draws": 30,
+   "sceneAssignments": 0,
+   "sceneAssignSame": 0,
+   "prepTasks": 11,
+   "maxTaskMs": 57,
+   "tasksOver50": [
+    {
+     "ms": 57,
+     "canvases": 1,
+     "uploads": 2
+    }
+   ],
+   "taskMs": [
+    5.3,
+    5.3,
+    5.2,
+    5.2,
+    6.5,
+    5.3,
+    9.1,
+    6.4,
+    5.3,
+    57,
+    10.2
+   ],
+   "taskCanvases": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "longTasksOverlappingPrep": 10
+  },
+  "idle-post-scroll": {
+   "phase": "idle-post-scroll",
+   "canvases": 0,
+   "uploads": 0,
+   "texCreated": 0,
+   "texDeleted": 0,
+   "linkProgram": 0,
+   "draws": 0,
+   "sceneAssignments": 0,
+   "sceneAssignSame": 0,
+   "prepTasks": 0,
+   "maxTaskMs": 0,
+   "tasksOver50": [],
+   "taskMs": [],
+   "taskCanvases": [],
+   "longTasksOverlappingPrep": 0
+  }
+ },
+ "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+ "sceneAtRest": {
+  "w": 487,
+  "h": 1055,
+  "cw": 390,
+  "ch": 844,
+  "dpr": 2
+ },
+ "settleMs-load": 3097,
+ "warmOpenWallMs": 4102,
+ "pageLabel": {
+  "before": "Title page",
+  "after": "Stack · Notes"
+ },
+ "cold": {
+  "wallMs": 9252,
+  "busyText": "Preparing",
+  "busyAria": "true",
+  "busyLive": "Preparing 911 OPERATOR ASSISTANT.",
+  "taskMs": [
+   7,
+   6.8,
+   9.4,
+   6.2,
+   5.4,
+   5.8,
+   5.7,
+   12.3,
+   6,
+   41.1,
+   11.3
+  ],
+  "taskCanvases": [
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "tasksOver50": []
+ },
+ "escape": {
+  "pendingText": "Preparing",
+  "afterEsc": {
+   "text": "Open",
+   "busy": null,
+   "live": "Preparation cancelled.",
+   "focus": "inspect",
+   "detail": false,
+   "mode": "pshelf webgl-ready"
+  },
+  "stillClosed": true
+ },
+ "resize": {
+  "assignments": 4,
+  "same": 0,
+  "after": {
+   "w": 487,
+   "h": 1055,
+   "cw": 390,
+   "ch": 844
+  }
+ },
+ "settleMs-post-resize": 11721,
+ "scrollSettleMs": 15086,
+ "density": {
+  "duringScroll": {
+   "w": 487,
+   "cw": 390
+  },
+  "afterScroll": {
+   "w": 487,
+   "cw": 390
+  },
+  "restRatio": 1.2487179487179487
+ },
+ "settleMs-post-scroll": 3095,
+ "failure": {
+  "thrown": 0,
+  "text": "Open",
+  "busy": null,
+  "live": "Opening LLM Chatbot. Drag the cover, click the book, or use Open book to begin reading.",
+  "detail": true,
+  "focus": "close-detail"
+ },
+ "fatal": "locator.click: Timeout 120000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-shelf=inspect]')\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"button\" class=\"text-button\" data-shelf=\"inspect\" aria-label=\"Open LLM Chatbot\">Open</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <canvas width=\"487\" class=\"scene\" height=\"1055\" data-shelf=\"scene\" aria-hidden=\"true\" data-engine=\"three.js r180\"></canvas> from <div class=\"scene-shell\">…</div> subtree intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <canvas width=\"487\" class=\"scene\" height=\"1055\" data-shelf=\"scene\" aria-hidden=\"true\" data-engine=\"three.js r180\"></canvas> from <div class=\"scene-shell\">…</div> subtree intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    208 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m        - element is visible, enabled and stable\u001b[22m\n\u001b[2m        - scrolling into view if needed\u001b[22m\n\u001b[2m        - done scrolling\u001b[22m\n\u001b[2m        - <canvas width=\"487\" class=\"scene\" height=\"1055\" data-shelf=\"scene\" aria-hidden=\"true\" data-engine=\"three.js r180\"></canvas> from <div class=\"scene-shell\">…</div> subtree intercepts pointer events\u001b[22m\n\u001b[2m      - retrying click action\u001b[22m\n\u001b[2m        - waiting 500ms\u001b[22m\n\n    at main (/home/khoido/Developer/portfolio/docs/pr/project-shelf-smoothness/qa-probe.cjs:236:48)",
+ "errors": [
+  "console: Failed to load resource: the server responded with a status of 404 (Not Found)"
+ ]
+}
