@@ -6,7 +6,7 @@ Keep the interactive 3D bookshelf. Make covers and open pages sharp, and give al
 
 ## Approaches
 
-1. **Illustrated covers, selected by the user:** coordinated editorial illustrations with a different subject for each project. Real project screenshots remain inside the books. This combines a consistent collection with evidence of the actual work.
+1. **Illustrated covers, selected by the user:** coordinated editorial illustrations with a different subject for each project. Original project visuals remain inside the books, including actual screenshots where available. This combines a consistent collection with evidence of the actual work.
 2. **Realistic scenes:** cinematic physical objects with a shared palette. Rejected in favor of illustrations because consistent software project representation is harder.
 
 ## Proposed visual treatment
@@ -46,6 +46,8 @@ Check asset dimensions and mappings for all nine projects. Verify adaptive resol
 ## Risks and limits
 
 Larger textures increase GPU memory and generation/upload time. Density changes need browser performance checks. The 573-pixel 911 source and 720-pixel chatbot source limit screenshot detail; generating cover art cannot restore missing screenshot detail. Generated gestures require visual review and must not claim a particular sign without verification.
+
+Observed during implementation: covers total 1,033,380 bytes and original visuals total 6,800,512 bytes, both loaded before shelf readiness. This improves source detail at the cost of startup transfer and decoded image memory. Existing originals include illustrations and photos as well as interface screenshots.
 
 ## Approval and permissions
 

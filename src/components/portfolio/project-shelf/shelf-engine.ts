@@ -3823,6 +3823,7 @@ export function createShelf({
       ]).catch(() => null),
       new Promise((resolve) => setTimeout(resolve, 2000)),
     ]);
+    // shortcut: preload all originals; load per inspected book if the 7.8 MB image payload delays shelf startup.
     const [, wood, loadedBooks] = await Promise.all([
       fontsReady,
       loadImage(WOOD_TEXTURE_URL),
