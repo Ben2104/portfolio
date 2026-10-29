@@ -1,6 +1,6 @@
 # Smooth 3D project shelf
 
-Status: proposed design; awaiting user approval before implementation.
+Status: approved by the user on 2026-10-29; implementation authorized.
 
 Builder check: the existing Codex QA worker independently reviewed the design against the engine and reported "nothing important left." Review ran inline in Herdr, honoring the user's no-subagent preference.
 
