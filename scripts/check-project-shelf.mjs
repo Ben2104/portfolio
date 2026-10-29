@@ -204,9 +204,17 @@ check("density integration caps DPR 1, restores on settle, and keeps resize in r
   state = engine.openShelfDensity(3, tierCap);
   assert.equal(state.cap, 2);
   assert.equal(state.pixelRatio, 2);
-  for (let index = 0; index < 30; index += 1) state = engine.applyShelfDensity(state, 22, true);
-  assert.equal(state.pixelRatio, 1.75);
-  const settled = engine.applyShelfDensity(state, 16, false);
+  state = engine.applyShelfDensity(state, 16, true);
+  assert.equal(state.pixelRatio, 1.5);
+  assert.equal(state.cap, 2);
+  for (let index = 0; index < 60; index += 1) state = engine.applyShelfDensity(state, 16, true);
+  assert.equal(state.pixelRatio, 1.5);
+  const held = engine.applyShelfDensity(state, 16, false);
+  assert.equal(held.pixelRatio, 1.5);
+  assert.equal(held.redraw, true);
+  const toggled = engine.applyShelfDensity(held, 16, true);
+  assert.equal(toggled.pixelRatio, 1.5);
+  const settled = engine.applyShelfDensity(held, 16, false);
   assert.equal(settled.pixelRatio, 2);
   assert.equal(settled.redraw, true);
   const painted = engine.applyShelfDensity(settled, 16, false);
@@ -214,13 +222,14 @@ check("density integration caps DPR 1, restores on settle, and keeps resize in r
   assert.equal(painted.redraw, false);
 
   state = engine.openShelfDensity(2, tierCap);
-  for (let index = 0; index < 30; index += 1) state = engine.applyShelfDensity(state, 22, true);
+  state = engine.applyShelfDensity(state, 22, true);
+  for (let index = 0; index < 29; index += 1) state = engine.applyShelfDensity(state, 22, true);
   state = engine.resizeShelfDensity(state);
-  assert.equal(state.pixelRatio, 1.75);
+  assert.equal(state.pixelRatio, 1.25);
   assert.equal(state.cap, 2);
   assert.equal(state.samples.length, 0);
-  for (let index = 0; index < 30; index += 1) state = engine.applyShelfDensity(state, 16, true);
-  assert.equal(state.pixelRatio, 2);
+  for (let index = 0; index < 60; index += 1) state = engine.applyShelfDensity(state, 16, true);
+  assert.equal(state.pixelRatio, 1.5);
 
   const resizedOne = engine.resizeShelfDensity(engine.openShelfDensity(1, tierCap));
   assert.equal(resizedOne.pixelRatio, 1);
@@ -232,25 +241,345 @@ check("density integration caps DPR 1, restores on settle, and keeps resize in r
   assert.match(source, /resizeShelfDensity\(density\)/);
 });
 
-check("final fast sample resizes before paint and does not schedule another frame", () => {
-  const quiet = { resize() {}, render() {}, schedule() {} };
-  let state = { pixelRatio: 1.75, cap: 2, samples: [] };
-  for (let index = 0; index < 29; index += 1) state = engine.commitShelfFrame(state, 16, true, quiet);
-  assert.equal(state.pixelRatio, 1.75);
+check("motion entry resizes before paint and the sharp rest frame is not cleared again", () => {
   const calls = [];
-  state = engine.commitShelfFrame(state, 16, false, {
+  const effects = {
     resize(ratio) { calls.push(`resize:${ratio}`); },
     render() { calls.push("render"); },
     schedule() { calls.push("schedule"); },
-  });
+  };
+  let state = engine.openShelfDensity(2, engine.SHELF_QUALITY.high.pixelRatioCap);
+  state = engine.commitShelfFrame(state, 16, true, effects);
+  assert.equal(state.pixelRatio, 1.5);
+  assert.deepEqual(calls, ["resize:1.5", "render", "schedule"]);
+  calls.length = 0;
+  state = engine.commitShelfFrame(state, 16, true, effects);
+  assert.equal(state.pixelRatio, 1.5);
+  assert.deepEqual(calls, ["render", "schedule"]);
+  calls.length = 0;
+  state = engine.commitShelfFrame(state, 16, false, effects);
+  assert.equal(state.pixelRatio, 1.5);
+  assert.deepEqual(calls, ["render", "schedule"]);
+  calls.length = 0;
+  state = engine.commitShelfFrame(state, 16, false, effects);
+  assert.equal(state.pixelRatio, 2);
+  assert.deepEqual(calls, ["resize:2", "render", "schedule"]);
+  calls.length = 0;
+  state = engine.commitShelfFrame(state, 16, false, effects);
   assert.equal(state.pixelRatio, 2);
   assert.equal(state.redraw, false);
-  assert.deepEqual(calls, ["resize:2", "render"]);
+  assert.deepEqual(calls, ["render"]);
+});
 
-  const source = readFileSync(new URL("../src/components/portfolio/project-shelf/shelf-engine.ts", import.meta.url), "utf8");
-  const frameStart = source.indexOf("function frame(time)");
-  const body = source.slice(frameStart, source.indexOf("function resize()", frameStart));
-  assert.match(body, /commitShelfFrame\(density, frameMs, shouldContinue/);
+check("unchanged drawing buffer is not reset", () => {
+  const calls = [];
+  const renderer = {
+    setPixelRatio() { calls.push("ratio"); },
+    setSize() { calls.push("size"); },
+    setDrawingBufferSize(width, height, ratio) { calls.push(`buffer:${width}x${height}@${ratio}`); },
+  };
+  let previous = engine.assignShelfBuffer(renderer, 800, 600, 1.5, null);
+  assert.deepEqual(calls, ["buffer:800x600@1.5"]);
+  calls.length = 0;
+  previous = engine.assignShelfBuffer(renderer, 800, 600, 1.5, previous);
+  assert.deepEqual(calls, []);
+  previous = engine.assignShelfBuffer(renderer, 800.4, 600.4, 1.5, previous);
+  assert.deepEqual(calls, []);
+  engine.assignShelfBuffer(renderer, 800, 600, 2, previous);
+  assert.deepEqual(calls, ["buffer:800x600@2"]);
+});
+
+function detailHarness(units = ["page-0", "page-1"]) {
+  const queue = [];
+  const created = [];
+  const uploaded = [];
+  const released = [];
+  let failUnit = null;
+  const prep = engine.createDetailPrep({
+    units: () => units,
+    create(id, unit) {
+      if (unit === failUnit) throw new Error(`fail ${unit}`);
+      const texture = { id: `${id}:${unit}` };
+      created.push(texture);
+      return texture;
+    },
+    upload(texture) { uploaded.push(texture); },
+    release(texture) { released.push(texture); },
+    schedule(fn) { queue.push(fn); },
+  });
+  return { queue, created, uploaded, released, prep, setFail(unit) { failUnit = unit; } };
+}
+
+function once(queue) {
+  const fn = queue.shift();
+  assert.ok(fn, "expected a scheduled preparation task");
+  fn();
+}
+
+check("detail prep yields per texture, retains one set, and drops stale work", () => {
+  const warm = detailHarness();
+  assert.equal(warm.prep.prepare("a"), "started");
+  assert.equal(warm.created.length, 0);
+  once(warm.queue);
+  assert.deepEqual(warm.created.map((texture) => texture.id), ["a:page-0"]);
+  assert.deepEqual(warm.uploaded.map((texture) => texture.id), ["a:page-0"]);
+  assert.equal(warm.queue.length, 1);
+  once(warm.queue);
+  assert.equal(warm.prep.isReady("a"), true);
+  assert.equal(warm.queue.length, 0);
+  warm.prep.markInspected("a");
+  warm.prep.markClosed();
+  warm.created.length = 0;
+  warm.uploaded.length = 0;
+  const ready = [];
+  assert.equal(warm.prep.prepare("a", { onReady(id) { ready.push(id); } }), "ready");
+  assert.deepEqual(ready, ["a"]);
+  assert.equal(warm.created.length, 0);
+  assert.equal(warm.uploaded.length, 0);
+  assert.equal(warm.queue.length, 0);
+  warm.prep.markInspected("a");
+  assert.equal(warm.prep.prepare("b"), "blocked");
+  assert.equal(warm.released.length, 0);
+  warm.prep.markClosed();
+  assert.equal(warm.prep.prepare("b"), "started");
+  assert.equal(warm.released.length, 2);
+  assert.deepEqual(warm.released.map((texture) => texture.id), ["a:page-0", "a:page-1"]);
+  const staleSwitch = detailHarness();
+  staleSwitch.prep.prepare("a");
+  once(staleSwitch.queue);
+  const stale = staleSwitch.queue.shift();
+  staleSwitch.prep.prepare("b");
+  stale();
+  assert.deepEqual(staleSwitch.created.map((texture) => texture.id), ["a:page-0"]);
+  assert.equal(staleSwitch.released.length, 1);
+
+  const cancelled = detailHarness();
+  cancelled.prep.prepare("a");
+  const late = cancelled.queue.shift();
+  cancelled.prep.cancel();
+  late();
+  assert.equal(cancelled.created.length, 0);
+  assert.equal(cancelled.uploaded.length, 0);
+  assert.equal(cancelled.prep.isReady("a"), false);
+});
+
+check("detail prep failure and teardown release owned textures once and can retry", () => {
+  const failed = detailHarness(["page-0", "page-1", "page-2"]);
+  failed.setFail("page-1");
+  let failedId = null;
+  failed.prep.prepare("a", { onFail() { failedId = "a"; } });
+  once(failed.queue);
+  once(failed.queue);
+  assert.equal(failedId, "a");
+  assert.equal(failed.prep.isReady("a"), false);
+  assert.deepEqual(failed.released.map((texture) => texture.id), ["a:page-0"]);
+  failed.setFail(null);
+  failed.released.length = 0;
+  failed.prep.prepare("a");
+  while (failed.queue.length) once(failed.queue);
+  assert.equal(failed.prep.isReady("a"), true);
+  assert.equal(failed.released.length, 0);
+
+  const torn = detailHarness();
+  torn.prep.prepare("a");
+  once(torn.queue);
+  torn.prep.dispose();
+  const late = torn.queue.shift();
+  late?.();
+  torn.prep.dispose();
+  assert.deepEqual(torn.released.map((texture) => texture.id), ["a:page-0"]);
+  assert.equal(torn.prep.isReady("a"), false);
+});
+
+check("transition progress follows wall time and ignores the idle gap before it starts", () => {
+  const duration = engine.SHELF_TRANSITION_MS;
+  assert.equal(duration, 920);
+  const start = 20000;
+  assert.equal(engine.transitionProgress(start, start, duration), 0);
+  assert.equal(engine.transitionProgress(start, start + 900, duration), 900 / 920);
+  assert.equal(engine.transitionProgress(start, start + 1000, duration), 1);
+  let now = start;
+  for (let frame = 0; frame < 4; frame += 1) now += 200;
+  assert.ok(engine.transitionProgress(start, now, duration) < 1);
+  assert.equal(engine.transitionProgress(start, now + 200, duration), 1);
+  now = start;
+  for (let frame = 0; frame < 9; frame += 1) now += 100;
+  assert.ok(engine.transitionProgress(start, now, duration) < 1);
+  assert.equal(engine.transitionProgress(start, now + 100, duration), 1);
+  assert.equal(engine.transitionProgress(80000, 80000, duration), 0);
+  assert.equal(engine.transitionProgress(start, start + 5000, duration, true), 1);
+});
+
+check("upload failure disposes the new texture and earlier owned textures once", () => {
+  const queue = [];
+  const shared = { id: "paper", disposed: 0, dispose() { this.disposed += 1; } };
+  const rig = { owned: [], materials: [] };
+  const made = [];
+  let failUpload = true;
+  const prep = engine.createDetailPrep({
+    units: () => ["page-0", "page-1"],
+    create(id, unit) {
+      const texture = {
+        id: `${id}:${unit}`,
+        disposed: 0,
+        dispose() { this.disposed += 1; },
+      };
+      rig.owned.push(texture);
+      rig.materials.push({
+        map: texture,
+        bumpMap: unit === "page-0" ? shared : texture,
+        needsUpdate: false,
+      });
+      made.push(texture);
+      return texture;
+    },
+    upload(texture) {
+      if (failUpload && texture.id.endsWith(":page-1")) throw new Error("upload");
+    },
+    release(texture) { engine.releaseOwnedDetail(texture, [rig]); },
+    schedule(fn) { queue.push(fn); },
+  });
+  let failed = false;
+  prep.prepare("a", { onFail() { failed = true; } });
+  once(queue);
+  once(queue);
+  assert.equal(failed, true);
+  assert.equal(prep.isReady("a"), false);
+  assert.equal(made[0].disposed, 1);
+  assert.equal(made[1].disposed, 1);
+  assert.equal(shared.disposed, 0);
+  assert.equal(rig.materials[0].map, null);
+  assert.equal(rig.materials[0].bumpMap, shared);
+  assert.equal(rig.materials[1].map, null);
+  assert.equal(rig.owned.length, 0);
+  engine.releaseOwnedDetail(made[0], [rig]);
+  engine.releaseOwnedDetail(made[1], [rig]);
+  assert.equal(made[0].disposed, 1);
+  assert.equal(made[1].disposed, 1);
+  failUpload = false;
+  prep.prepare("a");
+  while (queue.length) once(queue);
+  assert.equal(prep.isReady("a"), true);
+  assert.equal(made[0].disposed, 1);
+  assert.equal(made[1].disposed, 1);
+  assert.equal(made[2].disposed, 0);
+  assert.equal(made[3].disposed, 0);
+  assert.equal(shared.disposed, 0);
+  assert.equal(rig.owned.length, 2);
+});
+
+check("owned detail restore marks the touched material for upload", () => {
+  const texture = { disposed: 0, dispose() { this.disposed += 1; } };
+  const paper = { id: "paper" };
+  const material = { map: texture, needsUpdate: false };
+  const rig = {
+    owned: [texture],
+    materials: [material],
+    restore(item) {
+      item.map = paper;
+      item.needsUpdate = false;
+    },
+  };
+  engine.releaseOwnedDetail(texture, [rig]);
+  assert.equal(material.map, paper);
+  assert.equal(material.needsUpdate, true);
+  assert.equal(texture.disposed, 1);
+  engine.releaseOwnedDetail(texture, [rig]);
+  assert.equal(texture.disposed, 1);
+});
+
+check("closing hides internals before the book reference is released", () => {
+  const order = [];
+  engine.sealShelfClose({ id: "a" }, {
+    hideInternals(book) { order.push(`hide:${book.id}`); },
+    markClosed() { order.push("retain"); },
+  });
+  assert.deepEqual(order, ["hide:a", "retain"]);
+});
+
+check("context loss drops owned prep and a late task cannot open", () => {
+  const queue = [];
+  const released = [];
+  const session = { suspended: false, preparing: "a", opened: false };
+  const prep = engine.createDetailPrep({
+    units: () => ["page-0", "page-1"],
+    create(id, unit) {
+      return { id: `${id}:${unit}`, disposed: 0, dispose() { this.disposed += 1; released.push(this.id); } };
+    },
+    upload() {},
+    release(texture) { texture.dispose(); },
+    schedule(fn) { queue.push(fn); },
+  });
+  const order = [];
+  prep.prepare("a", { onReady() { if (!session.lost) session.opened = true; } });
+  once(queue);
+  engine.abandonShelfGraphics({
+    suspend() { order.push("suspend"); session.suspended = true; },
+    invalidate() { order.push("invalidate"); session.lost = true; },
+    cancelPrep() { order.push("cancel"); prep.cancel(); },
+    disposeOwned() { order.push("dispose"); prep.dispose(); },
+    clearPreparing() { order.push("clear"); session.preparing = null; },
+  });
+  const late = queue.shift();
+  late?.();
+  assert.deepEqual(order, ["suspend", "invalidate", "cancel", "dispose", "clear"]);
+  assert.equal(session.suspended, true);
+  assert.equal(session.lost, true);
+  assert.equal(session.preparing, null);
+  assert.equal(session.opened, false);
+  assert.deepEqual(released, ["a:page-0"]);
+  assert.equal(prep.isReady("a"), false);
+});
+
+check("prewarm waits for ready visible settled shelf and selection keeps the retained book", () => {
+  const settledShelf = {
+    ready: true, onScreen: true, settled: true, preparing: null, mode: "hero", suspended: false,
+    position: 1, targetPosition: 1, dragging: false,
+  };
+  assert.equal(engine.shelfPrewarmAllowed({ ...settledShelf, position: 0.9 }), false);
+  assert.equal(engine.shelfPrewarmAllowed({ ...settledShelf, settled: true, position: 0.2, targetPosition: 1 }), false);
+  assert.equal(engine.shelfPrewarmAllowed({ ...settledShelf, dragging: true }), false);
+  assert.equal(engine.shelfPrewarmAllowed({ ...settledShelf, settled: false }), false);
+  assert.equal(engine.shelfPrewarmAllowed(settledShelf), true);
+  assert.equal(engine.shelfPrewarmAllowed({
+    ready: true, onScreen: true, settled: true, preparing: null, mode: "hero", suspended: false,
+  }), false);
+  for (const blocked of [
+    { ready: false, onScreen: true, settled: true, mode: "hero" },
+    { ready: true, onScreen: false, settled: true, mode: "hero" },
+    { ready: true, onScreen: true, settled: false, mode: "hero" },
+    { ready: true, onScreen: true, settled: true, preparing: "a", mode: "hero" },
+    { ready: true, onScreen: true, settled: true, mode: "detail" },
+    { ready: true, onScreen: true, settled: true, mode: "hero", suspended: true },
+  ]) {
+    assert.equal(engine.shelfPrewarmAllowed(blocked), false);
+  }
+
+  const kept = detailHarness(["page-0"]);
+  kept.prep.prepare("kept");
+  once(kept.queue);
+  assert.equal(kept.prep.dropSpeculative("other"), false);
+  assert.equal(kept.prep.isReady("kept"), true);
+  assert.equal(kept.released.length, 0);
+
+  const passing = detailHarness(["page-0", "page-1"]);
+  passing.prep.prepare("passing");
+  once(passing.queue);
+  assert.equal(passing.prep.dropSpeculative("kept"), true);
+  const late = passing.queue.shift();
+  late?.();
+  assert.deepEqual(passing.created.map((texture) => texture.id), ["passing:page-0"]);
+  assert.deepEqual(passing.released.map((texture) => texture.id), ["passing:page-0"]);
+  assert.equal(passing.prep.isReady("passing"), false);
+
+  const selected = detailHarness(["page-0"]);
+  selected.prep.prepare("next");
+  assert.equal(selected.prep.dropSpeculative("next"), false);
+  selected.prep.markInspected("next");
+  assert.equal(selected.prep.dropSpeculative("other"), false);
+  assert.equal(selected.released.length, 0);
+  once(selected.queue);
+  assert.equal(selected.prep.isReady("next"), true);
 });
 
 if (reds.length) {
