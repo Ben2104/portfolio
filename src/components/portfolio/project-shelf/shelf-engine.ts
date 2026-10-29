@@ -398,6 +398,29 @@ function detachTextureMaps(material, owned) {
 const releasedOwnedDetails = new WeakSet();
 
 /* Detach one owned detail texture and dispose it once. Shared maps on the same material stay. */
+export function createPrepGate() {
+  let suppressedId = null;
+  return {
+    suppress(id) { suppressedId = id; },
+    liftAll() { suppressedId = null; },
+    allowsAutomatic(id) { return suppressedId !== id; },
+    allowUser(id) {
+      if (suppressedId === id) suppressedId = null;
+    },
+  };
+}
+
+export function preparedOpenDecision({ readyId, nearestId, preparingId }) {
+  if (preparingId !== readyId) return "ignore";
+  if (nearestId !== readyId) return "clear";
+  return "open";
+}
+
+export function startUserPrep(prep, id, hooks) {
+  const status = prep.prepare(id, hooks);
+  return status === "blocked" ? "clear" : status;
+}
+
 export function shelfPrewarmAllowed(state) {
   const position = state?.position;
   const target = state?.targetPosition;
@@ -2426,10 +2449,11 @@ export function createShelf({
       suspended: suspended || graphicsLost,
     })) return;
     const id = bookRigs[selectedIndex]?.data.id;
-    if (!id || detailPrep.isReady(id)) return;
-    prepareBook(id);
+    if (!id || detailPrep.isReady(id) || !prepGate.allowsAutomatic(id)) return;
+    prepareBook(id, { onFail() { prepGate.suppress(id); } });
   }
 
+  const prepGate = createPrepGate();
   const detailPrep = createDetailPrep({
     units() { return DETAIL_PREP_UNITS; },
     create: createDetailUnit,
@@ -2763,6 +2787,7 @@ export function createShelf({
   function updateSelection(index, announce = false, force = false) {
     const nextIndex = clamp(index, 0, lastIndex);
     if (nextIndex === selectedIndex && !announce && !force) return;
+    const selectionChanged = nextIndex !== selectedIndex;
     selectedIndex = nextIndex;
     const book = BOOKS[selectedIndex];
     selectionTitle.textContent = book.title;
@@ -2788,6 +2813,7 @@ export function createShelf({
       clearPreparing();
     }
     detailPrep.dropSpeculative(book.id);
+    if (selectionChanged) prepGate.liftAll();
   }
 
   function metaRow(label, content) {
@@ -3569,21 +3595,30 @@ export function createShelf({
     inspectButton.setAttribute("aria-busy", "true");
     inspectButton.textContent = "Preparing";
     liveRegion.textContent = `Preparing ${rig.data.title}.`;
-    prepareBook(id, {
+    prepGate.allowUser(id);
+    const status = startUserPrep(detailPrep, id, {
       onReady(readyId) {
-        if (disposed || suspended || graphicsLost || preparingId !== readyId || mode !== "hero") return;
-        if (bookRigs[selectedIndex]?.data.id !== readyId) return;
+        if (disposed || suspended || graphicsLost || mode !== "hero") return;
+        const nearestId = bookRigs[clamp(Math.round(position), 0, lastIndex)]?.data.id;
+        const decision = preparedOpenDecision({ readyId, nearestId, preparingId });
+        if (decision === "clear") {
+          clearPreparing();
+          return;
+        }
+        if (decision !== "open") return;
         clearPreparing();
         beginOpening();
       },
       onFail() {
         if (disposed || preparingId !== id) return;
+        prepGate.suppress(id);
         const title = rig.data.title;
         clearPreparing();
         liveRegion.textContent = `Could not prepare ${title}. The shelf is still available.`;
         inspectButton.focus({ preventScroll: true });
       },
     });
+    if (status === "clear") clearPreparing();
   }
 
   function beginOpening() {
@@ -3766,7 +3801,7 @@ export function createShelf({
 
       const nearest = clamp(Math.round(position), 0, lastIndex);
       // A click may select and open before the scroll animation reaches that book.
-      if (!preparingId && nearest !== selectedIndex) updateSelection(nearest, false);
+      if (nearest !== selectedIndex) updateSelection(nearest, false);
     }
 
     bookRigs.forEach((rig, index) => {
@@ -3960,6 +3995,7 @@ export function createShelf({
 
     if (event.key === "Escape" && preparingId && mode === "hero") {
       event.preventDefault();
+      prepGate.suppress(preparingId);
       detailPrep.cancel();
       clearPreparing();
       liveRegion.textContent = "Preparation cancelled.";
@@ -4287,10 +4323,12 @@ export function createShelf({
     /* Draw only while the section is on screen and the tab is visible */
     suspended = document.hidden;
     intersectionObserver = new IntersectionObserver(([entry]) => {
+      const becameVisible = entry.isIntersecting && !onScreen;
       onScreen = entry.isIntersecting;
       if (onScreen) {
         lastTime = performance.now();
         requestFrame();
+        if (becameVisible) prepGate.liftAll();
         prepareSettledBook();
       } else {
         cancelFrame();

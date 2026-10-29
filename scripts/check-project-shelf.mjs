@@ -582,6 +582,92 @@ check("prewarm waits for ready visible settled shelf and selection keeps the ret
   assert.equal(selected.prep.isReady("next"), true);
 });
 
+function throwingPrep() {
+  const queue = [];
+  let creates = 0;
+  const prep = engine.createDetailPrep({
+    units: () => ["page"],
+    create() {
+      creates += 1;
+      throw new Error("upload");
+    },
+    upload() {},
+    release() {},
+    schedule(fn) { queue.push(fn); },
+  });
+  return {
+    queue,
+    prep,
+    creates() { return creates; },
+    flush() { while (queue.length) queue.shift()(); },
+  };
+}
+
+check("failed prewarm does not retry every frame until the gate lifts", () => {
+  const gate = engine.createPrepGate();
+  const attempt = throwingPrep();
+  function prewarm(id) {
+    if (!gate.allowsAutomatic(id)) return;
+    attempt.prep.prepare(id, { onFail() { gate.suppress(id); } });
+    attempt.flush();
+  }
+  prewarm("a");
+  for (let frame = 0; frame < 6; frame += 1) prewarm("a");
+  assert.equal(attempt.creates(), 1);
+  gate.allowUser("a");
+  prewarm("a");
+  for (let frame = 0; frame < 4; frame += 1) prewarm("a");
+  assert.equal(attempt.creates(), 2);
+  gate.liftAll();
+  prewarm("a");
+  assert.equal(attempt.creates(), 3);
+});
+
+check("cancel suppresses the same prewarm until the gate lifts", () => {
+  const gate = engine.createPrepGate();
+  const attempt = throwingPrep();
+  attempt.prep.prepare("a");
+  gate.suppress("a");
+  attempt.prep.cancel();
+  attempt.flush();
+  const afterCancel = attempt.creates();
+  function prewarm(id) {
+    if (!gate.allowsAutomatic(id)) return;
+    attempt.prep.prepare(id, { onFail() { gate.suppress(id); } });
+    attempt.flush();
+  }
+  for (let frame = 0; frame < 5; frame += 1) prewarm("a");
+  assert.equal(attempt.creates(), afterCancel);
+  gate.liftAll();
+  prewarm("a");
+  assert.equal(attempt.creates(), afterCancel + 1);
+});
+
+check("ready prep does not open when the shelf has moved to another book", () => {
+  assert.equal(engine.preparedOpenDecision({
+    readyId: "a", nearestId: "b", preparingId: "a",
+  }), "clear");
+  assert.equal(engine.preparedOpenDecision({
+    readyId: "a", nearestId: "a", preparingId: "a",
+  }), "open");
+  assert.equal(engine.preparedOpenDecision({
+    readyId: "a", nearestId: "a", preparingId: null,
+  }), "ignore");
+});
+
+check("blocked prepare clears Preparing", () => {
+  const prep = engine.createDetailPrep({
+    units: () => ["page"],
+    create() { return { id: "x" }; },
+    upload() {},
+    release() {},
+    schedule() {},
+  });
+  prep.markInspected("kept");
+  assert.equal(engine.startUserPrep(prep, "other"), "clear");
+  assert.equal(prep.isReady("other"), false);
+});
+
 if (reds.length) {
   console.log(`${reds.length} failed`);
   process.exit(1);
