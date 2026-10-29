@@ -35,3 +35,11 @@ Final scoped shelf results and remaining baseline issues are recorded below.
 Start `npm run dev -- --port 3107` without an overlapping build. Install Playwright outside the project, for example `npm install --prefix /tmp/portfolio-shelf-qa playwright` and `/tmp/portfolio-shelf-qa/node_modules/.bin/playwright install chromium`. Run `node docs/pr/projects-shelf-clarity/browser-qa.cjs http://localhost:3107`; set `QA_MODE=desktop`, `mobile`, or `missing` to run one scenario. Markers are activated programmatically; keyboard and touch use browser input.
 
 For the GIF, install Pillow outside the project, e.g. `python3 -m pip install --target /tmp/portfolio-shelf-qa/python pillow`, then run `PYTHONPATH=/tmp/portfolio-shelf-qa/python node docs/pr/projects-shelf-clarity/capture-gif.cjs`. The script captures four interaction states and Pillow assembles the labeled sequence.
+
+## CI security follow-up
+
+The user subsequently requested that all PR CI checks pass. The only failing job was the production dependency audit against Next.js 16.4.0. Next.js and its matching runtime/compiler lock entries were updated to 16.4.3, with the manifest minimum raised to `^16.4.3`. CI checks were not disabled or weakened.
+
+After a clean `npm ci`, the production audit reports zero vulnerabilities. Lint, standalone TypeScript, all seven shelf regressions, and production build pass on 16.4.3; the build no longer emits the previous security notice. Independent QA reviewed the dependency diff and confirmed the user's 20 pending `libc` metadata deletions remain unstaged and excluded from the upgrade.
+
+The browser captures above were recorded on 16.4.0. The full browser suite was not rerun for this dependency-only follow-up; the existing hydration warning remains outside the CI fix. The remote run is linked from PR #28's Checks tab.

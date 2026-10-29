@@ -91,4 +91,4 @@
 
 ## Delivery status
 
-Local implementation, scoped QA, PNG captures, and a labeled reduced-motion GIF walkthrough are complete. Production build passed on retry after the existing Next.js security notice. Whole-page console validation still reports the baseline hydration warning, and the existing critical dependency audit fails. Branch pushed; draft PR: https://github.com/Ben2104/portfolio/pull/28. No merge or deployment.
+Local implementation, scoped QA, PNG captures, and a labeled reduced-motion GIF walkthrough are complete. The original production build passed on retry after the Next.js security notice. A subsequent user-authorized CI follow-up updates Next.js to 16.4.3; audit, lint, typecheck, regressions, and build now pass locally without that notice. Original browser evidence still reports the baseline hydration warning. Branch pushed; draft PR: https://github.com/Ben2104/portfolio/pull/28. No merge or deployment.
