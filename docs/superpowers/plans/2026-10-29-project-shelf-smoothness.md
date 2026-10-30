@@ -68,8 +68,8 @@
 **Interfaces:** Tasks 1-2 keep existing selectors/API. Reuse baseline scripts /tmp/portfolio-shelf-qa/perf.cjs and perf-high.cjs where suitable; fix their limitations explicitly. No build/server overlap with frontend.
 
 - [x] While frontend works, prepare the controlled QA sequence and persist the existing a6b87b2 baseline and renderer caveats. Read spec/plan; do not start competing builds or edit product files.
-- [ ] After frontend handoff, review the complete branch against main and inspect actual cancellation/ownership/clock code. Report ranked actionable defects with file/line and reproducer; label evidence gaps separately. Do not approve from tests alone.
-- [ ] Run focused checks, npm run lint, npx tsc --noEmit, npm run build, npm audit --omit=dev --audit-level=high. Serial build/types to avoid generated-file races. Record exit statuses and any pre-existing warnings. Use current source, no stale production bundle.
+- [x] After frontend handoff, review the complete branch against main and inspect actual cancellation/ownership/clock code. Report ranked actionable defects with file/line and reproducer; label evidence gaps separately. Do not approve from tests alone.
+- [x] Run focused checks, npm run lint, npx tsc --noEmit, npm run build, npm audit --omit=dev --audit-level=high. Serial build/types to avoid generated-file races. Record exit statuses and any pre-existing warnings. Use current source, no stale production bundle.
 - [ ] Start production server on free localhost port. Use Playwright CLI where available plus browser instrumentation for metrics. Normal motion: high DPR1/DPR2 and mobile/low. Test cold open, same-book reopen, other book, rapid select/Escape, page turns, close/focus return, keyboard, reduced motion, viewport resize, idle draw-stop, and actual teardown (using isolated harness if needed). Exercise preparation failure with a controlled injected failure; no permanent product fault switch.
 - [ ] Capture comparable texture creation/upload counts, preparation-task durations, event timing separately, draw/buffer assignments, and bounded retention/release. Assert warm reopen zero detail allocations/uploads; distinguish initial raster tasks from GPU API time and delayed observer entries. Disclose any preparation tasks >=50ms and any unverified hardware limits. Software-rendered results cannot claim physical-device FPS.
 - [ ] Save desktop/mobile sharp-rest screenshots and normal-motion interaction GIF. A GIF is visual evidence, not a performance metric. Stop owned server. Send lead exact results and blockers, not a blanket pass if acceptance is incomplete.
@@ -78,7 +78,7 @@
 
 **Files:** limited to approved implementation, checks, plan/spec, and QA evidence.
 
-- [ ] Lead inspects complete diff against a6b87b2 and validates user lockfile unchanged. Frontend addresses important QA findings with a reproducing failing check, minimal fix, and green checks; QA rechecks affected paths. No speculative redesign if GPU cost remains.
+- [x] Lead inspects complete diff against a6b87b2 and validates user lockfile unchanged. Frontend addresses important QA findings with a reproducing failing check, minimal fix, and green checks; QA rechecks affected paths. No speculative redesign if GPU cost remains.
 - [ ] Lead runs focused checks and reads complete QA output. Confirm spec acceptance item by item, including limitations. Mark task checkboxes only with supporting evidence.
 - [ ] Commit explicit files, excluding package-lock.json and generated unrelated files. Use git diff --cached --check before commit. Identity can be git -c user.name=Codex -c user.email=codex@openai.com.
 - [ ] Push perf/project-shelf-smoothness and create GitHub PR against main. Body describes confirmed causes, behavior, before/after evidence, tests, and remaining software-renderer limitations. Use a temporary --body-file for multiline text.
@@ -89,3 +89,5 @@
 Plan self-review: spec resource, timing, rendering, accessibility, QA evidence, and delivery requirements map to Tasks 1-4. Tests target the five review risks above. Existing Herdr workers execute continuously inline under the user's approved method.
 
 Lead verification: all 16 focused checks passed after review corrections. Final prewarm gating uses real position/target and drag state; preparation begins on the final settled frame and stale speculative work is cancelled during input. Independent production/browser verification is in progress.
+
+Lead, 2026-10-30: Codex hit its usage limit; the lead role moved to Claude. QA review found no confirmed bug but four code-reading risks (retry loop, cancel restart, stale open on scroll, ignored blocked prepare), ticketed in docs/pr/project-shelf-smoothness/tickets/01-prep-retry-and-cancel.md and fixed in 305b0f8. QA retest of those paths passed (desktop DPR1, software renderer). Not done: full DPR2, full mobile and reduced-motion passes after the fix, real-GPU timing, injected failure at the real texSubImage2D path. Task 3 browser and evidence checkboxes stay open for those gaps.

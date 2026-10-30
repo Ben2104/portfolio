@@ -1,0 +1,7 @@
+PASS R2 (page scroll to another book): Preparing entered, no stale open, Preparing cleared {"prep":"Preparing","y6":8867,"selected":"LLM Chatbot","detail":false,"busy":null,"text":"Open","live":"Preparing 911 OPERATOR ASSISTANT."}
+PASS R2 (marker reselect): no stale open and Preparing cleared {"detail":false,"busy":null,"text":"Open","live":"Selected project 8 of 9: Pickleball-Booking-Extension."}
+PASS regression: prewarmed open 0 canvases/uploads {"canvases":0,"uploads":0,"texCreated":0}
+PASS regression: same-book reopen 0 canvases/uploads/creations {"canvases":0,"uploads":0,"texCreated":0}
+PASS regression: idle draw-stop (0 draws over 4 s) {"d0":171,"d1":171}
+PASS no page errors overall []
+SUMMARY pass=6 fail=0

@@ -1,0 +1,195 @@
+{
+  "env": {
+    "tier": "high",
+    "dpr": 1,
+    "retest": "ticket-01"
+  },
+  "checks": [
+    {
+      "name": "R1: prewarm throws at least once (injection active)",
+      "pass": true,
+      "detail": {
+        "c0": 56,
+        "cAfterSettle": 57,
+        "cAfterDrive": 57,
+        "thrownAfterSettle": 1,
+        "thrownAfterDrive": 1,
+        "framesDriven": 23,
+        "open1": {
+          "text": "Open",
+          "busy": null,
+          "live": "Could not prepare 911 OPERATOR ASSISTANT. The shelf is still available.",
+          "detail": false,
+          "canvases": 1,
+          "throws": 1
+        }
+      }
+    },
+    {
+      "name": "R1: ~20 hover/resize frames after settle create 0 new canvases (no per-frame retry)",
+      "pass": true,
+      "detail": {
+        "c0": 56,
+        "cAfterSettle": 57,
+        "cAfterDrive": 57,
+        "thrownAfterSettle": 1,
+        "thrownAfterDrive": 1,
+        "framesDriven": 23,
+        "open1": {
+          "text": "Open",
+          "busy": null,
+          "live": "Could not prepare 911 OPERATOR ASSISTANT. The shelf is still available.",
+          "detail": false,
+          "canvases": 1,
+          "throws": 1
+        }
+      }
+    },
+    {
+      "name": "R1: settled prewarm total bounded (<=2 canvases)",
+      "pass": true,
+      "detail": {
+        "c0": 56,
+        "cAfterSettle": 57,
+        "cAfterDrive": 57,
+        "thrownAfterSettle": 1,
+        "thrownAfterDrive": 1,
+        "framesDriven": 23,
+        "open1": {
+          "text": "Open",
+          "busy": null,
+          "live": "Could not prepare 911 OPERATOR ASSISTANT. The shelf is still available.",
+          "detail": false,
+          "canvases": 1,
+          "throws": 1
+        }
+      }
+    },
+    {
+      "name": "R1: Open click attempts once (<=2 canvases), clears Preparing, announces failure, not opened",
+      "pass": true,
+      "detail": {
+        "text": "Open",
+        "busy": null,
+        "live": "Could not prepare 911 OPERATOR ASSISTANT. The shelf is still available.",
+        "detail": false,
+        "canvases": 1,
+        "throws": 1
+      }
+    },
+    {
+      "name": "R1: 20 frames after failed Open create 0 new canvases",
+      "pass": true,
+      "detail": {
+        "before": 58,
+        "after": 58,
+        "frames": 23
+      }
+    },
+    {
+      "name": "R1: second Open click retries exactly once more (<=2 canvases)",
+      "pass": true,
+      "detail": {
+        "canvases": 1
+      }
+    },
+    {
+      "name": "R1: shelf usable after failures (marker click works, no page errors)",
+      "pass": false,
+      "detail": {
+        "errors": [
+          "console: Failed to load resource: the server responded with a status of 404 (Not Found)"
+        ],
+        "selLabel": 9
+      }
+    },
+    {
+      "name": "R1: with fault removed Open succeeds (retry usable)",
+      "pass": true
+    },
+    {
+      "name": "R3: Preparing was entered",
+      "pass": true,
+      "detail": "Preparing"
+    },
+    {
+      "name": "R3: after Escape, 20 frames start no new prep (0 new canvases for that book)",
+      "pass": true,
+      "detail": {
+        "prepText": "Preparing",
+        "cEsc": 74,
+        "cEsc2": 74,
+        "framesDriven": 20,
+        "text": "Open",
+        "busy": null,
+        "detail": false
+      }
+    },
+    {
+      "name": "R3: not opened, busy cleared",
+      "pass": true,
+      "detail": {
+        "prepText": "Preparing",
+        "cEsc": 74,
+        "cEsc2": 74,
+        "framesDriven": 20,
+        "text": "Open",
+        "busy": null,
+        "detail": false
+      }
+    },
+    {
+      "name": "R3 sanity: prewarm resumes after selection changes",
+      "pass": true,
+      "detail": {
+        "before": 74,
+        "after": 85
+      }
+    },
+    {
+      "name": "R2 (wheel): no stale open and Preparing cleared",
+      "pass": false,
+      "detail": {
+        "prep": "Preparing",
+        "detail": true,
+        "busy": null,
+        "text": "Open",
+        "live": "Opening Shape-Sign. Drag the cover, click the book, or use Open book to begin reading."
+      }
+    },
+    {
+      "name": "FATAL locator.click: Timeout 120000ms exceeded.",
+      "pass": false
+    }
+  ],
+  "phases": {},
+  "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "r1": {
+    "c0": 56,
+    "cAfterSettle": 57,
+    "cAfterDrive": 57,
+    "thrownAfterSettle": 1,
+    "thrownAfterDrive": 1,
+    "framesDriven": 23,
+    "open1": {
+      "text": "Open",
+      "busy": null,
+      "live": "Could not prepare 911 OPERATOR ASSISTANT. The shelf is still available.",
+      "detail": false,
+      "canvases": 1,
+      "throws": 1
+    }
+  },
+  "r3": {
+    "prepText": "Preparing",
+    "cEsc": 74,
+    "cEsc2": 74,
+    "framesDriven": 20,
+    "text": "Open",
+    "busy": null,
+    "detail": false
+  },
+  "errors": [
+    "console: Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ]
+}

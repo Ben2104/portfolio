@@ -70,3 +70,25 @@ Latency note (SwiftShader, same sequence select book 4 -> wait 2.5 s -> Open): b
 Not verified: reduced-motion full pass, DPR2 full pass, real GPU/device behaviour, persistent-failure retry storm (hover after a failed prewarm re-triggers prep via `frame` -> `prepareSettledBook`; code-reading only), scroll during Preparing (updateSelection is suppressed while `preparingId` is set, so the opened book can differ from the shelf's scrolled position; code-reading only).
 
 Screenshots (sharp rest): `after-desktop-shelf-rest-high-dpr1.png`, `after-desktop-detail-rest-high-dpr1.png`, `after-desktop-page-turn-high-dpr1.png`, `after-mobile-shelf-rest-low-dpr2.png`, `after-mobile-detail-rest-low-dpr2.png`, `after-mobile-page-turn-low-dpr2.png`. Interaction GIF: not regenerated for the final tree; `interaction.gif` is from the earlier baseline.
+
+## Retest of ticket 01 fix (HEAD 305b0f8)
+
+Fresh `npm run build` (exit 0), one fresh production server on a free localhost port, stopped afterwards. High tier, desktop 1280x800, DPR 1, normal motion, Chromium on SwiftShader (software renderer; diagnostic only, no device-FPS claim). Probe: `qa-retest-01.cjs`; logs and JSON: `after-retest-01-r1r3.*` (R1/R3) and `after-retest-01-r2-regression.*` (R2 and regression). package-lock.json hash unchanged.
+
+| Item | Result | Evidence |
+| --- | --- | --- |
+| R1 persistent upload failure: no per-frame retry | pass | Fault injected so every detail upload throws. Settled speculative prewarm made 1 attempt (1 canvas, 1 throw). 23 hover and resize frames afterwards: 0 new canvases, 0 new throws. |
+| R1 user Open: one attempt per click, announces failure, shelf usable | pass | Each Open click made exactly 1 attempt (1 canvas, 1 throw). The button returned to "Open" with aria-busy cleared, the live region said "Could not prepare 911 OPERATOR ASSISTANT. The shelf is still available.", and the book did not open. 23 frames afterwards: 0 new canvases. A second click retried exactly once more. A marker click still selected a book. With the fault removed, Open succeeded. |
+| R3 Escape during Preparing | pass | After Escape, 20 driven frames created 0 canvases. The book did not open, Preparing was cleared, and the button read "Open". Prewarm resumed after the selection changed (11 new canvases). |
+| R2 page scroll moves selection during Preparing | pass | Open clicked, then page scrolled so the selection moved from 911 Operator Assistant to LLM Chatbot in the same task. The book did not open, Preparing was cleared, and the button read "Open". Marker reselect during Preparing: same outcome. |
+| Regression: prewarmed open and same-book reopen | pass | 0 canvases, 0 uploads, 0 texture creations on both. |
+| Regression: idle draw-stop | pass | 0 draws over 4 s. |
+| Page errors | none | The only console error was a 404 for `/_vercel/insights/script.js`, which does not exist off Vercel. |
+
+Probe corrections made while retesting (probe bugs, not product): (1) hooking `texImage2D`/`texSubImage2D`/`texStorage2D` does not inject a failure, because three's WebGLState catches those errors and logs them. All 11 units then "succeed" with blank textures. (2) Throwing in `createTexture` also breaks the main render loop (`usedTimes` of undefined). The valid injection is `generateMipmap`, which is called only while a detail canvas uploads. (3) A wheel scroll over the scene moves the page but not the selection, so opening the prepared book there was correct. R2 needs a scroll that changes the selection.
+
+Minor observation (not a defect against the ticket): after R2 or Escape cancels a pending Open, the live region keeps its stale text "Preparing <title>." until the next announcement. Escape announces "Preparation cancelled.", but the page-scroll cancel path announces nothing.
+
+Evidence gaps: DPR2, mobile and reduced-motion were not retested after the fix (the earlier results predate it). The injection fails at `generateMipmap` and not at the real upload API, so a failure inside `texSubImage2D` that three swallows is untested. No physical-device timing.
+
+Screenshots (final tree): `after-desktop-{shelf-rest,detail-rest,page-turn}-high-dpr1.png`, `after-mobile-{shelf-rest,detail-rest,page-turn}-low-dpr2.png`. `interaction.gif` is regenerated from the desktop after-* stills (shelf, open book, page turned); it is a still sequence and not a performance metric.
