@@ -1,0 +1,31 @@
+{
+  "part": "5",
+  "checks": [
+    {
+      "name": "part5 visible: shelf reaches ready with plate blocked",
+      "pass": true
+    },
+    {
+      "name": "part5 visible: book opens and pages turn",
+      "pass": true
+    },
+    {
+      "name": "part5 visible: no page errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "part5 deferred: shelf reaches ready with plate blocked",
+      "pass": true
+    },
+    {
+      "name": "part5 deferred: book opens and pages turn",
+      "pass": true
+    },
+    {
+      "name": "part5 deferred: no page errors",
+      "pass": true,
+      "detail": []
+    }
+  ]
+}
