@@ -4,6 +4,8 @@ import { readFileSync } from "node:fs";
 const engine = await import("../src/components/portfolio/project-shelf/shelf-engine.ts");
 const { projects } = await import("../src/data/portfolio.ts");
 
+const prefetchModule = await import("../src/components/portfolio/project-shelf/shelf-prefetch.ts");
+
 const reds = [];
 
 function check(name, fn) {
@@ -687,6 +689,16 @@ check("blocked prepare clears Preparing", () => {
   prep.markInspected("kept");
   assert.equal(engine.startUserPrep(prep, "other"), "clear");
   assert.equal(prep.isReady("other"), false);
+});
+
+check("early prefetch requests exactly what the engine blocks on at startup", () => {
+  const { prefetchShelfStartupImages } = prefetchModule;
+  const requested = prefetchShelfStartupImages(projects, () => {});
+  const plan = engine.shelfStartupPlan(engine.buildShelfBooks(projects));
+  const expectedUrls = ["/projects/shelf/walnut.webp", ...plan.blocking.flatMap((book) => book.images)];
+  assert.deepEqual([...requested].sort(), [...expectedUrls].sort());
+  assert.equal(prefetchModule.SHELF_STARTUP_VISIBLE, engine.SHELF_STARTUP_VISIBLE);
+  assert.equal(prefetchShelfStartupImages([], () => {}).length, 1);
 });
 
 if (reds.length) {
