@@ -1,0 +1,338 @@
+{
+  "url": "http://127.0.0.1:3119/",
+  "throttle": {
+    "downloadMbit": 9,
+    "latencyMs": 170
+  },
+  "readyMs": 7428,
+  "imageCount": 65,
+  "totalBytes": 2189621,
+  "missingContentLength": 8,
+  "images": [
+    {
+      "path": "/projects/shelf/covers/material-enhancement-assistant.webp",
+      "status": 200,
+      "bytes": 145852
+    },
+    {
+      "path": "/projects/shelf/covers/pickleball-booking-extension.webp",
+      "status": 200,
+      "bytes": 139146
+    },
+    {
+      "path": "/projects/shelf/covers/the-bookstore.webp",
+      "status": 200,
+      "bytes": 125512
+    },
+    {
+      "path": "/projects/shelf/covers/shape-sign.webp",
+      "status": 200,
+      "bytes": 116110
+    },
+    {
+      "path": "/projects/shelf/covers/pickleball-booking-automation-playwright-github-actions.webp",
+      "status": 200,
+      "bytes": 114354
+    },
+    {
+      "path": "/projects/shelf/covers/llm-chatbot.webp",
+      "status": 200,
+      "bytes": 108266
+    },
+    {
+      "path": "/projects/shelf/covers/911-operator-assistant.webp",
+      "status": 200,
+      "bytes": 99954
+    },
+    {
+      "path": "/projects/shelf/covers/quizzriff.webp",
+      "status": 200,
+      "bytes": 94158
+    },
+    {
+      "path": "/projects/shelf/walnut.webp",
+      "status": 200,
+      "bytes": 92864
+    },
+    {
+      "path": "/projects/shelf/covers/crisislineai.webp",
+      "status": 200,
+      "bytes": 90028
+    },
+    {
+      "path": "/assets/python.png",
+      "status": 200,
+      "bytes": 87329
+    },
+    {
+      "path": "/projects/shelf/plates/pickleball-booking-extension.webp",
+      "status": 200,
+      "bytes": 81324
+    },
+    {
+      "path": "/projects/shelf/plates/pickleball-booking-automation-playwright-github-actions.webp",
+      "status": 200,
+      "bytes": 65358
+    },
+    {
+      "path": "/assets/mongodb.png",
+      "status": 200,
+      "bytes": 54412
+    },
+    {
+      "path": "/assets/githubaction.png",
+      "status": 200,
+      "bytes": 45857
+    },
+    {
+      "path": "/assets/reactjs.png",
+      "status": 200,
+      "bytes": 36720
+    },
+    {
+      "path": "/assets/docker.png",
+      "status": 200,
+      "bytes": 35302
+    },
+    {
+      "path": "/assets/nodejs.png",
+      "status": 200,
+      "bytes": 28952
+    },
+    {
+      "path": "/assets/github.png",
+      "status": 200,
+      "bytes": 27081
+    },
+    {
+      "path": "/astronaut/sparkle.webp",
+      "status": 200,
+      "bytes": 24838
+    },
+    {
+      "path": "/assets/restapi.png",
+      "status": 200,
+      "bytes": 22802
+    },
+    {
+      "path": "/astronaut/surprised.webp",
+      "status": 200,
+      "bytes": 22212
+    },
+    {
+      "path": "/astronaut/sleepy.webp",
+      "status": 200,
+      "bytes": 22176
+    },
+    {
+      "path": "/astronaut/love.webp",
+      "status": 200,
+      "bytes": 21922
+    },
+    {
+      "path": "/astronaut/dizzy.webp",
+      "status": 200,
+      "bytes": 21556
+    },
+    {
+      "path": "/astronaut/starstruck.webp",
+      "status": 200,
+      "bytes": 21518
+    },
+    {
+      "path": "/astronaut/look-center.webp",
+      "status": 200,
+      "bytes": 21466
+    },
+    {
+      "path": "/astronaut/look-up.webp",
+      "status": 200,
+      "bytes": 21308
+    },
+    {
+      "path": "/astronaut/laugh.webp",
+      "status": 200,
+      "bytes": 21262
+    },
+    {
+      "path": "/astronaut/look-up-right.webp",
+      "status": 200,
+      "bytes": 20964
+    },
+    {
+      "path": "/astronaut/blush.webp",
+      "status": 200,
+      "bytes": 20892
+    },
+    {
+      "path": "/astronaut/look-right.webp",
+      "status": 200,
+      "bytes": 20860
+    },
+    {
+      "path": "/astronaut/blink.webp",
+      "status": 200,
+      "bytes": 20784
+    },
+    {
+      "path": "/astronaut/look-left.webp",
+      "status": 200,
+      "bytes": 20750
+    },
+    {
+      "path": "/astronaut/look-up-left.webp",
+      "status": 200,
+      "bytes": 20652
+    },
+    {
+      "path": "/astronaut/look-down-right.webp",
+      "status": 200,
+      "bytes": 20554
+    },
+    {
+      "path": "/astronaut/look-down.webp",
+      "status": 200,
+      "bytes": 20390
+    },
+    {
+      "path": "/projects/shelf/plates/911-operator-assistant.webp",
+      "status": 200,
+      "bytes": 20212
+    },
+    {
+      "path": "/astronaut/look-down-left.webp",
+      "status": 200,
+      "bytes": 20000
+    },
+    {
+      "path": "/assets/tailwindcss.png",
+      "status": 200,
+      "bytes": 19714
+    },
+    {
+      "path": "/assets/nextjs.png",
+      "status": 200,
+      "bytes": 18989
+    },
+    {
+      "path": "/assets/fastapi.png",
+      "status": 200,
+      "bytes": 17290
+    },
+    {
+      "path": "/projects/shelf/plates/quizzriff.webp",
+      "status": 200,
+      "bytes": 16916
+    },
+    {
+      "path": "/projects/shelf/plates/shape-sign.webp",
+      "status": 200,
+      "bytes": 15702
+    },
+    {
+      "path": "/projects/shelf/plates/the-bookstore.webp",
+      "status": 200,
+      "bytes": 15050
+    },
+    {
+      "path": "/assets/typescript.png",
+      "status": 200,
+      "bytes": 14974
+    },
+    {
+      "path": "/projects/shelf/plates/crisislineai.webp",
+      "status": 200,
+      "bytes": 14554
+    },
+    {
+      "path": "/_next/image?url=%2Fphotos%2Fportrait.jpg&w=640&q=75",
+      "status": 200,
+      "bytes": 14198
+    },
+    {
+      "path": "/projects/shelf/plates/llm-chatbot.webp",
+      "status": 200,
+      "bytes": 12674
+    },
+    {
+      "path": "/projects/shelf/plates/material-enhancement-assistant.webp",
+      "status": 200,
+      "bytes": 9664
+    },
+    {
+      "path": "/assets/express.svg",
+      "status": 200,
+      "bytes": 914
+    },
+    {
+      "path": "/assets/css3.svg",
+      "status": 200,
+      "bytes": 778
+    },
+    {
+      "path": "/assets/git.svg",
+      "status": 200,
+      "bytes": 778
+    },
+    {
+      "path": "/assets/html5.svg",
+      "status": 200,
+      "bytes": 607
+    },
+    {
+      "path": "/_next/image?url=%2Fprofile%2Ffavicon.png&w=32&q=75",
+      "status": 200,
+      "bytes": 478
+    },
+    {
+      "path": "/assets/firebase.svg",
+      "status": 200,
+      "bytes": 353
+    },
+    {
+      "path": "/assets/tensorflow.svg",
+      "status": 200,
+      "bytes": 291
+    },
+    {
+      "path": "/assets/javascript.svg",
+      "status": 200,
+      "bytes": 0
+    },
+    {
+      "path": "/assets/graphql.svg",
+      "status": 200,
+      "bytes": 0
+    },
+    {
+      "path": "/assets/playwright.svg",
+      "status": 200,
+      "bytes": 0
+    },
+    {
+      "path": "/assets/sqlite.svg",
+      "status": 200,
+      "bytes": 0
+    },
+    {
+      "path": "/assets/linux.svg",
+      "status": 200,
+      "bytes": 0
+    },
+    {
+      "path": "/assets/bash.svg",
+      "status": 200,
+      "bytes": 0
+    },
+    {
+      "path": "/assets/java.svg",
+      "status": 200,
+      "bytes": 0
+    },
+    {
+      "path": "/assets/cplusplus.svg",
+      "status": 200,
+      "bytes": 0
+    }
+  ]
+}

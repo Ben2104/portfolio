@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { projects } from "@/data/portfolio";
 
+import { prefetchShelfStartupImages } from "./project-shelf/shelf-prefetch";
 import { SectionHeading } from "./section-heading";
 
 function ShelfHeader() {
@@ -51,6 +52,17 @@ const SCROLL_PER_BOOK = "70svh";
 export function Projects({ introDone }: { introDone: boolean }) {
   const sectionRef = useRef<HTMLElement>(null);
   const [shelfRequested, setShelfRequested] = useState(false);
+
+  /* Images are cheap to fetch and need no parsing, so start them at page load; by the
+     time the intro ends and the shelf mounts, its first books are already cached */
+  useEffect(() => {
+    if (typeof window.requestIdleCallback === "function") {
+      const handle = window.requestIdleCallback(() => prefetchShelfStartupImages(projects));
+      return () => window.cancelIdleCallback(handle);
+    }
+    const handle = window.setTimeout(() => prefetchShelfStartupImages(projects), 200);
+    return () => window.clearTimeout(handle);
+  }, []);
 
   /* Wait for the intro to finish before pulling in Three.js and the shelf, so parsing
      it can't stutter the astronaut's glide or the hero's first paint */

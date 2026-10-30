@@ -421,6 +421,26 @@ export function startUserPrep(prep, id, hooks) {
   return status === "blocked" ? "clear" : status;
 }
 
+export const SHELF_STARTUP_VISIBLE = 3;
+
+export function shelfStartupPlan(books, visibleCount = SHELF_STARTUP_VISIBLE, centerIndex = 0) {
+  const list = books || [];
+  const count = Math.max(0, Math.min(list.length, visibleCount));
+  const center = Math.max(0, Math.min(Math.max(list.length - 1, 0), Math.round(Number(centerIndex) || 0)));
+  let start = center - Math.floor((count - 1) / 2);
+  if (start < 0) start = 0;
+  if (start + count > list.length) start = Math.max(0, list.length - count);
+  const blockingIds = new Set(list.slice(start, start + count).map((book) => book.id));
+  const entry = (book) => ({
+    id: book.id,
+    images: [book.cover, book.screenshot].filter(Boolean),
+  });
+  return {
+    blocking: list.filter((book) => blockingIds.has(book.id)).map(entry),
+    deferred: list.filter((book) => !blockingIds.has(book.id)).map(entry),
+  };
+}
+
 export function shelfPrewarmAllowed(state) {
   const position = state?.position;
   const target = state?.targetPosition;
@@ -429,6 +449,25 @@ export function shelfPrewarmAllowed(state) {
     && Number.isFinite(position) && position === target
     && !state.preparing && state.mode === "hero" && !state.suspended
   );
+}
+
+/* A late screenshot repaints only plate pages that already own a texture; pages not made yet will pick it up. */
+export function repaintArrivedPlates(rig, make, upload) {
+  let changed = false;
+  for (const pageIndex of [2, 6]) {
+    const material = rig.interiorPageMaterials[pageIndex];
+    const previous = material?.map;
+    const ownedIndex = previous ? rig.detailTextures.indexOf(previous) : -1;
+    if (ownedIndex < 0) continue;
+    const next = make(pageIndex);
+    material.map = next;
+    material.needsUpdate = true;
+    rig.detailTextures[ownedIndex] = next;
+    previous.dispose?.();
+    upload(next);
+    changed = true;
+  }
+  return changed;
 }
 
 /* Hide the open pages before the close handler drops its book reference. */
@@ -2314,6 +2353,7 @@ export function createShelf({
       internalsVisible: false,
       detailed: false,
       detailTextures: [],
+      coverArt,
       backArt,
       backFoilArt,
       backFoilPlane,
@@ -4177,6 +4217,49 @@ export function createShelf({
     });
   }
 
+  function paintArrivedCover(rig) {
+    const next = makeCoverTexture(rig.data);
+    const previous = rig.coverArt.map;
+    rig.coverArt.map = next;
+    rig.coverArt.needsUpdate = true;
+    if (previous && previous !== next) previous.dispose();
+    renderer?.initTexture(next);
+  }
+
+  function paintArrivedScreenshot(rig) {
+    repaintArrivedPlates(rig, (pageIndex) => makeInteriorPageTexture(rig.data, pageIndex), (texture) => renderer?.initTexture(texture));
+  }
+
+  function storeBookImages(entry) {
+    if (!entry || disposed || graphicsLost) return;
+    const index = BOOKS.findIndex((book) => book.id === entry.id);
+    if (index < 0) return;
+    const rig = bookRigs[index];
+    let changed = false;
+    if (entry.cover && coverImages.get(entry.id) !== entry.cover) {
+      coverImages.set(entry.id, entry.cover);
+      if (rig?.coverArt) {
+        paintArrivedCover(rig);
+        changed = true;
+      }
+    }
+    if (entry.screenshot && screenshotImages.get(entry.id) !== entry.screenshot) {
+      screenshotImages.set(entry.id, entry.screenshot);
+      if (rig?.detailTextures?.length) {
+        paintArrivedScreenshot(rig);
+        changed = true;
+      }
+    }
+    if (changed) requestFrame();
+  }
+
+  function loadBookImages(book) {
+    return Promise.all([
+      book.cover ? loadImage(book.cover) : null,
+      book.screenshot ? loadImage(book.screenshot) : null,
+    ]).then(([cover, screenshot]) => ({ id: book.id, cover, screenshot }));
+  }
+
   async function initialize() {
     const fontsReady = Promise.race([
       Promise.all([
@@ -4186,21 +4269,21 @@ export function createShelf({
       ]).catch(() => null),
       new Promise((resolve) => setTimeout(resolve, 2000)),
     ]);
-    // shortcut: preload all originals; load per inspected book if the 7.8 MB image payload delays shelf startup.
-    const [, wood, loadedBooks] = await Promise.all([
+    // Visible books block the first frame. The rest paint when their images arrive.
+    const plan = shelfStartupPlan(BOOKS, SHELF_STARTUP_VISIBLE, scrollProgressPosition());
+    const blocking = new Set(plan.blocking.map((book) => book.id));
+    const [, wood] = await Promise.all([
       fontsReady,
       loadImage(WOOD_TEXTURE_URL),
-      Promise.all(BOOKS.map(async (book) => ({
-        cover: book.cover ? await loadImage(book.cover) : null,
-        screenshot: book.screenshot ? await loadImage(book.screenshot) : null,
-      }))),
+      Promise.all(BOOKS.filter((book) => blocking.has(book.id)).map(async (book) => {
+        storeBookImages(await loadBookImages(book));
+      })),
     ]);
     if (disposed) return;
     woodImage = wood;
-    loadedBooks.forEach((entry, index) => {
-      if (entry.cover) coverImages.set(BOOKS[index].id, entry.cover);
-      if (entry.screenshot) screenshotImages.set(BOOKS[index].id, entry.screenshot);
-    });
+    void Promise.all(BOOKS.filter((book) => !blocking.has(book.id)).map(async (book) => {
+      storeBookImages(await loadBookImages(book));
+    }));
 
     try {
       renderer = new THREE.WebGLRenderer({

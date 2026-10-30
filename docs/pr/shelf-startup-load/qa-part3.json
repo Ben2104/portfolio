@@ -1,0 +1,31 @@
+{
+  "part": "3",
+  "checks": [
+    {
+      "name": "part3: first book reached spread 2",
+      "pass": true,
+      "detail": "02 / 05"
+    },
+    {
+      "name": "part3: first book reached spread 4",
+      "pass": true,
+      "detail": "04 / 05"
+    },
+    {
+      "name": "part3: deferred book reached spread 2",
+      "pass": true,
+      "detail": "02 / 05"
+    },
+    {
+      "name": "part3: deferred book reached spread 4",
+      "pass": true,
+      "detail": "04 / 05"
+    },
+    {
+      "name": "part3: no page errors",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "readyMs": 7441
+}
