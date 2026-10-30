@@ -1,0 +1,63 @@
+{
+  "part": "2",
+  "checks": [
+    {
+      "name": "part2: all shelf images requested and finished",
+      "pass": true,
+      "detail": {
+        "n": 19,
+        "pending": []
+      }
+    },
+    {
+      "name": "part2: no page errors",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "readyMs": 7361,
+  "atReady": {
+    "shelfRequested": 19,
+    "shelfFinished": 19
+  },
+  "deferredLoadedMs": 0,
+  "shelfFilesTotal": 19,
+  "covers": [
+    {
+      "i": 1,
+      "title": "Material Enhancement Assistant"
+    },
+    {
+      "i": 2,
+      "title": "CrisisLineAI"
+    },
+    {
+      "i": 3,
+      "title": "Shape-Sign"
+    },
+    {
+      "i": 4,
+      "title": "911 OPERATOR ASSISTANT"
+    },
+    {
+      "i": 5,
+      "title": "QuizzRiff"
+    },
+    {
+      "i": 6,
+      "title": "The Bookstore"
+    },
+    {
+      "i": 7,
+      "title": "LLM Chatbot"
+    },
+    {
+      "i": 8,
+      "title": "Pickleball-Booking-Extension"
+    },
+    {
+      "i": 9,
+      "title": "Pickleball Booking Automation (Playwright & GitHub Actions)"
+    }
+  ]
+}

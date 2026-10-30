@@ -1,0 +1,83 @@
+{
+  "env": {
+    "tier": "high",
+    "dpr": 1,
+    "retest": "ticket-01"
+  },
+  "checks": [
+    {
+      "name": "R2 (page scroll to another book): Preparing entered, no stale open, Preparing cleared",
+      "pass": true,
+      "detail": {
+        "prep": "Preparing",
+        "y6": 8867,
+        "selected": "LLM Chatbot",
+        "detail": false,
+        "busy": null,
+        "text": "Open",
+        "live": "Preparing 911 OPERATOR ASSISTANT."
+      }
+    },
+    {
+      "name": "R2 (marker reselect): no stale open and Preparing cleared",
+      "pass": true,
+      "detail": {
+        "detail": false,
+        "busy": null,
+        "text": "Open",
+        "live": "Selected project 8 of 9: Pickleball-Booking-Extension."
+      }
+    },
+    {
+      "name": "regression: prewarmed open 0 canvases/uploads",
+      "pass": true,
+      "detail": {
+        "canvases": 0,
+        "uploads": 0,
+        "texCreated": 0
+      }
+    },
+    {
+      "name": "regression: same-book reopen 0 canvases/uploads/creations",
+      "pass": true,
+      "detail": {
+        "canvases": 0,
+        "uploads": 0,
+        "texCreated": 0
+      }
+    },
+    {
+      "name": "regression: idle draw-stop (0 draws over 4 s)",
+      "pass": true,
+      "detail": {
+        "d0": 175,
+        "d1": 175
+      }
+    },
+    {
+      "name": "no page errors overall",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "phases": {},
+  "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "r2": {
+    "a": {
+      "prep": "Preparing",
+      "y6": 8867,
+      "selected": "LLM Chatbot",
+      "detail": false,
+      "busy": null,
+      "text": "Open",
+      "live": "Preparing 911 OPERATOR ASSISTANT."
+    },
+    "b": {
+      "detail": false,
+      "busy": null,
+      "text": "Open",
+      "live": "Selected project 8 of 9: Pickleball-Booking-Extension."
+    }
+  },
+  "errors": []
+}

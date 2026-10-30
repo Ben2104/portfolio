@@ -1,0 +1,37 @@
+{
+  "part": "4",
+  "checks": [
+    {
+      "name": "part4: deferred book opened before its plate arrived (race window real)",
+      "pass": true,
+      "detail": {
+        "atOpen": {
+          "requested": true,
+          "finished": false
+        },
+        "afterOpen": {
+          "requested": true,
+          "finished": false
+        }
+      }
+    },
+    {
+      "name": "part4: no page errors",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "readyMs": 7439,
+  "plateStateAtOpen": {
+    "requested": true,
+    "finished": false
+  },
+  "plateStateAfterOpen": {
+    "requested": true,
+    "finished": false
+  },
+  "plateStateAfterRelease": {
+    "finished": true
+  },
+  "plateArrivedMs": 37756
+}

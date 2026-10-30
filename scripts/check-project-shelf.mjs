@@ -4,6 +4,8 @@ import { readFileSync } from "node:fs";
 const engine = await import("../src/components/portfolio/project-shelf/shelf-engine.ts");
 const { projects } = await import("../src/data/portfolio.ts");
 
+const prefetchModule = await import("../src/components/portfolio/project-shelf/shelf-prefetch.ts");
+
 const reds = [];
 
 function check(name, fn) {
@@ -20,47 +22,47 @@ function check(name, fn) {
 const expected = [
   {
     id: "material-enhancement-assistant",
-    screenshot: "/projects/material-enhancement-assistant.png",
+    screenshot: "/projects/shelf/plates/material-enhancement-assistant.webp",
     cover: "/projects/shelf/covers/material-enhancement-assistant.webp",
   },
   {
     id: "crisislineai",
-    screenshot: "/projects/crisislineai.png",
+    screenshot: "/projects/shelf/plates/crisislineai.webp",
     cover: "/projects/shelf/covers/crisislineai.webp",
   },
   {
     id: "shape-sign",
-    screenshot: "/projects/shape&sign.png",
+    screenshot: "/projects/shelf/plates/shape-sign.webp",
     cover: "/projects/shelf/covers/shape-sign.webp",
   },
   {
     id: "911-operator-assistant",
-    screenshot: "/projects/911_operator.png",
+    screenshot: "/projects/shelf/plates/911-operator-assistant.webp",
     cover: "/projects/shelf/covers/911-operator-assistant.webp",
   },
   {
     id: "quizzriff",
-    screenshot: "/projects/quizzriff.png",
+    screenshot: "/projects/shelf/plates/quizzriff.webp",
     cover: "/projects/shelf/covers/quizzriff.webp",
   },
   {
     id: "the-bookstore",
-    screenshot: "/projects/Bookstore.png",
+    screenshot: "/projects/shelf/plates/the-bookstore.webp",
     cover: "/projects/shelf/covers/the-bookstore.webp",
   },
   {
     id: "llm-chatbot",
-    screenshot: "/projects/chatbot.png",
+    screenshot: "/projects/shelf/plates/llm-chatbot.webp",
     cover: "/projects/shelf/covers/llm-chatbot.webp",
   },
   {
     id: "pickleball-booking-extension",
-    screenshot: "/projects/pickleball.jpg",
+    screenshot: "/projects/shelf/plates/pickleball-booking-extension.webp",
     cover: "/projects/shelf/covers/pickleball-booking-extension.webp",
   },
   {
     id: "pickleball-booking-automation-playwright-github-actions",
-    screenshot: "/projects/pickleball_bot.png",
+    screenshot: "/projects/shelf/plates/pickleball-booking-automation-playwright-github-actions.webp",
     cover: "/projects/shelf/covers/pickleball-booking-automation-playwright-github-actions.webp",
   },
 ];
@@ -655,6 +657,27 @@ check("ready prep does not open when the shelf has moved to another book", () =>
   }), "ignore");
 });
 
+check("startup waits on the visible books and loads each pair together", () => {
+  const books = [
+    { id: "a", cover: "/a-cover", screenshot: "/a-shot" },
+    { id: "b", cover: "/b-cover", screenshot: "/b-shot" },
+    { id: "c", cover: "", screenshot: "/c-shot" },
+    { id: "d", cover: "/d-cover", screenshot: "/d-shot" },
+    { id: "e", cover: "/e-cover", screenshot: "/e-shot" },
+  ];
+  const plan = engine.shelfStartupPlan(books, 3, 0);
+  assert.deepEqual(plan.blocking.map((book) => book.id), ["a", "b", "c"]);
+  assert.deepEqual(plan.blocking[0].images, ["/a-cover", "/a-shot"]);
+  assert.deepEqual(plan.blocking[2].images, ["/c-shot"]);
+  assert.deepEqual(plan.deferred.map((book) => book.id), ["d", "e"]);
+  const end = engine.shelfStartupPlan(books, 3, 4);
+  assert.deepEqual(end.blocking.map((book) => book.id), ["c", "d", "e"]);
+  const real = engine.shelfStartupPlan(engine.buildShelfBooks(projects));
+  assert.equal(real.blocking.length, 3);
+  assert.equal(real.blocking.length + real.deferred.length, projects.length);
+  assert.ok(real.deferred.length > 0);
+});
+
 check("blocked prepare clears Preparing", () => {
   const prep = engine.createDetailPrep({
     units: () => ["page"],
@@ -668,8 +691,44 @@ check("blocked prepare clears Preparing", () => {
   assert.equal(prep.isReady("other"), false);
 });
 
+check("early prefetch requests exactly what the engine blocks on at startup", () => {
+  const { prefetchShelfStartupImages } = prefetchModule;
+  const requested = prefetchShelfStartupImages(projects, () => {});
+  const plan = engine.shelfStartupPlan(engine.buildShelfBooks(projects));
+  const expectedUrls = ["/projects/shelf/walnut.webp", ...plan.blocking.flatMap((book) => book.images)];
+  assert.deepEqual([...requested].sort(), [...expectedUrls].sort());
+  assert.equal(prefetchModule.SHELF_STARTUP_VISIBLE, engine.SHELF_STARTUP_VISIBLE);
+  assert.equal(prefetchShelfStartupImages([], () => {}).length, 1);
+});
+
 if (reds.length) {
   console.log(`${reds.length} failed`);
   process.exit(1);
 }
 console.log("all checks passed");
+
+check("late screenshot repaints only plate pages that already own a texture", () => {
+  const disposed = [];
+  const owned = { dispose() { disposed.push("page-2"); } };
+  const stranger = { dispose() { disposed.push("stranger"); } };
+  const materials = [];
+  materials[2] = { map: owned, needsUpdate: false };
+  materials[6] = { map: stranger, needsUpdate: false };
+  const rig = { interiorPageMaterials: materials, detailTextures: [owned] };
+  const made = [];
+  const uploaded = [];
+  const changed = engine.repaintArrivedPlates(rig, (page) => {
+    const texture = { page };
+    made.push(page);
+    return texture;
+  }, (texture) => uploaded.push(texture.page));
+  assert.equal(changed, true);
+  assert.deepEqual(made, [2]);
+  assert.deepEqual(uploaded, [2]);
+  assert.deepEqual(disposed, ["page-2"]);
+  assert.equal(rig.detailTextures.length, 1);
+  assert.equal(rig.detailTextures[0], materials[2].map);
+  assert.equal(materials[2].needsUpdate, true);
+  assert.equal(materials[6].map, stranger);
+  assert.equal(engine.repaintArrivedPlates({ interiorPageMaterials: [], detailTextures: [] }, () => { throw new Error("no"); }, () => {}), false);
+});
