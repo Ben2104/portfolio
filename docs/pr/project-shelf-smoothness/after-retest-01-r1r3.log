@@ -1,0 +1,15 @@
+PASS R1: prewarm throws at least once (injection active) {"c0":56,"cAfterSettle":57,"cAfterDrive":57,"thrownAfterSettle":1,"thrownAfterDrive":1,"framesDriven":23}
+PASS R1: ~20 hover/resize frames after settle create 0 new canvases (no per-frame retry) {"c0":56,"cAfterSettle":57,"cAfterDrive":57,"thrownAfterSettle":1,"thrownAfterDrive":1,"framesDriven":23}
+PASS R1: settled prewarm total bounded (<=2 canvases) {"c0":56,"cAfterSettle":57,"cAfterDrive":57,"thrownAfterSettle":1,"thrownAfterDrive":1,"framesDriven":23}
+PASS R1: Open click attempts once (<=2 canvases), clears Preparing, announces failure, not opened {"text":"Open","busy":null,"live":"Could not prepare 911 OPERATOR ASSISTANT. The shelf is still available.","detail":false,"canvases":1,"throws":1}
+PASS R1: 20 frames after failed Open create 0 new canvases {"before":58,"after":58,"frames":23}
+PASS R1: second Open click retries exactly once more (<=2 canvases) {"canvases":1}
+FAIL R1: shelf usable after failures (marker click works, no page errors) {"errors":["console: Failed to load resource: the server responded with a status of 404 (Not Found)"],"selLabel":9}
+PASS R1: with fault removed Open succeeds (retry usable) 
+PASS R3: Preparing was entered "Preparing"
+PASS R3: after Escape, 20 frames start no new prep (0 new canvases for that book) {"prepText":"Preparing","cEsc":74,"cEsc2":74,"framesDriven":20,"text":"Open","busy":null,"detail":false}
+PASS R3: not opened, busy cleared {"prepText":"Preparing","cEsc":74,"cEsc2":74,"framesDriven":20,"text":"Open","busy":null,"detail":false}
+PASS R3 sanity: prewarm resumes after selection changes {"before":74,"after":85}
+FAIL R2 (wheel): no stale open and Preparing cleared {"prep":"Preparing","detail":true,"busy":null,"text":"Open","live":"Opening Shape-Sign. Drag the cover, click the book, or use Open book to begin reading."}
+FAIL FATAL locator.click: Timeout 120000ms exceeded. 
+SUMMARY pass=11 fail=3

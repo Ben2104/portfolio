@@ -207,11 +207,29 @@ export function openShelfDensity(devicePixelRatio, tierCap) {
   return { pixelRatio: cap, cap, samples: [] };
 }
 
-/* One redraw restores the device cap after motion stops. Animation frames do not request it. */
+export const MOTION_PIXEL_CAP = 1.5;
+export const SHELF_TRANSITION_MS = 920;
+
+/* Motion stays at or below 1.5. One settled frame confirms the stop; the next restores the sharp cap. */
 export function applyShelfDensity(state, frameMs, animating) {
-  const stepped = stepShelfDensity(state, frameMs);
-  if (animating || stepped.pixelRatio >= stepped.cap) return { ...stepped, redraw: false };
-  return { pixelRatio: stepped.cap, cap: stepped.cap, samples: [], redraw: true };
+  const restCap = state.cap;
+  const motionCap = Math.min(MOTION_PIXEL_CAP, restCap);
+  if (animating) {
+    const clamped = Math.min(state.pixelRatio, motionCap);
+    const stepped = stepShelfDensity({
+      pixelRatio: clamped,
+      cap: motionCap,
+      samples: clamped === state.pixelRatio ? state.samples : [],
+    }, frameMs);
+    return { pixelRatio: stepped.pixelRatio, cap: restCap, samples: stepped.samples, redraw: false, hold: 0 };
+  }
+  if (state.pixelRatio < restCap) {
+    if ((state.hold || 0) < 1) {
+      return { pixelRatio: state.pixelRatio, cap: restCap, samples: state.samples, redraw: true, hold: 1 };
+    }
+    return { pixelRatio: restCap, cap: restCap, samples: [], redraw: true, hold: 0 };
+  }
+  return { pixelRatio: state.pixelRatio, cap: restCap, samples: state.samples, redraw: false, hold: 0 };
 }
 
 export function resizeShelfDensity(state) {
@@ -219,6 +237,7 @@ export function resizeShelfDensity(state) {
     pixelRatio: Math.min(state.cap, Math.max(DENSITY_FLOOR, state.pixelRatio)),
     cap: state.cap,
     samples: [],
+    hold: 0,
   };
 }
 
@@ -228,7 +247,135 @@ export function commitShelfFrame(density, frameMs, shouldContinue, effects) {
   if (next.pixelRatio !== density.pixelRatio) effects.resize(next.pixelRatio);
   effects.render();
   if (shouldContinue || next.redraw) effects.schedule();
-  return { pixelRatio: next.pixelRatio, cap: next.cap, samples: next.samples, redraw: next.redraw };
+  return { pixelRatio: next.pixelRatio, cap: next.cap, samples: next.samples, redraw: next.redraw, hold: next.hold };
+}
+
+/* setPixelRatio already calls setSize, so one drawing-buffer write covers both. */
+export function assignShelfBuffer(renderer, cssWidth, cssHeight, pixelRatio, previous) {
+  const width = Math.max(1, Math.floor(cssWidth));
+  const height = Math.max(1, Math.floor(cssHeight));
+  const ratio = pixelRatio > 0 ? pixelRatio : 1;
+  const bufferWidth = Math.floor(width * ratio);
+  const bufferHeight = Math.floor(height * ratio);
+  if (
+    previous
+    && previous.width === width
+    && previous.height === height
+    && previous.bufferWidth === bufferWidth
+    && previous.bufferHeight === bufferHeight
+  ) return previous;
+  renderer.setDrawingBufferSize(width, height, ratio);
+  return { width, height, ratio, bufferWidth, bufferHeight };
+}
+
+export function transitionProgress(startMs, nowMs, durationMs, reducedMotion = false) {
+  if (reducedMotion) return 1;
+  if (!(durationMs > 0) || !(nowMs > startMs)) return 0;
+  return Math.min(1, (nowMs - startMs) / durationMs);
+}
+
+const DETAIL_PREP_UNITS = [
+  "page-0", "page-1", "page-2", "page-3", "page-4", "page-5", "page-6", "page-7",
+  "endpaper", "back", "foil",
+];
+
+/* One in-flight or retained detail set. Each scheduled task creates and uploads a single texture. */
+export function createDetailPrep({ units, create, upload, release, schedule }) {
+  let token = 0;
+  let retained = null;
+  let pending = null;
+  let inspected = null;
+
+  function releaseTextures(textures) {
+    for (const texture of textures.splice(0, textures.length)) release(texture);
+  }
+
+  function run(job) {
+    if (job.token !== token || pending !== job) return;
+    const list = units(job.id);
+    if (job.index >= list.length) {
+      retained = { id: job.id, textures: job.textures };
+      pending = null;
+      job.onReady?.(job.id);
+      return;
+    }
+    let texture = null;
+    try {
+      texture = create(job.id, list[job.index]);
+      upload(texture);
+    } catch (error) {
+      if (texture) release(texture);
+      releaseTextures(job.textures);
+      if (pending === job) pending = null;
+      job.onFail?.(error);
+      return;
+    }
+    job.textures.push(texture);
+    job.index += 1;
+    if (job.index >= list.length) {
+      retained = { id: job.id, textures: job.textures };
+      pending = null;
+      job.onReady?.(job.id);
+      return;
+    }
+    schedule(() => run(job));
+  }
+
+  return {
+    prepare(id, hooks = {}) {
+      if (inspected && inspected !== id) return "blocked";
+      if (!pending && retained?.id === id) {
+        hooks.onReady?.(id);
+        return "ready";
+      }
+      if (pending?.id === id) {
+        if (hooks.onReady) pending.onReady = hooks.onReady;
+        if (hooks.onFail) pending.onFail = hooks.onFail;
+        return "pending";
+      }
+      token += 1;
+      if (pending) {
+        const stale = pending;
+        pending = null;
+        releaseTextures(stale.textures);
+      }
+      if (retained && retained.id !== id) {
+        releaseTextures(retained.textures);
+        retained = null;
+      }
+      const job = { id, token, index: 0, textures: [], onReady: hooks.onReady, onFail: hooks.onFail };
+      pending = job;
+      schedule(() => run(job));
+      return "started";
+    },
+    cancel() {
+      token += 1;
+      if (!pending) return;
+      const stale = pending;
+      pending = null;
+      releaseTextures(stale.textures);
+    },
+    dropSpeculative(nextId) {
+      if (!pending) return false;
+      if (pending.id === nextId || (inspected && pending.id === inspected)) return false;
+      token += 1;
+      const stale = pending;
+      pending = null;
+      releaseTextures(stale.textures);
+      return true;
+    },
+    markInspected(id) { inspected = id; },
+    markClosed() { inspected = null; },
+    dispose() {
+      token += 1;
+      if (pending) releaseTextures(pending.textures);
+      pending = null;
+      if (retained) releaseTextures(retained.textures);
+      retained = null;
+      inspected = null;
+    },
+    isReady(id) { return !pending && retained?.id === id; },
+  };
 }
 
 /* Null only textures this book created. Shared paper and cloth maps stay put. */
@@ -246,6 +393,78 @@ function detachTextureMaps(material, owned) {
     }
   }
   return removed;
+}
+
+const releasedOwnedDetails = new WeakSet();
+
+/* Detach one owned detail texture and dispose it once. Shared maps on the same material stay. */
+export function createPrepGate() {
+  let suppressedId = null;
+  return {
+    suppress(id) { suppressedId = id; },
+    liftAll() { suppressedId = null; },
+    allowsAutomatic(id) { return suppressedId !== id; },
+    allowUser(id) {
+      if (suppressedId === id) suppressedId = null;
+    },
+  };
+}
+
+export function preparedOpenDecision({ readyId, nearestId, preparingId }) {
+  if (preparingId !== readyId) return "ignore";
+  if (nearestId !== readyId) return "clear";
+  return "open";
+}
+
+export function startUserPrep(prep, id, hooks) {
+  const status = prep.prepare(id, hooks);
+  return status === "blocked" ? "clear" : status;
+}
+
+export function shelfPrewarmAllowed(state) {
+  const position = state?.position;
+  const target = state?.targetPosition;
+  return Boolean(
+    state?.ready && state.onScreen && state.settled && !state.dragging
+    && Number.isFinite(position) && position === target
+    && !state.preparing && state.mode === "hero" && !state.suspended
+  );
+}
+
+/* Hide the open pages before the close handler drops its book reference. */
+export function sealShelfClose(book, effects) {
+  effects.hideInternals(book);
+  effects.markClosed();
+}
+
+/* Context loss: stop prep, drop owned detail textures, and clear the preparing control. */
+export function abandonShelfGraphics(session) {
+  session.suspend();
+  session.invalidate();
+  session.cancelPrep();
+  session.disposeOwned();
+  session.clearPreparing();
+}
+
+export function releaseOwnedDetail(texture, rigs) {
+  if (!texture || releasedOwnedDetails.has(texture)) return;
+  releasedOwnedDetails.add(texture);
+  for (const rig of rigs || []) {
+    const owned = rig.owned;
+    if (!owned) continue;
+    const index = owned.indexOf(texture);
+    if (index < 0) continue;
+    owned.splice(index, 1);
+    for (const material of rig.materials || []) {
+      if (!detachTextureMaps(material, [texture]).length) continue;
+      rig.restore?.(material);
+      material.needsUpdate = true;
+    }
+    texture.dispose?.();
+    if (!owned.length) rig.markEmpty?.();
+    return;
+  }
+  texture.dispose?.();
 }
 
 export function releaseShelfDetails(rigs, inspectedId) {
@@ -406,6 +625,9 @@ export function createShelf({
   let lastTime = performance.now();
   let mode = "hero";
   let transitionTime = 0;
+  let transitionStartedAt = 0;
+  let preparingId = null;
+  let drawingBuffer = null;
   let position = 0;
   let targetPosition = 0;
   let selectedIndex = 0;
@@ -418,6 +640,9 @@ export function createShelf({
   let pointerDirty = false;
   let suspended = false;
   let onScreen = false;
+  let shelfReady = false;
+  let selectionSettled = true;
+  let graphicsLost = false;
   let disposed = false;
   let needsAnotherFrame = false;
   let viewWidth = root.clientWidth || window.innerWidth;
@@ -553,8 +778,6 @@ export function createShelf({
   const PAGE_TURN_COMMIT_PROGRESS = 0.18;
   const COVER_OPEN_COMMIT_PROGRESS = 0.16;
   const COVER_CLOSE_COMMIT_PROGRESS = 0.2;
-  const DETAIL_TRANSITION_DURATION = 0.92;
-  const SHELF_TRANSITION_DURATION = 0.92;
   let openingViewOffsetX = 0;
   let closingViewOffsetX = 0;
 
@@ -1174,14 +1397,11 @@ export function createShelf({
   }
 
   /* Eight printed pages carrying the project: title, overview, plate, stack, links, colophon */
-  function makeInteriorPageTextures(book) {
-    const pageCount = 8;
+  function makeInteriorPageTexture(book, pageIndex) {
     const inkColor = new THREE.Color(book.color).lerp(new THREE.Color(0x211b16), 0.62);
     const ink = `#${inkColor.getHexString()}`;
     const accent = new THREE.Color(SHELF_THEME.accent).lerp(new THREE.Color(0x211b16), 0.18);
     const accentInk = `#${accent.getHexString()}`;
-
-    return Array.from({ length: pageCount }, (_, pageIndex) => {
       const logicalWidth = 512;
       const logicalHeight = 768;
       const pixels = shelfTexturePixels("interior", densityQuality);
@@ -1312,7 +1532,6 @@ export function createShelf({
       const texture = configureCanvasTexture(new THREE.CanvasTexture(pageCanvas));
       texture.name = `${book.id}-interior-page-${pageIndex + 1}`;
       return texture;
-    });
   }
 
   function makeContactShadowTexture() {
@@ -2094,6 +2313,7 @@ export function createShelf({
       internals,
       internalsVisible: false,
       detailed: false,
+      detailTextures: [],
       backArt,
       backFoilArt,
       backFoilPlane,
@@ -2128,74 +2348,130 @@ export function createShelf({
     };
   }
 
-  /* Print pages, endpapers and back cover the first time a book is inspected */
-  function ensureDetailTextures(rig) {
-    if (rig.detailed) return;
-    rig.detailed = true;
+  /* One page, endpaper, back cover, or foil per scheduled task. */
+  function createDetailUnit(id, unit) {
+    const rig = bookRigs.find((item) => item.data.id === id);
+    if (!rig) throw new Error(`Missing shelf book ${id}.`);
     const book = rig.data;
-    const owned = [];
-    makeInteriorPageTextures(book).forEach((texture, index) => {
-      const material = rig.interiorPageMaterials[index];
+    let texture;
+    if (unit.startsWith("page-")) {
+      const pageIndex = Number(unit.slice(5));
+      texture = makeInteriorPageTexture(book, pageIndex);
+      const material = rig.interiorPageMaterials[pageIndex];
       material.map = texture;
       material.needsUpdate = true;
-      owned.push(texture);
-    });
-    const endpaper = makeEndpaperTexture(book);
-    rig.endpaperMaterial.map = endpaper;
-    rig.endpaperMaterial.needsUpdate = true;
-    owned.push(endpaper);
-    const back = makeBackCoverTexture(book);
-    rig.backArt.map = back;
-    rig.backArt.color.set(0xffffff);
-    rig.backArt.needsUpdate = true;
-    owned.push(back);
-    const backFoil = makeBackFoilTexture(book);
-    rig.backFoilArt.map = backFoil;
-    rig.backFoilArt.alphaMap = backFoil;
-    rig.backFoilArt.bumpMap = backFoil;
-    rig.backFoilArt.needsUpdate = true;
-    owned.push(backFoil);
-    rig.detailTextures = owned;
-    rig.backFoilPlane.visible = rig.internalsVisible;
+    } else if (unit === "endpaper") {
+      texture = makeEndpaperTexture(book);
+      rig.endpaperMaterial.map = texture;
+      rig.endpaperMaterial.needsUpdate = true;
+    } else if (unit === "back") {
+      texture = makeBackCoverTexture(book);
+      rig.backArt.map = texture;
+      rig.backArt.color.set(0xffffff);
+      rig.backArt.needsUpdate = true;
+    } else if (unit === "foil") {
+      texture = makeBackFoilTexture(book);
+      rig.backFoilArt.map = texture;
+      rig.backFoilArt.alphaMap = texture;
+      rig.backFoilArt.bumpMap = texture;
+      rig.backFoilArt.needsUpdate = true;
+    } else {
+      throw new Error(`Unknown detail unit ${unit}.`);
+    }
+    rig.detailTextures.push(texture);
+    return texture;
   }
 
   function restoreDetailMaterial(rig, material) {
     if (material === rig.backArt) {
       material.map = null;
       material.color.set(rig.data.color);
-      return;
-    }
-    if (material === rig.backFoilArt) {
+    } else if (material === rig.backFoilArt) {
       material.map = null;
       material.alphaMap = null;
       material.bumpMap = null;
-      return;
+    } else if (!material.map) {
+      material.map = makePaperFaceTexture();
     }
-    if (!material.map) material.map = makePaperFaceTexture();
+    material.needsUpdate = true;
   }
 
-  function releaseUninspectedDetails(inspectedId) {
-    releaseShelfDetails(bookRigs.map((rig) => ({
-      id: rig.data.id,
-      get detailed() { return rig.detailed; },
-      set detailed(value) {
-        rig.detailed = value;
-        if (!value) rig.detailTextures = [];
+  function releaseOwnedDetailTexture(texture) {
+    releaseOwnedDetail(texture, bookRigs.map((rig) => ({
+      owned: rig.detailTextures,
+      materials: [rig.endpaperMaterial, rig.backArt, rig.backFoilArt, ...rig.interiorPageMaterials],
+      restore(material) {
+        restoreDetailMaterial(rig, material);
+        material.needsUpdate = true;
       },
-      owned: rig.detailTextures || [],
-      materials: [
-        rig.endpaperMaterial,
-        rig.backArt,
-        rig.backFoilArt,
-        ...rig.interiorPageMaterials,
-      ],
-      hide() { setInternalsVisible(rig, false); },
-      restore(material) { restoreDetailMaterial(rig, material); },
-    })), inspectedId);
+      markEmpty() {
+        rig.detailed = false;
+        rig.backFoilPlane.visible = false;
+      },
+    })));
   }
+
+  function noteDetailReady(id) {
+    const rig = bookRigs.find((item) => item.data.id === id);
+    if (!rig) return;
+    rig.detailed = true;
+    rig.backFoilPlane.visible = rig.internalsVisible;
+  }
+
+  function clearPreparing() {
+    preparingId = null;
+    inspectButton.removeAttribute("aria-busy");
+    inspectButton.textContent = "Open";
+  }
+
+  function prepareBook(id, hooks) {
+    return detailPrep.prepare(id, {
+      onReady(readyId) {
+        noteDetailReady(readyId);
+        hooks?.onReady?.(readyId);
+      },
+      onFail(error) {
+        hooks?.onFail?.(error);
+      },
+    });
+  }
+
+  function prepareSettledBook() {
+    if (!shelfPrewarmAllowed({
+      ready: shelfReady,
+      onScreen,
+      settled: selectionSettled,
+      position,
+      targetPosition,
+      dragging: swipe.dragging,
+      preparing: preparingId,
+      mode,
+      suspended: suspended || graphicsLost,
+    })) return;
+    const id = bookRigs[selectedIndex]?.data.id;
+    if (!id || detailPrep.isReady(id) || !prepGate.allowsAutomatic(id)) return;
+    prepareBook(id, { onFail() { prepGate.suppress(id); } });
+  }
+
+  const prepGate = createPrepGate();
+  const detailPrep = createDetailPrep({
+    units() { return DETAIL_PREP_UNITS; },
+    create: createDetailUnit,
+    upload(texture) {
+      if (!renderer) throw new Error("Shelf renderer is unavailable.");
+      const context = renderer.getContext?.();
+      if (context?.isContextLost?.()) throw new Error("Shelf graphics context was lost.");
+      renderer.initTexture(texture);
+    },
+    release: releaseOwnedDetailTexture,
+    schedule(fn) {
+      requestAnimationFrame(() => {
+        if (!disposed && !graphicsLost) fn();
+      });
+    },
+  });
 
   function setInternalsVisible(rig, visible) {
-    if (rig.internalsVisible === visible) return;
     rig.internalsVisible = visible;
     rig.internals.forEach((object) => {
       object.visible = visible;
@@ -2511,6 +2787,7 @@ export function createShelf({
   function updateSelection(index, announce = false, force = false) {
     const nextIndex = clamp(index, 0, lastIndex);
     if (nextIndex === selectedIndex && !announce && !force) return;
+    const selectionChanged = nextIndex !== selectedIndex;
     selectedIndex = nextIndex;
     const book = BOOKS[selectedIndex];
     selectionTitle.textContent = book.title;
@@ -2531,6 +2808,12 @@ export function createShelf({
     if (announce) {
       liveRegion.textContent = `Selected project ${selectedIndex + 1} of ${BOOKS.length}: ${book.title}.`;
     }
+    if (preparingId && book.id !== preparingId) {
+      detailPrep.cancel();
+      clearPreparing();
+    }
+    detailPrep.dropSpeculative(book.id);
+    if (selectionChanged) prepGate.liftAll();
   }
 
   function metaRow(label, content) {
@@ -2820,13 +3103,17 @@ export function createShelf({
 
   function onScroll() {
     if (mode !== "hero" || swipe.dragging || disposed) return;
+    selectionSettled = false;
+    if (!preparingId) detailPrep.dropSpeculative(null);
     targetPosition = scrollProgressPosition();
     requestFrame();
     window.clearTimeout(scrollSettleTimer);
     scrollSettleTimer = window.setTimeout(() => {
-      if (mode !== "hero" || swipe.dragging || disposed) return;
+      if (mode !== "hero" || swipe.dragging || disposed || graphicsLost) return;
+      selectionSettled = true;
       targetPosition = clamp(Math.round(targetPosition), 0, lastIndex);
       requestFrame();
+      prepareSettledBook();
     }, SCROLL_SETTLE_MS);
   }
 
@@ -3257,6 +3544,9 @@ export function createShelf({
       if (Math.abs(deltaX) < DRAG_START_PX || Math.abs(deltaX) <= Math.abs(deltaY) * 1.3) return;
       swipe.dragging = true;
       swipe.consumed = true;
+      selectionSettled = false;
+      detailPrep.cancel();
+      clearPreparing();
       window.clearTimeout(scrollSettleTimer);
       setHovered(-1);
     }
@@ -3274,6 +3564,7 @@ export function createShelf({
     swipe.active = false;
     swipe.dragging = false;
     if (!wasDragging) return;
+    selectionSettled = true;
     const flick = event.type === "pointerup" ? (swipe.velocity * FLICK_PROJECTION_MS) / pixelsPerBook() : 0;
     const settled = clamp(Math.round(targetPosition - flick), 0, lastIndex);
     targetPosition = settled;
@@ -3287,21 +3578,60 @@ export function createShelf({
   }
 
   function openDetail(origin = inspectButton) {
-    if (mode !== "hero") return;
-    mode = "opening";
-    transitionTime = 0;
-    readingOpen = false;
-    detailBookHovered = false;
-    currentSpread = 0;
-    resetDetailPress();
+    if (mode !== "hero" || disposed) return;
     focusReturnTarget = origin === canvas
       ? markers.children[selectedIndex] || inspectButton
       : origin instanceof HTMLElement
         ? origin
         : inspectButton;
+    const rig = bookRigs[selectedIndex];
+    if (!rig) return;
+    const id = rig.data.id;
+    if (detailPrep.isReady(id)) {
+      beginOpening();
+      return;
+    }
+    preparingId = id;
+    inspectButton.setAttribute("aria-busy", "true");
+    inspectButton.textContent = "Preparing";
+    liveRegion.textContent = `Preparing ${rig.data.title}.`;
+    prepGate.allowUser(id);
+    const status = startUserPrep(detailPrep, id, {
+      onReady(readyId) {
+        if (disposed || suspended || graphicsLost || mode !== "hero") return;
+        const nearestId = bookRigs[clamp(Math.round(position), 0, lastIndex)]?.data.id;
+        const decision = preparedOpenDecision({ readyId, nearestId, preparingId });
+        if (decision === "clear") {
+          clearPreparing();
+          return;
+        }
+        if (decision !== "open") return;
+        clearPreparing();
+        beginOpening();
+      },
+      onFail() {
+        if (disposed || preparingId !== id) return;
+        prepGate.suppress(id);
+        const title = rig.data.title;
+        clearPreparing();
+        liveRegion.textContent = `Could not prepare ${title}. The shelf is still available.`;
+        inspectButton.focus({ preventScroll: true });
+      },
+    });
+    if (status === "clear") clearPreparing();
+  }
+
+  function beginOpening() {
+    if (mode !== "hero" || suspended || graphicsLost || disposed) return;
+    mode = "opening";
+    transitionTime = 0;
+    transitionStartedAt = performance.now();
+    readingOpen = false;
+    detailBookHovered = false;
+    currentSpread = 0;
+    resetDetailPress();
     activeBook = bookRigs[selectedIndex];
-    releaseUninspectedDetails(activeBook.data.id);
-    ensureDetailTextures(activeBook);
+    detailPrep.markInspected(activeBook.data.id);
     setInternalsVisible(activeBook, true);
     activeBook.root.visible = true;
     activeBook.contactShadow.visible = false;
@@ -3372,6 +3702,7 @@ export function createShelf({
     resetDetailPress();
     mode = "closing";
     transitionTime = 0;
+    transitionStartedAt = performance.now();
     readingOpen = false;
     detailBookHovered = false;
     currentSpread = 0;
@@ -3439,8 +3770,12 @@ export function createShelf({
     browseUi.inert = false;
     mode = "hero";
     transitionTime = 0;
+    setInternalsVisible(activeBook, false);
+    sealShelfClose(activeBook, {
+      hideInternals(book) { setInternalsVisible(book, false); },
+      markClosed() { detailPrep.markClosed(); },
+    });
     activeBook = null;
-    releaseUninspectedDetails(null);
     liveRegion.textContent = `${BOOKS[selectedIndex].title} returned to the shelf.`;
     requestAnimationFrame(() => focusReturnTarget?.focus?.({ preventScroll: true }));
   }
@@ -3456,11 +3791,16 @@ export function createShelf({
 
   function updateShelfLayout(delta) {
     if (mode === "hero") {
+      const positionBefore = position;
       position = reducedMotion ? targetPosition : damp(position, targetPosition, 9.5, delta);
-      if (Math.abs(position - targetPosition) < 0.0005) position = targetPosition;
+      const arrived = Math.abs(position - targetPosition) < 0.0005;
+      if (arrived) position = targetPosition;
       else needsAnotherFrame = true;
+      /* Timer may fire while damping is still moving. This arrival retries prewarm. */
+      if (arrived && positionBefore !== targetPosition) prepareSettledBook();
 
       const nearest = clamp(Math.round(position), 0, lastIndex);
+      // A click may select and open before the scroll animation reaches that book.
       if (nearest !== selectedIndex) updateSelection(nearest, false);
     }
 
@@ -3517,14 +3857,15 @@ export function createShelf({
     });
   }
 
-  function updateTransition(delta) {
+  function updateTransition(delta, now) {
+    if (mode === "opening" || mode === "closing") {
+      transitionTime = transitionProgress(transitionStartedAt, now, SHELF_TRANSITION_MS, reducedMotion);
+    }
     if (mode === "opening") {
-      transitionTime = Math.min(1, transitionTime + delta / DETAIL_TRANSITION_DURATION);
       applyOpeningPose(transitionTime);
       updatePaginatedBook(activeBook, delta, 0);
       if (transitionTime >= 1) finishOpening();
     } else if (mode === "closing") {
-      transitionTime = Math.min(1, transitionTime + delta / SHELF_TRANSITION_DURATION);
       applyClosingPose(transitionTime);
       updatePaginatedBook(activeBook, delta, 0);
       if (transitionTime >= 1) finishClosing();
@@ -3572,7 +3913,7 @@ export function createShelf({
 
     if (pointerDirty) updateHover();
     updateShelfLayout(delta);
-    updateTransition(delta);
+    updateTransition(delta, time);
     const themeIsMoving = updateTheme(delta);
 
     if (mode === "detail") {
@@ -3591,9 +3932,7 @@ export function createShelf({
     const outcome = commitShelfFrame(density, frameMs, shouldContinue, {
       resize(ratio) {
         pixelRatio = ratio;
-        if (!renderer) return;
-        renderer.setPixelRatio(ratio);
-        renderer.setSize(viewWidth, viewHeight, false);
+        applyDrawingBuffer(ratio);
       },
       render() {
         renderer.render(scene, camera);
@@ -3602,8 +3941,14 @@ export function createShelf({
         requestFrame();
       },
     });
-    density = { pixelRatio: outcome.pixelRatio, cap: outcome.cap, samples: outcome.samples };
+    density = { pixelRatio: outcome.pixelRatio, cap: outcome.cap, samples: outcome.samples, hold: outcome.hold };
     pixelRatio = outcome.pixelRatio;
+    if (!shouldContinue) prepareSettledBook();
+  }
+
+  function applyDrawingBuffer(ratio) {
+    if (!renderer) return;
+    drawingBuffer = assignShelfBuffer(renderer, viewWidth, viewHeight, ratio, drawingBuffer);
   }
 
   function resize() {
@@ -3613,8 +3958,7 @@ export function createShelf({
     density = resizeShelfDensity(density);
     pixelRatio = density.pixelRatio;
     configureResponsiveTargets();
-    renderer.setPixelRatio(pixelRatio);
-    renderer.setSize(viewWidth, viewHeight, false);
+    applyDrawingBuffer(pixelRatio);
     camera.aspect = viewWidth / viewHeight;
     camera.updateProjectionMatrix();
     const shelfDistance = Math.abs(shelfCameraPosition.z - 0.13);
@@ -3648,6 +3992,18 @@ export function createShelf({
     if (target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))) return;
     const focusInside = root.contains(document.activeElement);
     if (!focusInside && !sectionHasViewportFocus()) return;
+
+    if (event.key === "Escape" && preparingId && mode === "hero") {
+      event.preventDefault();
+      prepGate.suppress(preparingId);
+      detailPrep.cancel();
+      clearPreparing();
+      liveRegion.textContent = "Preparation cancelled.";
+      const returnTarget = focusReturnTarget instanceof HTMLElement ? focusReturnTarget : inspectButton;
+      returnTarget.focus({ preventScroll: true });
+      requestFrame();
+      return;
+    }
 
     if (event.key === "Escape" && mode === "detail") {
       event.preventDefault();
@@ -3719,8 +4075,14 @@ export function createShelf({
     event.preventDefault();
     cancelPageDrag();
     resetDetailPress();
-    suspended = true;
     cancelFrame();
+    abandonShelfGraphics({
+      suspend() { suspended = true; },
+      invalidate() { graphicsLost = true; },
+      cancelPrep() { detailPrep.cancel(); },
+      disposeOwned() { detailPrep.dispose(); },
+      clearPreparing() { clearPreparing(); },
+    });
     showFallback("The 3D shelf paused after losing its graphics context. Reload to restore it.");
   }
 
@@ -3734,6 +4096,7 @@ export function createShelf({
   function dispose() {
     if (disposed) return;
     disposed = true;
+    detailPrep.dispose();
     suspended = true;
     cancelPageDrag();
     resetDetailPress();
@@ -3960,12 +4323,22 @@ export function createShelf({
     /* Draw only while the section is on screen and the tab is visible */
     suspended = document.hidden;
     intersectionObserver = new IntersectionObserver(([entry]) => {
+      const becameVisible = entry.isIntersecting && !onScreen;
       onScreen = entry.isIntersecting;
       if (onScreen) {
         lastTime = performance.now();
         requestFrame();
+        if (becameVisible) prepGate.liftAll();
+        prepareSettledBook();
       } else {
         cancelFrame();
+        if (preparingId) {
+          detailPrep.cancel();
+          clearPreparing();
+          liveRegion.textContent = "Preparation cancelled.";
+        } else {
+          detailPrep.dropSpeculative(null);
+        }
       }
     });
     intersectionObserver.observe(root);
@@ -3978,7 +4351,9 @@ export function createShelf({
     renderer.render(scene, camera);
     loading.hidden = true;
     root.classList.add("webgl-ready");
+    shelfReady = true;
     onReady?.();
+    prepareSettledBook();
     requestFrame();
   }
 

@@ -1,0 +1,1431 @@
+[
+  {
+    "tier": "high",
+    "dpr": 1,
+    "errors": [],
+    "phase": "inspect1",
+    "handlers": [
+      {
+        "phase": "inspect1",
+        "target": "inspect",
+        "ms": 37.400000005960464
+      }
+    ],
+    "events": [],
+    "canvases": [
+      {
+        "phase": "startup",
+        "width": 1274,
+        "height": 800
+      },
+      {
+        "phase": "startup",
+        "width": 512,
+        "height": 128
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 256
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 256
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 256
+      },
+      {
+        "phase": "startup",
+        "width": 768,
+        "height": 1152
+      },
+      {
+        "phase": "startup",
+        "width": 512,
+        "height": 768
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 192
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "inspect1",
+        "width": 768,
+        "height": 1152
+      },
+      {
+        "phase": "inspect1",
+        "width": 768,
+        "height": 1152
+      },
+      {
+        "phase": "inspect1",
+        "width": 768,
+        "height": 1152
+      },
+      {
+        "phase": "inspect1",
+        "width": 768,
+        "height": 1152
+      },
+      {
+        "phase": "inspect1",
+        "width": 768,
+        "height": 1152
+      },
+      {
+        "phase": "inspect1",
+        "width": 768,
+        "height": 1152
+      },
+      {
+        "phase": "inspect1",
+        "width": 768,
+        "height": 1152
+      },
+      {
+        "phase": "inspect1",
+        "width": 768,
+        "height": 1152
+      },
+      {
+        "phase": "inspect1",
+        "width": 768,
+        "height": 1152
+      },
+      {
+        "phase": "inspect1",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "inspect1",
+        "width": 1024,
+        "height": 1536
+      }
+    ],
+    "gl": {
+      "startup:createTexture": {
+        "count": 53,
+        "ms": 0.7999999523162842,
+        "max": 0.09999999403953552,
+        "sizes": []
+      },
+      "startup:texImage2D": {
+        "count": 10,
+        "ms": 0.09999999403953552,
+        "max": 0.09999999403953552,
+        "sizes": []
+      },
+      "startup:createShader": {
+        "count": 54,
+        "ms": 0.19999998807907104,
+        "max": 0.09999999403953552,
+        "sizes": []
+      },
+      "startup:compileShader": {
+        "count": 54,
+        "ms": 0,
+        "max": 0,
+        "sizes": []
+      },
+      "startup:linkProgram": {
+        "count": 27,
+        "ms": 0.09999999403953552,
+        "max": 0.09999999403953552,
+        "sizes": []
+      },
+      "startup:drawElements": {
+        "count": 266,
+        "ms": 0.6000000238418579,
+        "max": 0.10000002384185791,
+        "sizes": []
+      },
+      "startup:drawElementsInstanced": {
+        "count": 6,
+        "ms": 0,
+        "max": 0,
+        "sizes": []
+      },
+      "startup:drawArrays": {
+        "count": 160,
+        "ms": 0.30000001192092896,
+        "max": 0.10000002384185791,
+        "sizes": []
+      },
+      "startup:deleteTexture": {
+        "count": 1,
+        "ms": 0,
+        "max": 0,
+        "sizes": []
+      },
+      "startup:texSubImage2D": {
+        "count": 46,
+        "ms": 1289.4999999701977,
+        "max": 154,
+        "sizes": []
+      },
+      "startup:generateMipmap": {
+        "count": 44,
+        "ms": 0.09999999403953552,
+        "max": 0.09999999403953552,
+        "sizes": []
+      },
+      "scroll:drawElements": {
+        "count": 243,
+        "ms": 0.30000001192092896,
+        "max": 0.10000002384185791,
+        "sizes": []
+      },
+      "scroll:drawArrays": {
+        "count": 138,
+        "ms": 0.19999998807907104,
+        "max": 0.09999999403953552,
+        "sizes": []
+      },
+      "inspect1:drawElements": {
+        "count": 1174,
+        "ms": 2.0000000298023224,
+        "max": 0.5999999940395355,
+        "sizes": []
+      },
+      "inspect1:drawArrays": {
+        "count": 567,
+        "ms": 0.9999999403953552,
+        "max": 0.09999999403953552,
+        "sizes": []
+      },
+      "inspect1:createTexture": {
+        "count": 11,
+        "ms": 0.19999998807907104,
+        "max": 0.09999999403953552,
+        "sizes": []
+      },
+      "inspect1:texSubImage2D": {
+        "count": 11,
+        "ms": 97.2999999821186,
+        "max": 13.700000017881393,
+        "sizes": []
+      },
+      "inspect1:generateMipmap": {
+        "count": 11,
+        "ms": 0,
+        "max": 0,
+        "sizes": []
+      }
+    },
+    "frames": [
+      {
+        "phase": "startup",
+        "time": 5853,
+        "ms": 13.400000005960464,
+        "draws": 127
+      },
+      {
+        "phase": "startup",
+        "time": 13186.1,
+        "ms": 11.599999994039536,
+        "draws": 127
+      },
+      {
+        "phase": "scroll",
+        "time": 20135.8,
+        "ms": 14.699999988079071,
+        "draws": 127
+      },
+      {
+        "phase": "scroll",
+        "time": 21885.7,
+        "ms": 8.299999982118607,
+        "draws": 127
+      },
+      {
+        "phase": "scroll",
+        "time": 23685.6,
+        "ms": 9,
+        "draws": 127
+      },
+      {
+        "phase": "inspect1",
+        "time": 25468.9,
+        "ms": 6.5999999940395355,
+        "draws": 127
+      },
+      {
+        "phase": "inspect1",
+        "time": 27202.2,
+        "ms": 6.5,
+        "draws": 127
+      },
+      {
+        "phase": "inspect1",
+        "time": 29002.1,
+        "ms": 6,
+        "draws": 127
+      },
+      {
+        "phase": "inspect1",
+        "time": 30752,
+        "ms": 8.199999988079071,
+        "draws": 127
+      },
+      {
+        "phase": "inspect1",
+        "time": 32485.3,
+        "ms": 11.300000011920929,
+        "draws": 127
+      },
+      {
+        "phase": "inspect1",
+        "time": 34218.5,
+        "ms": 11.099999994039536,
+        "draws": 127
+      },
+      {
+        "phase": "inspect1",
+        "time": 35985.2,
+        "ms": 5.699999988079071,
+        "draws": 127
+      },
+      {
+        "phase": "inspect1",
+        "time": 37735.1,
+        "ms": 140.40000000596046,
+        "draws": 170
+      },
+      {
+        "phase": "inspect1",
+        "time": 41051.6,
+        "ms": 9,
+        "draws": 170
+      },
+      {
+        "phase": "inspect1",
+        "time": 43384.9,
+        "ms": 7.5,
+        "draws": 170
+      },
+      {
+        "phase": "inspect1",
+        "time": 45618.1,
+        "ms": 7.700000017881393,
+        "draws": 171
+      },
+      {
+        "phase": "inspect1",
+        "time": 47851.4,
+        "ms": 6.699999988079071,
+        "draws": 171
+      }
+    ],
+    "long": [
+      {
+        "phase": "startup",
+        "start": 156.5,
+        "duration": 79
+      },
+      {
+        "phase": "startup",
+        "start": 3568.5,
+        "duration": 158
+      },
+      {
+        "phase": "startup",
+        "start": 3751.5,
+        "duration": 249
+      },
+      {
+        "phase": "startup",
+        "start": 4011.199999988079,
+        "duration": 236
+      },
+      {
+        "phase": "startup",
+        "start": 4266.299999982119,
+        "duration": 278
+      },
+      {
+        "phase": "startup",
+        "start": 4563.199999988079,
+        "duration": 195
+      },
+      {
+        "phase": "startup",
+        "start": 4771.199999988079,
+        "duration": 117
+      },
+      {
+        "phase": "startup",
+        "start": 4905.799999982119,
+        "duration": 152
+      },
+      {
+        "phase": "startup",
+        "start": 5082.299999982119,
+        "duration": 131
+      },
+      {
+        "phase": "startup",
+        "start": 5243.199999988079,
+        "duration": 157
+      },
+      {
+        "phase": "startup",
+        "start": 5430.299999982119,
+        "duration": 137
+      },
+      {
+        "phase": "startup",
+        "start": 5601.0999999940395,
+        "duration": 198
+      },
+      {
+        "phase": "startup",
+        "start": 5883.799999982119,
+        "duration": 1552
+      },
+      {
+        "phase": "startup",
+        "start": 7436.699999988079,
+        "duration": 5737
+      },
+      {
+        "phase": "startup",
+        "start": 13187.799999982119,
+        "duration": 1896
+      },
+      {
+        "phase": "scroll",
+        "start": 20143.40000000596,
+        "duration": 1756
+      },
+      {
+        "phase": "scroll",
+        "start": 21906.90000000596,
+        "duration": 1779
+      },
+      {
+        "phase": "inspect1",
+        "start": 23692.40000000596,
+        "duration": 1777
+      },
+      {
+        "phase": "inspect1",
+        "start": 25477.09999999404,
+        "duration": 1723
+      },
+      {
+        "phase": "inspect1",
+        "start": 27210.5,
+        "duration": 1779
+      },
+      {
+        "phase": "inspect1",
+        "start": 29002.5,
+        "duration": 1751
+      },
+      {
+        "phase": "inspect1",
+        "start": 30758.40000000596,
+        "duration": 1743
+      },
+      {
+        "phase": "inspect1",
+        "start": 32507.59999999404,
+        "duration": 1714
+      },
+      {
+        "phase": "inspect1",
+        "start": 34228.59999999404,
+        "duration": 1766
+      },
+      {
+        "phase": "inspect1",
+        "start": 36002.09999999404,
+        "duration": 1742
+      },
+      {
+        "phase": "inspect1",
+        "start": 37891.69999998808,
+        "duration": 3163
+      },
+      {
+        "phase": "inspect1",
+        "start": 41062.29999998212,
+        "duration": 2328
+      },
+      {
+        "phase": "inspect1",
+        "start": 43399.59999999404,
+        "duration": 2232
+      },
+      {
+        "phase": "inspect1",
+        "start": 45638.90000000596,
+        "duration": 2225
+      },
+      {
+        "phase": "inspect1",
+        "start": 47870.09999999404,
+        "duration": 2097
+      }
+    ],
+    "clicks": [
+      {
+        "phase": "inspect1",
+        "target": "inspect",
+        "toRafMs": 280.59999999403954
+      }
+    ],
+    "resizes": [
+      {
+        "phase": "startup",
+        "prop": "width",
+        "value": 300,
+        "time": 3764.5
+      },
+      {
+        "phase": "startup",
+        "prop": "height",
+        "value": 150,
+        "time": 3764.5
+      },
+      {
+        "phase": "startup",
+        "prop": "width",
+        "value": 1274,
+        "time": 3764.5999999940395
+      },
+      {
+        "phase": "startup",
+        "prop": "height",
+        "value": 800,
+        "time": 3766.0999999940395
+      },
+      {
+        "phase": "startup",
+        "prop": "width",
+        "value": 1274,
+        "time": 5809.799999982119
+      },
+      {
+        "phase": "startup",
+        "prop": "height",
+        "value": 800,
+        "time": 5809.799999982119
+      },
+      {
+        "phase": "startup",
+        "prop": "width",
+        "value": 1274,
+        "time": 5809.799999982119
+      },
+      {
+        "phase": "startup",
+        "prop": "height",
+        "value": 800,
+        "time": 5809.799999982119
+      }
+    ],
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "scene": {
+      "width": 1274,
+      "height": 800,
+      "cssWidth": 1274,
+      "cssHeight": 800
+    }
+  },
+  {
+    "tier": "high",
+    "dpr": 2,
+    "errors": [],
+    "phase": "inspect1",
+    "handlers": [
+      {
+        "phase": "inspect1",
+        "target": "inspect",
+        "ms": 38.30000001192093
+      }
+    ],
+    "events": [],
+    "canvases": [
+      {
+        "phase": "startup",
+        "width": 2548,
+        "height": 1600
+      },
+      {
+        "phase": "startup",
+        "width": 512,
+        "height": 128
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 256
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 256
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 256
+      },
+      {
+        "phase": "startup",
+        "width": 768,
+        "height": 1152
+      },
+      {
+        "phase": "startup",
+        "width": 512,
+        "height": 768
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 192
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "startup",
+        "width": 256,
+        "height": 1024
+      },
+      {
+        "phase": "inspect1",
+        "width": 768,
+        "height": 1152
+      },
+      {
+        "phase": "inspect1",
+        "width": 768,
+        "height": 1152
+      },
+      {
+        "phase": "inspect1",
+        "width": 768,
+        "height": 1152
+      },
+      {
+        "phase": "inspect1",
+        "width": 768,
+        "height": 1152
+      },
+      {
+        "phase": "inspect1",
+        "width": 768,
+        "height": 1152
+      },
+      {
+        "phase": "inspect1",
+        "width": 768,
+        "height": 1152
+      },
+      {
+        "phase": "inspect1",
+        "width": 768,
+        "height": 1152
+      },
+      {
+        "phase": "inspect1",
+        "width": 768,
+        "height": 1152
+      },
+      {
+        "phase": "inspect1",
+        "width": 768,
+        "height": 1152
+      },
+      {
+        "phase": "inspect1",
+        "width": 1024,
+        "height": 1536
+      },
+      {
+        "phase": "inspect1",
+        "width": 1024,
+        "height": 1536
+      }
+    ],
+    "gl": {
+      "startup:createTexture": {
+        "count": 53,
+        "ms": 0.6000000238418579,
+        "max": 0.10000002384185791,
+        "sizes": []
+      },
+      "startup:texImage2D": {
+        "count": 10,
+        "ms": 0,
+        "max": 0,
+        "sizes": []
+      },
+      "startup:createShader": {
+        "count": 54,
+        "ms": 3.399999976158142,
+        "max": 3.0999999940395355,
+        "sizes": []
+      },
+      "startup:compileShader": {
+        "count": 54,
+        "ms": 0,
+        "max": 0,
+        "sizes": []
+      },
+      "startup:linkProgram": {
+        "count": 27,
+        "ms": 0,
+        "max": 0,
+        "sizes": []
+      },
+      "startup:drawElements": {
+        "count": 266,
+        "ms": 0.6000000238418579,
+        "max": 0.10000002384185791,
+        "sizes": []
+      },
+      "startup:drawElementsInstanced": {
+        "count": 6,
+        "ms": 0,
+        "max": 0,
+        "sizes": []
+      },
+      "startup:drawArrays": {
+        "count": 160,
+        "ms": 0.19999998807907104,
+        "max": 0.09999999403953552,
+        "sizes": []
+      },
+      "startup:deleteTexture": {
+        "count": 1,
+        "ms": 0,
+        "max": 0,
+        "sizes": []
+      },
+      "startup:texSubImage2D": {
+        "count": 46,
+        "ms": 1066.8999999463558,
+        "max": 120.19999998807907,
+        "sizes": []
+      },
+      "startup:generateMipmap": {
+        "count": 44,
+        "ms": 0.10000002384185791,
+        "max": 0.10000002384185791,
+        "sizes": []
+      },
+      "scroll:drawElements": {
+        "count": 81,
+        "ms": 0.19999998807907104,
+        "max": 0.09999999403953552,
+        "sizes": []
+      },
+      "scroll:drawArrays": {
+        "count": 46,
+        "ms": 0,
+        "max": 0,
+        "sizes": []
+      },
+      "inspect1:drawElements": {
+        "count": 1011,
+        "ms": 1.4999999701976776,
+        "max": 0.10000002384185791,
+        "sizes": []
+      },
+      "inspect1:drawArrays": {
+        "count": 515,
+        "ms": 1.5999999642372131,
+        "max": 0.10000002384185791,
+        "sizes": []
+      },
+      "inspect1:createTexture": {
+        "count": 11,
+        "ms": 0.09999999403953552,
+        "max": 0.09999999403953552,
+        "sizes": []
+      },
+      "inspect1:texSubImage2D": {
+        "count": 11,
+        "ms": 99.3999999165535,
+        "max": 14.099999994039536,
+        "sizes": []
+      },
+      "inspect1:generateMipmap": {
+        "count": 11,
+        "ms": 0,
+        "max": 0,
+        "sizes": []
+      }
+    },
+    "frames": [
+      {
+        "phase": "startup",
+        "time": 5771.5,
+        "ms": 17.400000005960464,
+        "draws": 127
+      },
+      {
+        "phase": "startup",
+        "time": 21037.6,
+        "ms": 8.100000023841858,
+        "draws": 127
+      },
+      {
+        "phase": "scroll",
+        "time": 31837.1,
+        "ms": 10.799999982118607,
+        "draws": 127
+      },
+      {
+        "phase": "inspect1",
+        "time": 37270.3,
+        "ms": 10.5,
+        "draws": 127
+      },
+      {
+        "phase": "inspect1",
+        "time": 42736.7,
+        "ms": 9.699999988079071,
+        "draws": 127
+      },
+      {
+        "phase": "inspect1",
+        "time": 48186.5,
+        "ms": 11.299999982118607,
+        "draws": 127
+      },
+      {
+        "phase": "inspect1",
+        "time": 53602.9,
+        "ms": 7.5999999940395355,
+        "draws": 127
+      },
+      {
+        "phase": "inspect1",
+        "time": 59069.4,
+        "ms": 7.5999999940395355,
+        "draws": 127
+      },
+      {
+        "phase": "inspect1",
+        "time": 64419.2,
+        "ms": 10.5,
+        "draws": 127
+      },
+      {
+        "phase": "inspect1",
+        "time": 69918.9,
+        "ms": 8.5,
+        "draws": 127
+      },
+      {
+        "phase": "inspect1",
+        "time": 75302,
+        "ms": 6,
+        "draws": 127
+      },
+      {
+        "phase": "inspect1",
+        "time": 80685.2,
+        "ms": 136.90000000596046,
+        "draws": 170
+      },
+      {
+        "phase": "inspect1",
+        "time": 88368.2,
+        "ms": 9.200000017881393,
+        "draws": 170
+      },
+      {
+        "phase": "inspect1",
+        "time": 95384.6,
+        "ms": 8.700000017881393,
+        "draws": 170
+      }
+    ],
+    "long": [
+      {
+        "phase": "startup",
+        "start": 159.90000000596046,
+        "duration": 51
+      },
+      {
+        "phase": "startup",
+        "start": 211.7000000178814,
+        "duration": 57
+      },
+      {
+        "phase": "startup",
+        "start": 3555.4000000059605,
+        "duration": 228
+      },
+      {
+        "phase": "startup",
+        "start": 3847.4000000059605,
+        "duration": 251
+      },
+      {
+        "phase": "startup",
+        "start": 4113.300000011921,
+        "duration": 123
+      },
+      {
+        "phase": "startup",
+        "start": 4260.200000017881,
+        "duration": 177
+      },
+      {
+        "phase": "startup",
+        "start": 4458.200000017881,
+        "duration": 137
+      },
+      {
+        "phase": "startup",
+        "start": 4625.300000011921,
+        "duration": 132
+      },
+      {
+        "phase": "startup",
+        "start": 4778.5,
+        "duration": 149
+      },
+      {
+        "phase": "startup",
+        "start": 4956.5999999940395,
+        "duration": 118
+      },
+      {
+        "phase": "startup",
+        "start": 5099.5999999940395,
+        "duration": 138
+      },
+      {
+        "phase": "startup",
+        "start": 5276.9000000059605,
+        "duration": 169
+      },
+      {
+        "phase": "startup",
+        "start": 5478.9000000059605,
+        "duration": 151
+      },
+      {
+        "phase": "startup",
+        "start": 5698.4000000059605,
+        "duration": 68
+      },
+      {
+        "phase": "startup",
+        "start": 5767.200000017881,
+        "duration": 1617
+      },
+      {
+        "phase": "startup",
+        "start": 7384.200000017881,
+        "duration": 13646
+      },
+      {
+        "phase": "startup",
+        "start": 21038,
+        "duration": 5681
+      },
+      {
+        "phase": "inspect1",
+        "start": 31841,
+        "duration": 5443
+      },
+      {
+        "phase": "inspect1",
+        "start": 37286,
+        "duration": 5452
+      },
+      {
+        "phase": "inspect1",
+        "start": 42743.20000001788,
+        "duration": 5449
+      },
+      {
+        "phase": "inspect1",
+        "start": 48196,
+        "duration": 5395
+      },
+      {
+        "phase": "inspect1",
+        "start": 53616.80000001192,
+        "duration": 5451
+      },
+      {
+        "phase": "inspect1",
+        "start": 59080,
+        "duration": 5341
+      },
+      {
+        "phase": "inspect1",
+        "start": 64421.40000000596,
+        "duration": 5507
+      },
+      {
+        "phase": "inspect1",
+        "start": 69930.20000001788,
+        "duration": 5372
+      },
+      {
+        "phase": "inspect1",
+        "start": 75304.5,
+        "duration": 5386
+      },
+      {
+        "phase": "inspect1",
+        "start": 80832,
+        "duration": 7544
+      },
+      {
+        "phase": "inspect1",
+        "start": 88379.30000001192,
+        "duration": 7007
+      },
+      {
+        "phase": "inspect1",
+        "start": 95388.20000001788,
+        "duration": 6867
+      }
+    ],
+    "clicks": [
+      {
+        "phase": "inspect1",
+        "target": "inspect",
+        "toRafMs": 276.69999998807907
+      }
+    ],
+    "resizes": [
+      {
+        "phase": "startup",
+        "prop": "width",
+        "value": 600,
+        "time": 3861.4000000059605
+      },
+      {
+        "phase": "startup",
+        "prop": "height",
+        "value": 300,
+        "time": 3862.9000000059605
+      },
+      {
+        "phase": "startup",
+        "prop": "width",
+        "value": 2548,
+        "time": 3864.5999999940395
+      },
+      {
+        "phase": "startup",
+        "prop": "height",
+        "value": 1600,
+        "time": 3866
+      },
+      {
+        "phase": "startup",
+        "prop": "width",
+        "value": 2548,
+        "time": 5641.9000000059605
+      },
+      {
+        "phase": "startup",
+        "prop": "height",
+        "value": 1600,
+        "time": 5641.9000000059605
+      },
+      {
+        "phase": "startup",
+        "prop": "width",
+        "value": 2548,
+        "time": 5641.9000000059605
+      },
+      {
+        "phase": "startup",
+        "prop": "height",
+        "value": 1600,
+        "time": 5641.9000000059605
+      }
+    ],
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "scene": {
+      "width": 2548,
+      "height": 1600,
+      "cssWidth": 1274,
+      "cssHeight": 800
+    }
+  }
+]
