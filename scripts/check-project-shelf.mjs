@@ -19,6 +19,11 @@ function check(name, fn) {
 
 const expected = [
   {
+    id: "lobe",
+    screenshot: "/projects/lobe.jpg",
+    cover: "/projects/shelf/covers/lobe.webp",
+  },
+  {
     id: "material-enhancement-assistant",
     screenshot: "/projects/material-enhancement-assistant.png",
     cover: "/projects/shelf/covers/material-enhancement-assistant.webp",
@@ -65,10 +70,10 @@ const expected = [
   },
 ];
 
-check("nine cover and screenshot mappings", () => {
+check("cover and screenshot mappings", () => {
   const books = engine.buildShelfBooks(projects);
-  assert.equal(books.length, 9);
-  assert.equal(projects.length, 9);
+  assert.equal(books.length, expected.length);
+  assert.equal(projects.length, expected.length);
   expected.forEach((want, index) => {
     const book = books[index];
     assert.equal(projects[index].image, want.screenshot);

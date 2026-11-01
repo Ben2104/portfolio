@@ -27,6 +27,33 @@ export const navLinks = [
 
 export const projects = [
   {
+    title: "Lobe",
+    subtitle: "Shared 3D Brain MRI Study Space",
+    desc: "A CalHacks 13.0 workspace that opens brain MRI cases as linked slice views and a 3D brain, then lets people review the same case together with live pointers, voice, chat, and short practice games.",
+    tags: [
+      "React",
+      "React Router",
+      "Vite",
+      "Three.js",
+      "React Three Fiber",
+      "NiiVue",
+      "Convex",
+      "FastAPI",
+      "PyTorch",
+      "MONAI",
+      "LiveKit",
+      "Claude",
+      "Docker",
+    ],
+    color: "#f97316",
+    image: "/projects/lobe.jpg",
+    liveHref: "",
+    devpostHref: "https://devpost.com/software/lobe",
+    sourceHref: "https://github.com/DuongAnh1201/Lobe",
+    award: "",
+    stars: "",
+  },
+  {
     title: "Material Enhancement Assistant",
     subtitle: "AI-Powered Course Material Workspace",
     desc: "An AI-powered workspace that helps professors upload, analyze, and enhance course materials with retrieval-assisted Gemini workflows while keeping instructors in control of every change.",
