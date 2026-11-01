@@ -2,6 +2,8 @@
 
 `npm run lint`, `npx tsc --noEmit --incremental false`, `npm run build`, and `node --experimental-strip-types scripts/check-project-shelf.mjs` passed.
 
+Lobe is the first project, so the shelf opens on it as 01 / 10.
+
 Screenshots are from `chrome-devtools-axi` against `next start` of that build, at 1440×900 and 390×844. `next dev` did not hydrate here: the dev HMR upgrade hung, so the intro stayed at opacity 0.
 
 | View | File |
