@@ -142,6 +142,7 @@ const SHELF_COVERS: Record<string, string> = {
   "crisislineai": "/projects/shelf/covers/crisislineai.webp",
   "shape-sign": "/projects/shelf/covers/shape-sign.webp",
   "911-operator-assistant": "/projects/shelf/covers/911-operator-assistant.webp",
+  "lobe": "/projects/shelf/covers/lobe.webp",
   "quizzriff": "/projects/shelf/covers/quizzriff.webp",
   "the-bookstore": "/projects/shelf/covers/the-bookstore.webp",
   "llm-chatbot": "/projects/shelf/covers/llm-chatbot.webp",
