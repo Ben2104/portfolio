@@ -24,12 +24,21 @@ const HYSTERESIS = 0.12;
 const DEAD_ZONE_RATIO = 0.5; // of the mascot's width
 
 const CLICK_REACTIONS: Reaction[] = ["laugh", "starstruck", "sparkle"];
+/* Same index as CLICK_REACTIONS so each click reads as a different gesture */
+const CLICK_MOTIONS = [
+  { y: [0, -22, 0], scale: [1, 1.06, 1], rotate: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
+  { y: 0, scale: 1, rotate: [0, -14, 12, -8, 0], transition: { duration: 0.55, ease: "easeInOut" as const } },
+  { y: [0, -6, 0], scale: [1, 0.94, 1], rotate: [0, 160, 0], transition: { duration: 0.7, ease: "easeInOut" as const } },
+];
+const GLANCES: Direction[] = ["left", "right", "up", "down-left", "down-right"];
 const GREET_MS = 1600;
 const REACTION_MS = 1100;
 const SURPRISE_MS = 550;
 const WAKE_MS = 700;
 const BLINK_MS = 150;
 const BLINK_EVERY_MS = [2800, 6000] as const;
+const GLANCE_MS = 900;
+const GLANCE_EVERY_MS = [4200, 8000] as const;
 const BLUSH_AFTER_MS = 2500;
 const SLEEP_AFTER_MS = 12000;
 const DIZZY_CLICKS = 5;
@@ -44,10 +53,14 @@ export function AstronautMascot({ className = "" }: { className?: string }) {
   const [direction, setDirection] = useState<Direction>("center");
   /* null shows the direction frame; a reaction overrides it */
   const [reaction, setReaction] = useState<Reaction | null>("sparkle");
+  /* False while the tab is hidden or the mascot is offscreen; timers unmount with it */
+  const [shown, setShown] = useState(true);
 
   const buttonRef = useRef<HTMLButtonElement>(null);
   const reactionRef = useRef<Reaction | null>("sparkle");
   const hovering = useRef(false);
+  const aimed = useRef(false);
+  const greeted = useRef(false);
   const blushing = useRef(false);
   const keyboardFocus = useRef(false);
   const reacting = useRef(true);
@@ -90,17 +103,45 @@ export function AstronautMascot({ className = "" }: { className?: string }) {
     [show, resting],
   );
 
-  /* Greeting: sparkle is the initial frame, settle after a beat */
+  /* Greeting: sparkle is the initial frame, settle after a beat, hop once on landing */
   useEffect(() => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!greeted.current && !reduce) {
+      greeted.current = true;
+      body.start({
+        y: [0, -18, 0],
+        scale: [0.96, 1.06, 1],
+        transition: { duration: 0.7, ease: "easeOut" },
+      });
+    }
     reactionTimer.current = window.setTimeout(() => {
       reacting.current = false;
       show(resting(), { bounce: false });
     }, GREET_MS);
     return () => window.clearTimeout(reactionTimer.current);
-  }, [show, resting]);
+  }, [show, resting, body]);
+
+  /* Drop blink, glance, and sleep timers while hidden or offscreen */
+  useEffect(() => {
+    const node = buttonRef.current;
+    if (!node) return;
+    let onScreen = true;
+    const sync = () => setShown(!document.hidden && onScreen);
+    const observer = new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting;
+      sync();
+    });
+    observer.observe(node);
+    document.addEventListener("visibilitychange", sync);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", sync);
+    };
+  }, []);
 
   /* Blink now and then while idle */
   useEffect(() => {
+    if (!shown) return;
     let timer: number | undefined;
     const schedule = () => {
       const [min, max] = BLINK_EVERY_MS;
@@ -111,10 +152,36 @@ export function AstronautMascot({ className = "" }: { className?: string }) {
     };
     schedule();
     return () => window.clearTimeout(timer);
-  }, [react]);
+  }, [react, shown]);
+
+  /* Look aside on its own when the pointer is not already aiming the head */
+  useEffect(() => {
+    if (!shown) return;
+    let timer: number | undefined;
+    let back: number | undefined;
+    const schedule = () => {
+      const [min, max] = GLANCE_EVERY_MS;
+      timer = window.setTimeout(() => {
+        if (reactionRef.current === null && !hovering.current && !aimed.current) {
+          setDirection(GLANCES[Math.floor(Math.random() * GLANCES.length)]);
+          window.clearTimeout(back);
+          back = window.setTimeout(() => {
+            if (!aimed.current && !hovering.current) setDirection("center");
+          }, GLANCE_MS);
+        }
+        schedule();
+      }, min + Math.random() * (max - min));
+    };
+    schedule();
+    return () => {
+      window.clearTimeout(timer);
+      window.clearTimeout(back);
+    };
+  }, [shown]);
 
   /* Doze off when the page goes quiet, wake up startled */
   useEffect(() => {
+    if (!shown) return;
     const fallAsleep = () => {
       window.clearTimeout(reactionTimer.current);
       reacting.current = false;
@@ -136,7 +203,7 @@ export function AstronautMascot({ className = "" }: { className?: string }) {
         window.removeEventListener(event, onActivity);
       }
     };
-  }, [react, show]);
+  }, [react, show, shown]);
 
   /* Turn the head toward the cursor; fine pointers only */
   useEffect(() => {
@@ -154,9 +221,11 @@ export function AstronautMascot({ className = "" }: { className?: string }) {
 
       if (Math.hypot(dx, dy) < rect.width * DEAD_ZONE_RATIO) {
         sector = -1;
+        aimed.current = false;
         setDirection("center");
         return;
       }
+      aimed.current = true;
 
       // Hold the current sector until the pointer is well past its edge
       const angle = Math.atan2(dy, dx);
@@ -231,11 +300,10 @@ export function AstronautMascot({ className = "" }: { className?: string }) {
       return;
     }
 
-    react(CLICK_REACTIONS[clickIndex.current % CLICK_REACTIONS.length], REACTION_MS);
+    const index = clickIndex.current;
     clickIndex.current += 1;
-    if (!prefersReducedMotion) {
-      body.start({ y: [0, -22, 0], scale: [1, 1.06, 1], transition: { duration: 0.5, ease: "easeOut" } });
-    }
+    react(CLICK_REACTIONS[index % CLICK_REACTIONS.length], REACTION_MS);
+    if (!prefersReducedMotion) body.start(CLICK_MOTIONS[index % CLICK_MOTIONS.length]);
   };
 
   const sleepy = reaction === "sleepy";
@@ -266,11 +334,11 @@ export function AstronautMascot({ className = "" }: { className?: string }) {
       <motion.div
         className="pointer-events-none h-full w-full"
         animate={
-          prefersReducedMotion
+          prefersReducedMotion || !shown
             ? undefined
             : sleepy
               ? { y: [0, 6, 0], rotate: [-6, -4, -6] }
-              : { y: [0, -12, 0], rotate: [-1.5, 1.5, -1.5] }
+              : { y: [0, -12, 0], rotate: [-1.5, 1.5, -1.5], scale: [1, 1.035, 1] }
         }
         transition={{ duration: sleepy ? 5 : 4.2, repeat: Infinity, ease: "easeInOut" }}
       >
