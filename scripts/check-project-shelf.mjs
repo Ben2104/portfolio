@@ -660,6 +660,29 @@ check("ready prep does not open when the shelf has moved to another book", () =>
   }), "ignore");
 });
 
+check("project links with a url are hit targets and empty urls are omitted", () => {
+  const [book] = engine.buildShelfBooks([{
+    title: "Links",
+    liveHref: "",
+    sourceHref: "https://github.com/acme/widget",
+    devpostHref: "https://devpost.com/software/widget",
+  }]);
+  assert.deepEqual(book.links.map((link) => link.label), ["GitHub", "Devpost"]);
+  const bands = engine.interiorLinkBands(book.links);
+  assert.equal(bands.length, 2);
+  assert.equal(bands[0].href, "https://github.com/acme/widget");
+  assert.equal(bands[1].href, "https://devpost.com/software/widget");
+  assert.ok((bands[0].v0 + bands[0].v1) / 2 > (bands[1].v0 + bands[1].v1) / 2);
+  const hit = engine.interiorLinkAt(bands, (bands[0].u0 + bands[0].u1) / 2, (bands[0].v0 + bands[0].v1) / 2);
+  assert.equal(hit.href, "https://github.com/acme/widget");
+  assert.equal(engine.interiorLinkAt(bands, 0.01, 0.99), null);
+  const [blank] = engine.buildShelfBooks([{ title: "None", liveHref: "", sourceHref: "", devpostHref: "" }]);
+  assert.deepEqual(blank.links, []);
+  assert.deepEqual(engine.interiorLinkBands(blank.links), []);
+  const live = engine.interiorLinkBands([{ label: "Live", href: "https://shape-sign.vercel.app/" }]);
+  assert.equal(engine.interiorLinkAt(live, (live[0].u0 + live[0].u1) / 2, (live[0].v0 + live[0].v1) / 2).label, "Live");
+});
+
 check("blocked prepare clears Preparing", () => {
   const prep = engine.createDetailPrep({
     units: () => ["page"],

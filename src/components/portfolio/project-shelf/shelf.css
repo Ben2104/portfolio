@@ -72,6 +72,21 @@
   z-index: 3;
 }
 
+/* Anchors projected onto the printed links page. The texture cannot be a link. */
+.pshelf .page-link-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+}
+
+.pshelf .page-link {
+  position: absolute;
+  color: transparent;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
 .pshelf .scene {
   display: block;
   width: 100%;
