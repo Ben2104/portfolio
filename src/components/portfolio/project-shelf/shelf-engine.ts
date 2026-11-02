@@ -4149,7 +4149,7 @@ export function createShelf({
       const focusables = [
         ...detailPanel.querySelectorAll("button, a[href]"),
         ...(pageLinksShown ? pageLinkLayer.querySelectorAll("a[href]") : []),
-      ].filter((element) => !element.disabled);
+      ].filter((element) => !element.disabled && !element.hidden);
       const current = focusables.indexOf(document.activeElement);
       const next = event.shiftKey
         ? (current <= 0 ? focusables.length - 1 : current - 1)
