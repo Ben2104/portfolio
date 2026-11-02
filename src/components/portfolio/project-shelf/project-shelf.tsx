@@ -39,6 +39,7 @@ export default function ProjectShelf({ header, sectionRef }: ProjectShelfProps) 
       <div className="scene-shell">
         <canvas className="scene" data-shelf="scene" aria-hidden="true" />
       </div>
+      <div className="page-link-layer" data-shelf="page-links" hidden />
 
       <div className="pshelf-header">{header}</div>
 

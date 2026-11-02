@@ -100,6 +100,52 @@ function hostLabel(href) {
   }
 }
 
+const LINK_PAGE_WIDTH = 512;
+const LINK_PAGE_HEIGHT = 768;
+const LINK_URL_CHARS = 42;
+
+/* Same boxes the links page paints, in texture UV, so hit targets sit on the glyphs */
+export function interiorLinkBands(links) {
+  let y = 306;
+  const bands = [];
+  for (const link of links) {
+    if (!link?.href) continue;
+    const url = hostLabel(link.href);
+    const lines = [];
+    let rest = url;
+    while (rest && lines.length < 2) {
+      if (rest.length <= LINK_URL_CHARS || lines.length === 1) {
+        lines.push(rest);
+        break;
+      }
+      lines.push(rest.slice(0, LINK_URL_CHARS));
+      rest = rest.slice(LINK_URL_CHARS);
+    }
+    const labelY = y;
+    const urlY = y + 30;
+    const top = labelY - 14;
+    const bottom = urlY + Math.max(lines.length - 1, 0) * 24 + 8;
+    bands.push({
+      label: link.label,
+      href: link.href,
+      url,
+      lines,
+      labelY,
+      urlY,
+      u0: 54 / LINK_PAGE_WIDTH,
+      u1: (LINK_PAGE_WIDTH - 54) / LINK_PAGE_WIDTH,
+      v0: 1 - bottom / LINK_PAGE_HEIGHT,
+      v1: 1 - top / LINK_PAGE_HEIGHT,
+    });
+    y = urlY + lines.length * 24 + 26;
+  }
+  return bands;
+}
+
+export function interiorLinkAt(bands, u, v) {
+  return bands.find((band) => u >= band.u0 && u <= band.u1 && v >= band.v0 && v <= band.v1) ?? null;
+}
+
 type ShelfProject = {
   readonly title: string;
   readonly subtitle?: string;
@@ -597,6 +643,7 @@ export function createShelf({
   const detailTitle = $("detail-title");
   const detailDeck = $("detail-deck");
   const detailMeta = $("detail-meta");
+  const pageLinkLayer = $("page-links");
   const liveRegion = $("live-region");
   const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -622,6 +669,9 @@ export function createShelf({
   let shelfStage;
   let bookRigs = [];
   let hitTargets = [];
+  let pageLinkEntries = [];
+  let pageLinksShown = false;
+  const linkPoint = new THREE.Vector3();
   let rafId = 0;
   let lastTime = performance.now();
   let mode = "hero";
@@ -1510,15 +1560,17 @@ export function createShelf({
         label("03  —  LINKS", 166);
         ctx.font = `500 44px ${TITLE_FONT}`;
         ctx.fillText("Find it", 52, 236);
-        let y = 306;
-        book.links.forEach((link) => {
+        interiorLinkBands(book.links).forEach((band) => {
           ctx.font = `600 11px ${LABEL_FONT}`;
           ctx.letterSpacing = "2px";
           ctx.fillStyle = accentInk;
-          ctx.fillText(link.label.toUpperCase(), 54, y);
+          ctx.fillText(band.label.toUpperCase(), 54, band.labelY);
           ctx.letterSpacing = "0px";
           ctx.fillStyle = ink;
-          y = body(hostLabel(link.href), y + 30, 2, 17, 24) + 26;
+          ctx.globalAlpha = 0.72;
+          ctx.font = `400 17px ${LABEL_FONT}`;
+          band.lines.forEach((line, index) => ctx.fillText(line, 54, band.urlY + index * 24));
+          ctx.globalAlpha = 1;
         });
       } else {
         label("COLOPHON", 164);
@@ -2158,6 +2210,7 @@ export function createShelf({
 
     const pagePivots = [];
     const pageSurfaces = [];
+    let linksPage = null;
     for (let pageIndex = 0; pageIndex < 6; pageIndex += 1) {
       const leafOrder = 5 - pageIndex;
       const frontPageMaterial = leafOrder < 4
@@ -2190,6 +2243,7 @@ export function createShelf({
       backPage.rotation.y = Math.PI;
       pagePivot.add(backPage);
       pageSurfaces.push(backPage);
+      if (leafOrder === 2) linksPage = backPage;
       pagePivot.userData.flex = {
         curve: 0,
         curveVelocity: 0,
@@ -2309,6 +2363,7 @@ export function createShelf({
       pageBlock,
       pagePivots,
       pageSurfaces,
+      linksPage,
       pageGestureSurfaces: [...pageSurfaces, pageBlock],
       hit,
       internals,
@@ -2859,6 +2914,7 @@ export function createShelf({
       });
       rows.push(metaRow("Links", links));
     }
+    syncPageLinks(book);
     detailMeta.replaceChildren(...rows);
     detailMeta.hidden = rows.length === 0;
   }
@@ -3905,6 +3961,75 @@ export function createShelf({
     return 1;
   }
 
+  function syncPageLinks(book) {
+    pageLinkEntries = interiorLinkBands(book.links).map((band) => {
+      const anchor = document.createElement("a");
+      anchor.className = "page-link";
+      anchor.href = band.href;
+      anchor.target = "_blank";
+      anchor.rel = "noopener noreferrer";
+      anchor.textContent = band.label;
+      anchor.setAttribute("aria-label", `${band.label}: ${book.title} (opens in a new tab)`);
+      return { band, anchor };
+    });
+    pageLinkLayer.replaceChildren(...pageLinkEntries.map((entry) => entry.anchor));
+    pageLinkLayer.hidden = true;
+    pageLinksShown = false;
+  }
+
+  /* shortcut: anchors track the flat page quad, so they hide while a drag bends the sheet */
+  function placePageLinks() {
+    const mesh = activeBook?.linksPage;
+    const show = mode === "detail" && readingOpen && currentSpread === 3 && mesh && !pageDrag.active && pageLinkEntries.length > 0;
+    if (!show) {
+      if (pageLinksShown) {
+        pageLinkLayer.hidden = true;
+        pageLinksShown = false;
+      }
+      return;
+    }
+    mesh.updateWorldMatrix(true, false);
+    const canvasRect = canvas.getBoundingClientRect();
+    const rootRect = root.getBoundingClientRect();
+    const project = (u, v) => {
+      linkPoint.set(u - 0.5, v - 0.5, 0);
+      linkPoint.applyMatrix4(mesh.matrixWorld);
+      linkPoint.project(camera);
+      return {
+        x: (linkPoint.x * 0.5 + 0.5) * canvasRect.width + canvasRect.left - rootRect.left,
+        y: (-linkPoint.y * 0.5 + 0.5) * canvasRect.height + canvasRect.top - rootRect.top,
+        z: linkPoint.z,
+      };
+    };
+    let placed = false;
+    for (const entry of pageLinkEntries) {
+      const { band, anchor } = entry;
+      const corners = [project(band.u0, band.v0), project(band.u1, band.v0), project(band.u1, band.v1), project(band.u0, band.v1)];
+      const onScreen = corners.every((corner) => corner.z > -1 && corner.z < 1);
+      const left = Math.min(...corners.map((corner) => corner.x));
+      const top = Math.min(...corners.map((corner) => corner.y));
+      const width = Math.max(...corners.map((corner) => corner.x)) - left;
+      const height = Math.max(...corners.map((corner) => corner.y)) - top;
+      if (!onScreen || width < 8 || height < 8) {
+        anchor.hidden = true;
+        continue;
+      }
+      placed = true;
+      anchor.hidden = false;
+      const box = `${Math.round(left)}:${Math.round(top)}:${Math.round(width)}:${Math.round(height)}`;
+      if (entry.box === box) continue;
+      entry.box = box;
+      anchor.style.left = `${left}px`;
+      anchor.style.top = `${top}px`;
+      anchor.style.width = `${width}px`;
+      anchor.style.height = `${height}px`;
+    }
+    if (placed !== pageLinksShown) {
+      pageLinkLayer.hidden = !placed;
+      pageLinksShown = placed;
+    }
+  }
+
   function frame(time) {
     rafId = 0;
     const frameMs = time - lastTime;
@@ -3924,6 +4049,7 @@ export function createShelf({
       if (controls.update()) needsAnotherFrame = true;
       updatePaginatedBook(activeBook, delta, getDetailOpenAmount());
     }
+    placePageLinks();
 
     const shouldContinue = mode === "opening"
       || mode === "closing"
@@ -4020,7 +4146,10 @@ export function createShelf({
 
     /* Keep keyboard focus inside the open book's controls, links included */
     if (mode === "detail" && event.key === "Tab" && focusInside) {
-      const focusables = [...detailPanel.querySelectorAll("button, a[href]")].filter((element) => !element.disabled);
+      const focusables = [
+        ...detailPanel.querySelectorAll("button, a[href]"),
+        ...(pageLinksShown ? pageLinkLayer.querySelectorAll("a[href]") : []),
+      ].filter((element) => !element.disabled);
       const current = focusables.indexOf(document.activeElement);
       const next = event.shiftKey
         ? (current <= 0 ? focusables.length - 1 : current - 1)
