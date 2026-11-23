@@ -134,12 +134,12 @@ export const education = [
   {
     year: "(2026)",
     school: "California State University, Long Beach",
-    detail: "B.S. Computer Science, expected December 2026. Member of AI Club and ACM.",
+    detail: "B.S. in Computer Science, with a focus on software development, computational problem-solving, and emerging technologies. Expected graduation: December 2026.",
   },
   {
-    year: "(2022 – 2024)",
+    year: "(2022–2024)",
     school: "De Anza College",
-    detail: "Computer Science, Cupertino. Teaching assistant and tech support volunteer.",
+    detail: "Studied Computer Science, building a foundation in programming, computer systems, and problem-solving. Also gained practical experience through technical support and teaching assistance.",
   },
 ];
 

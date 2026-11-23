@@ -19,13 +19,6 @@ export default function ProjectsPage() {
       </nav>
       <main className="arc lit">
         <div className="wrap">
-          <header className="arc__head">
-            <div>
-              <p className="lbl">Project archive</p>
-              <h1 className="giant">Every build, one place</h1>
-            </div>
-            <p className="mono">Scroll to explore →</p>
-          </header>
           <Archive />
         </div>
         <ExperienceExperiment />
