@@ -1,0 +1,783 @@
+{
+ "start": "2026-11-23T00:06:57.714Z",
+ "round": 0,
+ "idle": 2,
+ "errors": 0,
+ "status": "done",
+ "history": [
+  {
+   "at": "2026-11-23T00:51:08.301Z",
+   "mode": "hook",
+   "host": "claude",
+   "status": "fail",
+   "fails": 12,
+   "round": 0,
+   "reused": false,
+   "stopHookActive": false,
+   "decision": "block",
+   "reason": "12 FAILs remain (not a round: the gate has not been run by hand in this build yet):"
+  },
+  {
+   "at": "2026-11-23T00:51:13.665Z",
+   "mode": "hook",
+   "host": "claude",
+   "status": "fail",
+   "fails": 12,
+   "round": 0,
+   "reused": true,
+   "stopHookActive": true,
+   "decision": "allow",
+   "reason": "nothing changed since the last block; this stop is allowed once without a round (a question to the user)"
+  },
+  {
+   "at": "2026-11-23T01:08:02.073Z",
+   "mode": "hook",
+   "host": "claude",
+   "status": "fail",
+   "fails": 12,
+   "round": 0,
+   "reused": true,
+   "stopHookActive": false,
+   "decision": "block",
+   "reason": "nothing changed, and 12 FAILs remain (not a round: the gate has not been run by hand in this build yet):"
+  },
+  {
+   "at": "2026-11-23T01:16:21.710Z",
+   "mode": "hook",
+   "host": "claude",
+   "status": "fail",
+   "fails": 12,
+   "round": 0,
+   "reused": true,
+   "stopHookActive": false,
+   "decision": "block",
+   "reason": "nothing changed, and 12 FAILs remain (not a round: the gate has not been run by hand in this build yet):"
+  },
+  {
+   "at": "2026-11-23T01:16:56.685Z",
+   "mode": "hook",
+   "host": "claude",
+   "status": "fail",
+   "fails": 12,
+   "round": 0,
+   "reused": true,
+   "stopHookActive": true,
+   "decision": "block",
+   "reason": "12 FAILs remain (not a round: the gate has not been run by hand in this build yet):"
+  },
+  {
+   "at": "2026-11-23T01:35:18.026Z",
+   "mode": "hook",
+   "host": "claude",
+   "status": "fail",
+   "fails": 12,
+   "round": 0,
+   "reused": true,
+   "stopHookActive": true,
+   "decision": "block",
+   "reason": "12 FAILs remain (not a round: the gate has not been run by hand in this build yet):"
+  },
+  {
+   "at": "2026-11-23T01:35:28.894Z",
+   "mode": "hook",
+   "host": "claude",
+   "status": "fail",
+   "fails": 12,
+   "round": 0,
+   "reused": true,
+   "stopHookActive": true,
+   "decision": "block",
+   "reason": "12 FAILs remain (not a round: the gate has not been run by hand in this build yet):"
+  },
+  {
+   "at": "2026-11-23T02:03:02.124Z",
+   "mode": "hook",
+   "host": "claude",
+   "status": "fail",
+   "fails": 12,
+   "round": 0,
+   "reused": true,
+   "stopHookActive": true,
+   "decision": "block",
+   "reason": "12 FAILs remain (not a round: the gate has not been run by hand in this build yet):"
+  },
+  {
+   "at": "2026-11-23T02:03:05.494Z",
+   "mode": "hook",
+   "host": "claude",
+   "decision": "allow",
+   "reason": "blocked 7 times for this build before the gate was run by hand (7 in 6 hours here); stop allowed",
+   "stopHookActive": true
+  },
+  {
+   "at": "2026-11-23T02:16:46.055Z",
+   "mode": "hook",
+   "host": "claude",
+   "decision": "allow",
+   "reason": "blocked 7 times for this build before the gate was run by hand (7 in 6 hours here); stop allowed",
+   "stopHookActive": false
+  },
+  {
+   "at": "2026-11-23T02:21:10.188Z",
+   "mode": "hook",
+   "host": "claude",
+   "decision": "allow",
+   "reason": "blocked 7 times for this build before the gate was run by hand (7 in 6 hours here); stop allowed",
+   "stopHookActive": false
+  },
+  {
+   "at": "2026-11-23T02:36:40.034Z",
+   "mode": "done",
+   "status": "done",
+   "reason": "Old page paused while I review the new Canva frames",
+   "round": 0
+  },
+  {
+   "at": "2026-11-23T02:36:45.258Z",
+   "mode": "hook",
+   "host": "claude",
+   "decision": "allow",
+   "reason": "no build is active here",
+   "stopHookActive": false
+  },
+  {
+   "at": "2026-11-23T02:40:02.831Z",
+   "mode": "hook",
+   "host": "claude",
+   "decision": "allow",
+   "reason": "no build is active here",
+   "stopHookActive": false
+  },
+  {
+   "at": "2026-11-23T02:46:24.471Z",
+   "mode": "hook",
+   "host": "claude",
+   "decision": "allow",
+   "reason": "no build is active here",
+   "stopHookActive": false
+  },
+  {
+   "at": "2026-11-23T02:52:29.517Z",
+   "mode": "hook",
+   "host": "claude",
+   "decision": "allow",
+   "reason": "no build is active here",
+   "stopHookActive": false
+  },
+  {
+   "at": "2026-11-23T03:03:33.405Z",
+   "mode": "hook",
+   "host": "claude",
+   "decision": "allow",
+   "reason": "no build is active here",
+   "stopHookActive": false
+  },
+  {
+   "at": "2026-11-23T03:14:26.163Z",
+   "mode": "hook",
+   "host": "claude",
+   "decision": "allow",
+   "reason": "no build is active here",
+   "stopHookActive": false
+  },
+  {
+   "at": "2026-11-23T03:57:43.540Z",
+   "mode": "hook",
+   "host": "claude",
+   "decision": "allow",
+   "reason": "no build is active here",
+   "stopHookActive": false
+  }
+ ],
+ "max": 3,
+ "marker": {
+  "page": null,
+  "dir": "/Users/kaydee/Developer/portfolio/prototype",
+  "kind": "software",
+  "start": "2026-11-23T00:06:57.714Z",
+  "by": "start.mjs"
+ },
+ "roundKey": "7419855aea65ffa5:da39a3ee",
+ "roundFree": true,
+ "idleFree": true,
+ "blockKey": "7419855aea65ffa5:da39a3ee",
+ "fp": "7419855aea65ffa5",
+ "page": "index.html",
+ "found": {
+  "fails": [
+   {
+    "check": "no-visual",
+    "where": "section#tools \"Languages, frameworks and APIs\"",
+    "msg": "no picture, effect or mock in this section; a feature section needs a visual",
+    "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "no-visual"
+    ],
+    "wheres": [
+     "section#tools \"Languages, frameworks and APIs\""
+    ]
+   },
+   {
+    "check": "hero-screen",
+    "where": "main#top > section.hero.hero--name > p.hero__name \"Khoi Do\"",
+    "msg": "\"Khoi Do\" starts at 14px, under the 72px nav (SR-1)",
+    "fix": "keep the hero's content between the nav and 24px above the fold (and the action bar): shorten the picture or the text; a docked strip 96px at most",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "hero-screen"
+    ],
+    "wheres": [
+     "main#top > section.hero.hero--name > p.hero__name \"Khoi Do\""
+    ]
+   },
+   {
+    "check": "hero-screen",
+    "where": "main#top > section.hero.hero--name > img.hero__cut \"Khoi Do in a dark suit, hands folded\"",
+    "msg": "\"Khoi Do in a dark suit, hands fo\" ends at 900px, below the hero's content line at 876px (the 900px screen less 24px) (SR-1)",
+    "fix": "keep the hero's content between the nav and 24px above the fold (and the action bar): shorten the picture or the text; a docked strip 96px at most",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "hero-screen"
+    ],
+    "wheres": [
+     "main#top > section.hero.hero--name > img.hero__cut \"Khoi Do in a dark suit, hands folded\""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "main#top > section.hero.hero--name > p.hero__name \"Khoi Do\"",
+    "msg": "a child of section 1 beside its .wrap is no valid background layer: not img, picture, video or canvas (SR-6)",
+    "fix": "build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "main#top > section.hero.hero--name > p.hero__name \"Khoi Do\""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "main#top > section.hero.hero--name > img.hero__cut \"Khoi Do in a dark suit, hands folded\"",
+    "msg": "a child of section 1 beside its .wrap is no valid background layer: does not span the screen from 0 to 1440px; z-index 1, not 0 (SR-6)",
+    "fix": "build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "main#top > section.hero.hero--name > img.hero__cut \"Khoi Do in a dark suit, hands folded\""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "main#top > section.hero.hero--name \"Khoi Do Software engineer, Long Beach, C\"",
+    "msg": "the hero holds 2 background layers: one at most (and 1 more like it: section#about > div.mo-io__stage) (SR-6)",
+    "fix": "build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "main#top > section.hero.hero--name \"Khoi Do Software engineer, Long Beach, C\""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "div.grid.hero__foot > dl.hero-facts.hero-facts--col > div:nth-of-type(1) > dt \"Now\"",
+    "msg": "6 text blocks start on a left line at x 1058, 978px from the container's left: text starts on the container's left, or on one split line (x 623, 732, 841) (also \"Full stack developer, Netsservic\", \"Studying\", \"Computer science, CSULB, Dec 202\") (SR-6)",
+    "fix": "start the text on the container's left, or on the one split line every split shares",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "div.grid.hero__foot > dl.hero-facts.hero-facts--col > div:nth-of-type(1) > dt \"Now\""
+    ]
+   },
+   {
+    "check": "row-lines",
+    "where": "div.wrap > div.grid:nth-of-type(2) > div.frame.span-12 > ul.tools \"TypeScript JavaScript Python Swift React\"",
+    "msg": "a row of 8 items: its first item starts at 192px, the container's left line at 80px; its last item ends at 1249px, the container's right line at 1360px (2px either way) (SR-7)",
+    "fix": "start the row's first item on the container's left line and end its last on the right line, every item one height",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "row-lines"
+    ],
+    "wheres": [
+     "div.wrap > div.grid:nth-of-type(2) > div.frame.span-12 > ul.tools \"TypeScript JavaScript Python Swift React\""
+    ]
+   },
+   {
+    "check": "split-pair",
+    "where": "section.hero.hero--name > div.wrap > div.hero-text > div.grid.hero__foot \"Software engineer, Long Beach, Californi\"",
+    "msg": "the two columns of the split start 201px apart at the top: a split's columns are top-aligned, 8px either way (SR-8)",
+    "fix": "top-align both columns of the split (align-items: start)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "split-pair"
+    ],
+    "wheres": [
+     "section.hero.hero--name > div.wrap > div.hero-text > div.grid.hero__foot \"Software engineer, Long Beach, Californi\""
+    ]
+   },
+   {
+    "check": "split-pair",
+    "where": "section#work > div.wrap > div.grid.grid--top \"Software I have built Point at a project\"",
+    "msg": "the split's columns are off the page's one pair of lines: its right column starts at x 732, the first split's at 1058 (SR-8)",
+    "fix": "start every split's right column on one shared line (wrap.left + k x (width + 24) / 12, k 5, 6 or 7; 6 on a place page) and end the left one 24px before it",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "split-pair"
+    ],
+    "wheres": [
+     "section#work > div.wrap > div.grid.grid--top \"Software I have built Point at a project\""
+    ]
+   },
+   {
+    "check": "split-pair",
+    "where": "section#tools > div.wrap > div.grid.grid--top \"Languages, frameworks and APIs Every too\"",
+    "msg": "the split's columns are off the page's one pair of lines: its right column starts at x 732, the first split's at 1058 (SR-8)",
+    "fix": "start every split's right column on one shared line (wrap.left + k x (width + 24) / 12, k 5, 6 or 7; 6 on a place page) and end the left one 24px before it",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "split-pair"
+    ],
+    "wheres": [
+     "section#tools > div.wrap > div.grid.grid--top \"Languages, frameworks and APIs Every too\""
+    ]
+   },
+   {
+    "check": "no-visual",
+    "where": "section#experience \"Work history\"",
+    "msg": "no picture, effect or mock in this section; a feature section needs a visual",
+    "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "no-visual"
+    ],
+    "wheres": [
+     "section#experience \"Work history\""
+    ]
+   }
+  ],
+  "warns": [
+   {
+    "check": "flush",
+    "where": "section#about > div.mo-io__stage > div.mo-io__cover",
+    "msg": "its first line sits 17px under the top edge of section#about, where the ground changes",
+    "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "nav",
+    "where": "header.nav > div.wrap.nav__bar > a.nav__logo \"K Khoi Do\"",
+    "msg": "the nav is lopsided: its first item starts 6px inside the content's edge (80px), while its last ends on the other edge",
+    "fix": "start the nav's first item and end its last on the content's two edges",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "overlap-text",
+    "where": "div.ui-win__main > ul.ui-win__rows > li.ui-win__row.arc-row:nth-of-type(1) > a.ui-win__who \"Lobe\"",
+    "msg": "inside div.ui.ui-panel, a box sits on the mock's own text and hides it mid-line (\"Shared 3D brain MRI review\") (and 3 more like it: \"Material Enhancement Ass\", \"CrisisLineAI\", \"Pickleball Booking Exten\")",
+    "fix": "move the box off the text (or the text off the box)",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "cut-text",
+    "where": "div.ui-win__main > ul.ui-win__rows > li.ui-win__row.arc-row:nth-of-type(2) > span.ui-win__sub \"Course material workspace for professors\"",
+    "msg": "shortened with an ellipsis",
+    "fix": "give the text room: no overflow clipping a line, no line past its box",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "cut-text",
+    "where": "div.ui-win__main > ul.ui-win__rows > li.ui-win__row.arc-row:nth-of-type(10) > a.ui-win__who \"Pickleball Bot\"",
+    "msg": "cut 11px at the bottom by the overflow of section#work > div.wrap > div.ui.app > div.app__pane.app__pane--list: a fragment run out through its panel's edge",
+    "fix": "give the text room: no overflow clipping a line, no line past its box",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "no-visual",
+    "where": "main#top > section.hero.hero--name \"Full-stack engineer for AI products\"",
+    "msg": "pictures, effects and mocks cover 20% of this section; a feature section needs a visual (about 25% or more)",
+    "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "copy-headings",
+    "where": "h2#approach-h \"Ship the weekend build\"",
+    "msg": "\"Ship the weekend build\" names no product, part, place or section (the one brand line a page may have)",
+    "fix": "name the thing in every heading: the product, a part, the place or a section noun",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "text-contrast",
+    "where": "div.ui-win__main > ul.ui-win__rows > li.ui-win__row.arc-row:nth-of-type(1) > span.ui-avatar \"L\"",
+    "msg": "18 lines of text in drawn mocks read under 4.5:1 (6 colour pairs), the worst \"L\" in #ad7e6c on #4f3d37 at 2.91:1",
+    "fix": "lift the mocks' muted text (labels, meta, initials) to 4.5:1 on their own panel, or set it larger",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-gaps",
+    "where": "main#top > section.hero.hero--name / section#work",
+    "msg": "112px between these sections, -46% against the median 209px",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-gaps",
+    "where": "section#tools / section#about",
+    "msg": "uneven space at the edge of a band: 158px outside its edge, 17px inside it (the space on either side of a change of ground reads as one gap only when the two match)",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "photo-set",
+    "where": "article.arc-open:nth-of-type(1) > div.arc-open__body > div.arc-open__shot > img \"lobe.webp\"",
+    "msg": "3 photographs in more than one look: lightness from 0.16 to 0.72; the odd one out is lobe.webp",
+    "fix": "grade the photographs to one look (light, colour, warmth), or replace the odd one out",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "copy-length",
+    "where": "section#experience \"Work history\"",
+    "msg": "1 section over 90 words a screen outside the UI mocks (\"Work history\" 99); 63 words a screen across the page (376 words in 6 screens): a tech page says it in about 80 or fewer",
+    "fix": "cut every section to its heading, one line and the product UI: the UI says the rest; no second paragraph, no list of feature sentences",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "container-edges",
+    "where": "section#about > div.mo-io__stage > div.mo-io__cover",
+    "msg": "a box runs 17-1422px, outside the container lines of section 6 at 80-1360px: full width is for background layers and grounds only (it is in a scroll scene: told as a WARN) (SR-6)",
+    "fix": "keep it inside the container lines (.wrap): full width is for background layers and grounds only",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "cut-text",
+    "where": "div.ui-win__main > ul.ui-win__rows > li.ui-win__row.arc-row:nth-of-type(2) > a.ui-win__who \"Material Enhancement Assistant\"",
+    "msg": "shortened with an ellipsis (and 8 more like it: \"Course material workspac\", \"Sign language through th\", \"Call audio to incidents \", \"Chat, summarise links, r\", ...)",
+    "fix": "give the text room: no overflow clipping a line, no line past its box",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-gaps",
+    "where": "section#about / footer#contact",
+    "msg": "uneven space at the edge of a band: 91px outside its edge, 54px inside it (the space on either side of a change of ground reads as one gap only when the two match)",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "orphan",
+    "where": "div.grid:nth-of-type(2) > div.frame.span-12 > ul.tools > li.tool:nth-of-type(9) \"Tailwind CSS\"",
+    "msg": "its last line holds only \"CSS\" (and 2 more like it: \"OpenAI API\", \"Claude API\")",
+    "fix": "rebalance the text (text-wrap: pretty, or a shorter line) so the last line holds more than one short word",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "empty-area",
+    "where": "section#work \"Software I have built\"",
+    "msg": "42% of the section is empty: 656px of empty rows between its content, in its 1544px of rows (WARN over 35%, FAIL over 50%)",
+    "fix": "fill the section: a picture or a second column beside the words, or more of its own content; the section stays one or two screens tall (T-height)",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   }
+  ],
+  "crashed": [],
+  "seconds": {
+   "consistency": 93,
+   "layout": 3
+  }
+ },
+ "open": [
+  {
+   "check": "no-visual",
+   "where": "section#tools \"Languages, frameworks and APIs\"",
+   "msg": "no picture, effect or mock in this section; a feature section needs a visual",
+   "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "no-visual"
+   ],
+   "wheres": [
+    "section#tools \"Languages, frameworks and APIs\""
+   ]
+  },
+  {
+   "check": "hero-screen",
+   "where": "main#top > section.hero.hero--name > p.hero__name \"Khoi Do\"",
+   "msg": "\"Khoi Do\" starts at 14px, under the 72px nav (SR-1)",
+   "fix": "keep the hero's content between the nav and 24px above the fold (and the action bar): shorten the picture or the text; a docked strip 96px at most",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "hero-screen"
+   ],
+   "wheres": [
+    "main#top > section.hero.hero--name > p.hero__name \"Khoi Do\""
+   ]
+  },
+  {
+   "check": "hero-screen",
+   "where": "main#top > section.hero.hero--name > img.hero__cut \"Khoi Do in a dark suit, hands folded\"",
+   "msg": "\"Khoi Do in a dark suit, hands fo\" ends at 900px, below the hero's content line at 876px (the 900px screen less 24px) (SR-1)",
+   "fix": "keep the hero's content between the nav and 24px above the fold (and the action bar): shorten the picture or the text; a docked strip 96px at most",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "hero-screen"
+   ],
+   "wheres": [
+    "main#top > section.hero.hero--name > img.hero__cut \"Khoi Do in a dark suit, hands folded\""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "main#top > section.hero.hero--name > p.hero__name \"Khoi Do\"",
+   "msg": "a child of section 1 beside its .wrap is no valid background layer: not img, picture, video or canvas (SR-6)",
+   "fix": "build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "main#top > section.hero.hero--name > p.hero__name \"Khoi Do\""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "main#top > section.hero.hero--name > img.hero__cut \"Khoi Do in a dark suit, hands folded\"",
+   "msg": "a child of section 1 beside its .wrap is no valid background layer: does not span the screen from 0 to 1440px; z-index 1, not 0 (SR-6)",
+   "fix": "build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "main#top > section.hero.hero--name > img.hero__cut \"Khoi Do in a dark suit, hands folded\""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "main#top > section.hero.hero--name \"Khoi Do Software engineer, Long Beach, C\"",
+   "msg": "the hero holds 2 background layers: one at most (and 1 more like it: section#about > div.mo-io__stage) (SR-6)",
+   "fix": "build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "main#top > section.hero.hero--name \"Khoi Do Software engineer, Long Beach, C\""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "div.grid.hero__foot > dl.hero-facts.hero-facts--col > div:nth-of-type(1) > dt \"Now\"",
+   "msg": "6 text blocks start on a left line at x 1058, 978px from the container's left: text starts on the container's left, or on one split line (x 623, 732, 841) (also \"Full stack developer, Netsservic\", \"Studying\", \"Computer science, CSULB, Dec 202\") (SR-6)",
+   "fix": "start the text on the container's left, or on the one split line every split shares",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "div.grid.hero__foot > dl.hero-facts.hero-facts--col > div:nth-of-type(1) > dt \"Now\""
+   ]
+  },
+  {
+   "check": "row-lines",
+   "where": "div.wrap > div.grid:nth-of-type(2) > div.frame.span-12 > ul.tools \"TypeScript JavaScript Python Swift React\"",
+   "msg": "a row of 8 items: its first item starts at 192px, the container's left line at 80px; its last item ends at 1249px, the container's right line at 1360px (2px either way) (SR-7)",
+   "fix": "start the row's first item on the container's left line and end its last on the right line, every item one height",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "row-lines"
+   ],
+   "wheres": [
+    "div.wrap > div.grid:nth-of-type(2) > div.frame.span-12 > ul.tools \"TypeScript JavaScript Python Swift React\""
+   ]
+  },
+  {
+   "check": "split-pair",
+   "where": "section.hero.hero--name > div.wrap > div.hero-text > div.grid.hero__foot \"Software engineer, Long Beach, Californi\"",
+   "msg": "the two columns of the split start 201px apart at the top: a split's columns are top-aligned, 8px either way (SR-8)",
+   "fix": "top-align both columns of the split (align-items: start)",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "split-pair"
+   ],
+   "wheres": [
+    "section.hero.hero--name > div.wrap > div.hero-text > div.grid.hero__foot \"Software engineer, Long Beach, Californi\""
+   ]
+  },
+  {
+   "check": "split-pair",
+   "where": "section#work > div.wrap > div.grid.grid--top \"Software I have built Point at a project\"",
+   "msg": "the split's columns are off the page's one pair of lines: its right column starts at x 732, the first split's at 1058 (SR-8)",
+   "fix": "start every split's right column on one shared line (wrap.left + k x (width + 24) / 12, k 5, 6 or 7; 6 on a place page) and end the left one 24px before it",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "split-pair"
+   ],
+   "wheres": [
+    "section#work > div.wrap > div.grid.grid--top \"Software I have built Point at a project\""
+   ]
+  },
+  {
+   "check": "split-pair",
+   "where": "section#tools > div.wrap > div.grid.grid--top \"Languages, frameworks and APIs Every too\"",
+   "msg": "the split's columns are off the page's one pair of lines: its right column starts at x 732, the first split's at 1058 (SR-8)",
+   "fix": "start every split's right column on one shared line (wrap.left + k x (width + 24) / 12, k 5, 6 or 7; 6 on a place page) and end the left one 24px before it",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "split-pair"
+   ],
+   "wheres": [
+    "section#tools > div.wrap > div.grid.grid--top \"Languages, frameworks and APIs Every too\""
+   ]
+  },
+  {
+   "check": "no-visual",
+   "where": "section#experience \"Work history\"",
+   "msg": "no picture, effect or mock in this section; a feature section needs a visual",
+   "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "no-visual"
+   ],
+   "wheres": [
+    "section#experience \"Work history\""
+   ]
+  }
+ ],
+ "waived": [],
+ "warnCount": 17,
+ "at": "2026-11-23T02:36:40.035Z",
+ "session": "37c2a314-d352-4b6c-8a74-4b0100d6e33f",
+ "doneReason": "Old page paused while I review the new Canva frames"
+}

@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en" data-type="software" data-radius="soft" data-ground="sand" data-buttons="solid" data-motion>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Material Enhancement Assistant: a case study by Khoi Do</title>
+<meta name="description" content="Helps professors make their course material clearer, while they approve every change.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Material Enhancement Assistant: a case study by Khoi Do">
+<meta property="og:description" content="Helps professors make their course material clearer, while they approve every change.">
+<meta property="og:image" content="../share.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#141414">
+<!-- <link rel="canonical" href="https://www.khoido.com/"> -->
+<meta name="site-kind" content="software">
+<meta name="page-type" content="software">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mona+Sans:wdth,wght@75..125,400..600&family=Geist+Mono:wght@400..500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/system.css">
+<link rel="stylesheet" href="../assets/ui/cards.css">
+<link rel="stylesheet" href="../assets/motion/motion.css">
+<link rel="stylesheet" href="../assets/backgrounds/backgrounds.css">
+<link rel="stylesheet" href="../assets/layout/layout.css">
+<link rel="stylesheet" href="../assets/icons/icon.css">
+<style>
+:root {
+  --p-bg: #141414; --p-surface: #1d1d1c; --p-ink: #f2efe9; --p-muted: #8c8b88;
+  --p-accent: #ff8a3d; --p-accent-ink: #141414; --p-action: #ff8a3d; --p-action-ink: #141414;
+  --p-inv-bg: #f2efe9; --p-inv-surface: #e0ddd8; --p-inv-ink: #141414; --p-inv-muted: #5f5e5c;
+  --p-inv-accent: #141414; --p-inv-accent-ink: #f2efe9; --p-inv-action: #141414; --p-inv-action-ink: #f2efe9;
+  --font-display: "Mona Sans", system-ui, sans-serif;
+  --font-text: "Mona Sans", system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --display-weight: 500;
+  --display-tracking: -0.03em;
+  --display-tracking-xl: -0.04em;
+  --display-stretch: 104%;
+  --ly-scale: 0.96;
+}
+</style>
+<link rel="stylesheet" href="../assets/ui/base.css">
+<link rel="stylesheet" href="../assets/ui/window/fragment.css">
+<link rel="stylesheet" href="../page.css">
+<script>document.documentElement.classList.add('m-enter');setTimeout(()=>document.documentElement.classList.add('m-enter-done'),700)</script>
+<script src="../assets/backgrounds/backgrounds.js"></script>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap nav__bar">
+    <a class="skip-link" href="#top">Skip to content</a>
+    <a class="nav__logo" href="../index.html#top"><span class="mark mark--initial" aria-hidden="true">K</span>Khoi Do</a>
+    <nav class="nav__links" aria-label="Main">
+      <div class="nav__item">
+        <a class="nav__link" href="../index.html#work">Work <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <div class="nav__menu">
+          <div class="wrap grid">
+            <div class="menu-col span-3">
+              <p class="t-label">AI and ML</p>
+              <a href="../work/lobe.html">Lobe<span>Review brain MRI scans together</span></a>
+              <a href="../work/crisislineai.html">CrisisLineAI<span>AI company until a counselor joins</span></a>
+              <a href="../work/911-operator-assistant.html">911 Operator Assistant<span>Call audio to a map pin</span></a>
+            </div>
+            <div class="menu-col span-3">
+              <p class="t-label">Web and automation</p>
+              <a href="../work/material-enhancement-assistant.html">Material Enhancement Assistant<span>Clearer course material for professors</span></a>
+              <a href="../work/pickleball-bot.html">Pickleball Bot<span>Books courts on a schedule</span></a>
+              <a href="../index.html#work">All ten projects<span>The full archive with filters</span></a>
+            </div>
+            <a class="menu-card span-3 start-10" href="../work/shape-sign.html">
+              <div class="panel"><img class="frame__img" src="../img/shape-sign.webp" alt="The Shape-Sign lesson screen with a webcam view of a hand"></div>
+              <span class="t-card">Best Overall at BeachHacks 8.0</span>
+              <span class="t-small muted">Shape-Sign teaches sign language by webcam.</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="nav__item"><a class="nav__link" href="../index.html#experience">Experience</a></div>
+      <div class="nav__item"><a class="nav__link" href="../index.html#tools">Tools</a></div>
+      <div class="nav__item"><a class="nav__link" href="../index.html#about">About</a></div>
+    </nav>
+    <div class="nav__actions">
+      <a class="btn btn--primary" href="mailto:dohoangkhoi341@gmail.com?subject=Hello%20Khoi">Email Khoi</a>
+    </div>
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-label="Menu"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 5h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+  </div>
+</header>
+<main id="top">
+  <section class="hero hero--case" data-enter aria-labelledby="hero-h">
+    <div class="wrap"><div class="hero-text">
+      <div class="grid grid--top">
+        <div class="hero-copy span-5">
+          <p class="hero-notice"><a class="link" href="../index.html#work">All projects</a> · <b>Team project</b></p>
+          <h1 id="hero-h">Material Enhancement Assistant</h1>
+          <p class="t-lead">Helps professors make their course material clearer, while they approve every change.</p>
+          <div class="btn-row">
+            <a class="btn btn--primary" href="https://github.com/spiderpilo/Material-Enhancement-Assistant">View the source<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
+          </div>
+          <dl class="hero-facts">
+            <div><dt>Year</dt><dd>2026</dd></div>
+            <div><dt>Team</dt><dd>Team of 4</dd></div>
+            <div><dt>Kind</dt><dd>AI and ML</dd></div>
+          </dl>
+        </div>
+        <div class="hero-visual frame frame--photo case__shot span-7 start-6">
+          <img class="frame__img" src="../img/material-enhancement-assistant.webp" alt="Material Enhancement Assistant, its main screen" fetchpriority="high">
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="section" id="overview" aria-labelledby="overview-h">
+    <div class="wrap">
+      <h2 id="overview-h">The problem and the fix</h2>
+      <div class="grid grid--top case__pair">
+        <div class="span-6 stack-4"><p class="t-label muted">Problem</p><p class="t-lead">Professors have slides and readings in many formats and little time to check which parts confuse students.</p></div>
+        <div class="span-6 stack-4"><p class="t-label muted">What we built</p><p class="t-lead">Upload the files once; the app reads them, answers questions about them, drafts quizzes and outlines, and nothing changes without the professor saying yes.</p></div>
+      </div>
+      <ol class="grid case__flow">
+        <li class="span-3"><span class="case__step">1</span><p>A PDF, DOCX or PPTX upload</p></li>
+        <li class="span-3"><span class="case__step">2</span><p>Stored in S3 and indexed</p></li>
+        <li class="span-3"><span class="case__step">3</span><p>Chat, quizzes and outlines</p></li>
+        <li class="span-3"><span class="case__step">4</span><p>The professor approves each change</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" id="build" aria-labelledby="build-h">
+    <div class="wrap grid grid--top">
+      <div class="span-5 stack-4">
+        <h2 id="build-h">My part</h2>
+        <p class="t-lead">I built Google and GitHub sign-in, added retries to the Gemini quiz calls, and moved chat to DeepSeek and outlines to Cerebras.</p>
+        <ul class="tools tools--case">
+          <li class="tool"><span class="ic-tile"><img class="ic ic-40" src="../assets/icons/python.svg" alt="" width="40" height="40"></span><span class="t-label">Python</span></li>
+          <li class="tool"><span class="ic-tile"><img class="ic ic-40" src="../assets/icons/fastapi-icon.svg" alt="" width="40" height="40"></span><span class="t-label">FastAPI</span></li>
+          <li class="tool"><span class="ic-tile"><img class="ic ic-40" src="../assets/icons/typescript-icon.svg" alt="" width="40" height="40"></span><span class="t-label">TypeScript</span></li>
+          <li class="tool"><span class="ic-tile"><img class="ic ic-40" src="../assets/icons/nextjs-icon.svg" alt="" width="40" height="40"></span><span class="t-label">Next.js</span></li>
+          <li class="tool"><span class="ic-tile"><img class="ic ic-40" src="../assets/icons/google-gemini-icon.svg" alt="" width="40" height="40"></span><span class="t-label">Gemini</span></li>
+          <li class="tool"><span class="ic-tile tool__word" aria-hidden="true">D</span><span class="t-label">DeepSeek</span></li>
+          <li class="tool"><span class="ic-tile tool__word" aria-hidden="true">C</span><span class="t-label">Cerebras</span></li>
+          <li class="tool"><span class="ic-tile"><img class="ic ic-40 ic-land" src="../assets/icons/docker-icon.svg" alt="" width="40" height="40"></span><span class="t-label">Docker</span></li>
+        </ul>
+      </div>
+      <ul class="rows span-6 start-7 case__features">
+        <li><span class="rows__name">Upload any format<small>PDF, DOCX and PPTX up to 50 MB.</small></span></li>
+        <li><span class="rows__name">Chat with the course<small>Answers come from the uploaded material.</small></span></li>
+        <li><span class="rows__name">Draft quizzes<small>Gemini writes them, with retries when it stalls.</small></span></li>
+        <li><span class="rows__name">Outline slides<small>A beta outline writer on Cerebras.</small></span></li>
+        <li><span class="rows__name">Sign in fast<small>Google or GitHub accounts.</small></span></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer class="footer closing" id="contact" aria-labelledby="close-h">
+  <div class="wrap">
+    <div class="closing__cta close--word">
+      <div class="section-head--split">
+        <div><h2 id="close-h">Next project: CrisisLineAI</h2><p class="t-lead">A crisis support chat and phone line where AI keeps people company until a counselor takes over.</p></div>
+        <a class="btn btn--primary" href="crisislineai.html">Read the CrisisLineAI case study<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
+      </div>
+      <p class="close__word" aria-hidden="true">ME</p>
+    </div>
+    <div class="closing__links">
+      <div class="grid">
+        <div class="span-4 stack-4">
+          <a class="nav__logo" href="../index.html#top"><span class="mark mark--initial" aria-hidden="true">K</span>Khoi Do</a>
+          <p class="footer__lede">Software that ships, AI included.</p>
+        </div>
+        <div class="span-2 footer__col"><h3>Work</h3><ul><li><a href="../work/lobe.html">Lobe</a></li><li><a href="../work/crisislineai.html">CrisisLineAI</a></li><li><a href="../work/shape-sign.html">Shape-Sign</a></li><li><a href="../index.html#work">All projects</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>Experience</h3><ul><li><a href="../index.html#experience">Netsservice</a></li><li><a href="../index.html#experience">DFM Europe</a></li><li><a href="../index.html#experience">ACM at CSULB</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>Tools</h3><ul><li><a href="../index.html#tools">Languages</a></li><li><a href="../index.html#tools">Frameworks</a></li><li><a href="../index.html#tools">AI services</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>About</h3><ul><li><a href="../index.html#about">Education</a></li><li><a href="https://www.linkedin.com/in/hoang-khoi-do">LinkedIn</a></li><li><a href="https://github.com/Ben2104">GitHub</a></li></ul></div>
+      </div>
+      <div class="footer__legal">
+        <span>&copy; 2026 Khoi Do</span>
+        <span class="t-small muted">Product names and logos are trademarks of their owners.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+<script type="module" src="../assets/system.js"></script>
+<script type="module" src="../assets/motion/motion.js"></script>
+<script type="module" src="../assets/layout/layout.js"></script>
+</body>
+</html>
