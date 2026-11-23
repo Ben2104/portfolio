@@ -22,3 +22,7 @@ pnpm-debug.log*
 
 # Local design prototype and browser artifacts
 /prototype/
+
+# Generated Next.js and TypeScript files
+/next-env.d.ts
+*.tsbuildinfo
