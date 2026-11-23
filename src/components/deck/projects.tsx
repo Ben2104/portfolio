@@ -1,29 +1,42 @@
 import Link from "next/link";
 import { projects } from "@/data/site";
+import { Photo } from "./photo";
 import { Reveal } from "./reveal";
 
 export function Selected() {
   return (
     <section className="scr selected" id="selected" aria-labelledby="sel-h">
-      <div className="wrap selected__layout">
-        <Reveal>
-          <h2 className="giant" id="sel-h">Selected projects</h2>
-          <p className="lead">Hackathon winners, team builds, and solo tools.</p>
-          <Link className="pill pill--w" href="/projects">Open the archive ↗</Link>
-        </Reveal>
-        <ul className="selected__list">
-          {projects.slice(0, 3).map((project) => (
-            <li key={project.slug}>
-              <Link href={`/projects/${project.slug}`}>
-                <span>
-                  <strong>{project.title}</strong>
-                  <span>{project.short}</span>
-                </span>
-                <span aria-hidden="true">↗</span>
+      <div className="stage">
+        <Photo
+          className="sel__ph"
+          src="/deck/k-profile.webp"
+          alt="Hoang Khoi Do in profile"
+          sizes="(max-width: 860px) 76vw, 30vw"
+        />
+        <div className="sel__copy">
+          <div className="wrap">
+            <Reveal>
+              <p className="lbl">05 / Projects</p>
+              <h2 className="giant" id="sel-h">
+                Selected
+                <br />
+                projects
+              </h2>
+              <div className="sel__pills">
+                <span className="pill pill--o">{projects.length} featured projects</span>
+                <span className="pill">Team collaboration</span>
+                <span className="pill">Individual contributions</span>
+              </div>
+              <p className="lead">
+                Hackathon winners, team builds and solo tools. Each one has a case study: the idea, what I owned, how it
+                works and the stack behind it.
+              </p>
+              <Link className="pill pill--w" href="/projects">
+                Open the archive ↗
               </Link>
-            </li>
-          ))}
-        </ul>
+            </Reveal>
+          </div>
+        </div>
       </div>
     </section>
   );

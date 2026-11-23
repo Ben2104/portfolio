@@ -174,11 +174,23 @@ for (const width of [390, 2560]) {
   check(`archive (${width}): home and experience links stay visible`,
     await page.getByRole("link", { name: "Home" }).isVisible() &&
     await page.getByRole("link", { name: "Work experience" }).isVisible());
-  const cards = page.getByRole("list", { name: "Projects", exact: true }).getByRole("listitem");
+  check(`archive (${width}): opens the dedicated archive screen`,
+    await page.getByRole("heading", { name: "Every build, one place" }).isVisible());
+  const row = page.getByRole("list", { name: "Projects", exact: true });
+  const cards = row.getByRole("listitem");
   check(`archive (${width}): all ten projects appear`, await cards.count() === 10);
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+  await page.screenshot({ path: OUT + "/" + width + "/archive.png" });
   check(`archive (${width}): no horizontal overflow`, await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
-  await page.getByRole("button", { name: "Solo builds" }).click();
+  await row.press("ArrowRight");
+  const scrolled = await page.waitForFunction((element) => element.scrollLeft > 0, await row.elementHandle(), { timeout: 1500 })
+    .then(() => true, () => false);
+  check(`archive (${width}): carousel scrolls with the keyboard`, scrolled);
+  await page.getByRole("button", { name: "Team builds" }).click();
   await page.getByRole("button", { name: "Automation" }).click();
+  check(`archive (${width}): empty filter combination shows an empty state`,
+    await cards.count() === 0 && await page.getByText("No projects match this pair of filters.").isVisible());
+  await page.getByRole("button", { name: "Solo builds" }).click();
   const filtered = await cards.allTextContents();
   check(`archive (${width}): collection and category filters combine`, filtered.length > 0 &&
     filtered.length < 10 && filtered.every((card) => card.includes("Automation") && card.includes("Solo build")));
