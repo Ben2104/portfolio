@@ -70,3 +70,21 @@
   .row{padding-right:14px}
   .pc{flex-basis:78vw}
 }
+
+/* deck pages 15-16: explorer window with its own title, counter and drag rail */
+.arc{padding-top:clamp(40px,5vw,88px)}
+.os__ttl{color:var(--or)!important}
+.os__dots i{background:rgba(255,255,255,.16)}
+.os__dots i:first-child{background:var(--or)}
+.os__head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding-right:26px;margin:0 0 22px}
+.os__head h1{font-family:var(--sans);font-weight:700;text-transform:uppercase;font-size:calc(var(--u)*52);line-height:1;margin:0;color:#f1f1f3}
+.os__head p{margin:8px 0 0}
+.os__head .os__sel{color:var(--or);font-size:15px;letter-spacing:.1em;white-space:nowrap}
+.pc__id{display:flex;justify-content:space-between}
+.pc__id b{font-weight:400;color:var(--ink)}
+.pc h2{font-family:var(--sans);font-weight:700;letter-spacing:0;line-height:1.1;font-size:calc(var(--u)*30)}
+.os__rail{display:flex;align-items:center;gap:18px;margin:20px 26px 0 0}
+.os__rail i{flex:1;height:1px;background:rgba(255,255,255,.14);position:relative}
+.os__rail b{position:absolute;left:0;top:-1px;height:3px;background:var(--or);transition:width .15s}
+.row{cursor:grab}
+.row:active{cursor:grabbing}

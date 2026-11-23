@@ -4,7 +4,8 @@ import { Contact } from "@/components/deck/contact";
 import { Experience } from "@/components/deck/experience";
 import { Hero } from "@/components/deck/hero";
 import { Selected } from "@/components/deck/projects";
-import { About, Education, Intro } from "@/components/deck/story";
+import { OpenSource } from "@/components/deck/open-source";
+import { About, Education, Intro, Skills } from "@/components/deck/story";
 
 export default function Home() {
   return (
@@ -15,8 +16,10 @@ export default function Home() {
         <Intro />
         <About />
         <Education />
+        <Skills />
         <Experience />
         <Selected />
+        <OpenSource />
         <Contact />
       </main>
     </>

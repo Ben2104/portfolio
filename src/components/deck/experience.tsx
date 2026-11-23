@@ -3,7 +3,7 @@
 import { motion, useMotionValueEvent, useScroll } from "motion/react";
 import { useRef, useState } from "react";
 import type { CSSProperties } from "react";
-import { experience } from "@/data/site";
+import { experience, xpDetail } from "@/data/site";
 
 // the data lists newest first; the timeline reads oldest to newest as you scroll
 const roles = [...experience].reverse();
@@ -29,6 +29,7 @@ export function Experience() {
   };
 
   const r = roles[active];
+  const d = xpDetail[r.n];
   return (
     <section
       ref={track}
@@ -48,7 +49,7 @@ export function Experience() {
               <button
                 key={role.n}
                 type="button"
-                className={"xp__dot" + (i === active ? " on" : "")}
+                className={"xp__dot" + (i === active ? " on" : "") + (Math.cos(a) > 0.55 ? " xp__dot--r" : "")}
                 style={{ left: `${CX + RX * Math.cos(a)}%`, top: `${CY + RY * Math.sin(a)}%` }}
                 aria-label={`${role.role}, ${role.org}`}
                 aria-current={i === active}
@@ -71,10 +72,14 @@ export function Experience() {
             <p className="xp__when">{r.when}</p>
             <h3>{r.role}</h3>
             <p className="mono">{r.org} · {r.where}</p>
-            <p className="xp__txt">{r.text}</p>
+            <p className="xp__txt">{d.summary}</p>
+            <p className="xp__k">Key contributions</p>
+            <ul className="xp__pts">
+              {d.points.map((t) => <li key={t}>{t}</li>)}
+            </ul>
             <p className="xp__k">Tech stack</p>
             <ul>
-              {r.tags.map((t) => <li className="tag" key={t}>{t}</li>)}
+              {d.tags.map((t) => <li className="tag" key={t}>{t}</li>)}
             </ul>
           </motion.article>
         </div>

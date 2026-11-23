@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
+import type { PointerEvent } from "react";
 import { cats, projects } from "@/data/site";
 import type { Project } from "@/data/site";
 
@@ -20,6 +21,7 @@ const okWho = (p: Project, w: Who) => w === "all" || (w === "solo") === isSolo(p
 const okCat = (p: Project, c: string) => c === "all" || p.cat === c;
 const pad = (n: number, len: number) => String(n).padStart(len, "0");
 const TOTAL = pad(projects.length, 2);
+const YEARS = `${Math.min(...projects.map((p) => p.year))}–${Math.max(...projects.map((p) => p.year))}`;
 
 /** The archive: a window-style card with two filters and a row of case-study cards. Hovering a card selects it. */
 export function Archive() {
@@ -27,6 +29,19 @@ export function Archive() {
   const [cat, setCat] = useState("all");
   const [pick, setPick] = useState("");
   const row = useRef<HTMLUListElement>(null);
+  const [prog, setProg] = useState(0);
+  const drag = useRef<{ x: number; left: number } | null>(null);
+
+  const onScroll = () => {
+    const el = row.current;
+    if (el) setProg(el.scrollWidth > el.clientWidth ? el.scrollLeft / (el.scrollWidth - el.clientWidth) : 0);
+  };
+  const onDown = (e: PointerEvent<HTMLUListElement>) => {
+    if (e.pointerType === "mouse") drag.current = { x: e.clientX, left: e.currentTarget.scrollLeft };
+  };
+  const onMove = (e: PointerEvent<HTMLUListElement>) => {
+    if (drag.current) e.currentTarget.scrollLeft = drag.current.left - (e.clientX - drag.current.x);
+  };
 
   const shown = projects.filter((p) => okWho(p, who) && okCat(p, cat));
   const sel = shown.find((p) => p.slug === pick) ?? shown[0];
@@ -47,13 +62,13 @@ export function Archive() {
             <i />
             <i />
           </span>
-          <span className="mono">KHOI.OS / {n === null ? "PROJECTS" : `PROJECT_${pad(n, 3)}`}</span>
+          <span className="mono">KHOI.OS / PROJECT EXPLORER</span>
         </div>
-        {n !== null && <span className="mono os__count">Case study / {pad(n, 2)} — {TOTAL}</span>}
+        <span className="mono os__count">{TOTAL} items · {YEARS}</span>
       </div>
       <div className="os__body">
         <div className="os__side">
-          <span className="mono">Collection</span>
+          <span className="mono os__ttl">Project explorer</span>
           <ul>
             {whoOptions.map(([w, label]) => (
               <li key={w}>
@@ -64,7 +79,7 @@ export function Archive() {
               </li>
             ))}
           </ul>
-          <span className="mono">Category</span>
+          <span className="mono">Filter by category</span>
           <ul>
             {catOptions.map((c) => (
               <li key={c}>
@@ -78,14 +93,20 @@ export function Archive() {
         </div>
 
         <div className="os__main">
-          <p className="os__meta mono">
-            <span role="status">
-              {shown.length} {shown.length === 1 ? "project" : "projects"}
+          <div className="os__head">
+            <div>
+              <h1>Project archive</h1>
+              <p className="mono">A collection of ideas, experiments &amp; builds.</p>
+            </div>
+            <span className="os__sel mono" aria-hidden="true">
+              {n === null ? "00" : pad(n, 2)} / {TOTAL}
             </span>
-            <span className="os__sel">{sel?.title}</span>
+          </div>
+          <p className="sr-only" role="status">
+            {shown.length} {shown.length === 1 ? "project" : "projects"}
           </p>
           {shown.length === 0 && <p className="os__empty">No projects match this pair of filters.</p>}
-          <ul className="row" ref={row} aria-label="Projects" tabIndex={0}>
+          <ul className="row" ref={row} aria-label="Projects" tabIndex={0} onScroll={onScroll} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={() => (drag.current = null)} onPointerLeave={() => (drag.current = null)}>
             {shown.map((p) => (
               <li
                 key={p.slug}
@@ -97,7 +118,7 @@ export function Archive() {
                   <Image src={"/deck/projects/" + p.img + ".webp"} alt="" fill sizes="(max-width: 860px) 78vw, (max-width: 1920px) 25vw, 480px" />
                 </div>
                 <div className="pc__in">
-                  <span className="mono">CASE_{pad(projects.indexOf(p) + 1, 3)}</span>
+                  <span className="mono pc__id">CASE_{pad(projects.indexOf(p) + 1, 3)} <b aria-hidden="true">↗</b></span>
                   <h2>{p.title}</h2>
                   <span className="cat mono">
                     {cats[p.cat]} · {p.year} · {isSolo(p) ? "Solo build" : "Team build"}
@@ -110,6 +131,10 @@ export function Archive() {
               </li>
             ))}
           </ul>
+          <div className="os__rail">
+            <span className="mono">Drag to explore</span>
+            <i aria-hidden="true"><b style={{ width: `${12 + prog * 88}%` }} /></i>
+          </div>
         </div>
       </div>
     </div>

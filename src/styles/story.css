@@ -17,3 +17,55 @@
   .story__layout{grid-template-columns:1fr}
   .story .about__ph{aspect-ratio:1}
 }
+
+.skills .giant{font-size:clamp(46px,8vw,150px);margin:0}
+.skills__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(24px,5vw,96px);margin-top:clamp(28px,4vw,56px)}
+.skills__pill{height:auto;min-height:44px;padding:10px 26px;margin:0 0 20px;font-weight:600;font-family:var(--sans)}
+.osrc__cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(24px,5vw,96px);margin-top:clamp(32px,4vw,64px)}
+.osrc__list{list-style:none;margin:16px 0 28px;padding:0}
+.osrc__list li{border-top:1px solid var(--line)}
+.osrc__list a,.osrc__list li>div{display:grid;gap:6px;padding:20px 0;transition:color .2s}
+.osrc__list a:hover strong{color:var(--or)}
+.osrc__list strong{font-size:clamp(18px,1.6vw,26px);font-weight:500}
+.osrc__list span{color:#a9aab2;line-height:1.55;max-width:46ch}
+.osrc__list em{font-style:normal}
+.osec .giant{font-size:clamp(40px,6vw,110px);line-height:.95;margin:14px 0 20px;max-width:16ch}
+@media (max-width:860px){.skills__grid,.osrc__cols{grid-template-columns:1fr}}
+
+/* deck slides: full-screen compositions copied from the Canva pages */
+.deck{min-height:100svh;padding:0;display:block}
+.deck__copy{position:absolute;z-index:3;font-size:max(15px,calc(var(--u)*24));line-height:1.28;color:#f1f1f3}
+.deck__copy p{margin:0 0 1.5em;max-width:27em}
+.deck__copy h3{font-family:var(--sans);font-weight:600;font-size:1.9em;line-height:1.1;margin:0 0 .35em;color:var(--or)}
+.deck .ph{-webkit-mask-image:none;mask-image:none}
+.deck__lbl{font-weight:600;font-size:.72em;letter-spacing:.02em;text-transform:uppercase;color:var(--or)}
+.deck__lbl{margin:0 0 .3em!important}
+
+.deck--intro .deck__copy{left:9.5%;top:11%;width:56%}
+.deck__word{position:absolute;left:6%;right:5%;bottom:5%;margin:0;font-family:var(--disp);font-weight:400;text-transform:uppercase;line-height:.8;font-size:min(17.6vw,calc(100svh*.4));letter-spacing:0;color:#fff;white-space:nowrap;text-align:center}
+.deck--intro .deck__ph{right:7%;bottom:0;width:30%;height:92%;z-index:2}
+.deck--intro .deck__ph img{object-fit:contain;object-position:bottom}
+
+.deck--about .deck__ph{left:0;bottom:0;width:38%;height:100%}
+.deck--about .deck__ph img{object-fit:cover;object-position:center top}
+.deck__name{position:absolute;right:4%;top:11%;width:58%;margin:0;font-family:var(--disp);font-weight:400;text-transform:uppercase;line-height:.9;font-size:min(8.4vw,150px);color:#fff;text-align:right;white-space:nowrap}
+.deck--about .deck__copy{left:37%;bottom:9%;width:34%;font-size:max(14px,calc(var(--u)*21))}
+
+.deck--edu .deck__copy{left:7%;top:10%;bottom:10%;width:40%;display:flex;flex-direction:column;justify-content:space-between;font-size:max(14px,calc(var(--u)*23))}
+.deck--edu article h3{font-family:var(--sans);font-weight:700;font-size:1.65em;line-height:1.1;color:#fff;margin:0 0 .3em}
+.deck--edu article h3 span{color:var(--or)}
+.deck--edu article p{margin:0;font-size:.9em;max-width:24em}
+.deck--edu .deck__ph{left:44%;bottom:0;width:30%;height:92%;z-index:1}
+.deck--edu .deck__ph img{object-fit:cover}
+.deck__vert{position:absolute;right:4%;top:50%;margin:0;transform:translateY(-50%) rotate(180deg);writing-mode:vertical-rl;font-family:var(--disp);font-weight:400;text-transform:uppercase;line-height:1;font-size:min(11.3vw,18.5svh);color:#f1f1f3}
+
+@media (max-width:860px){
+  .deck{min-height:0;display:flex;flex-direction:column;gap:24px;padding:96px 24px 64px}
+  .deck>*{position:relative!important;inset:auto!important;width:auto!important;height:auto!important}
+  .deck__word{font-size:15vw;order:3;text-align:left}
+  .deck .deck__ph{order:2;aspect-ratio:3/4;max-width:80%}
+  .deck__name{font-size:13vw;text-align:left;white-space:normal}
+  .deck__vert{writing-mode:horizontal-tb;transform:none;font-size:20vw;order:0}
+}
+.deck--about .deck__ph{-webkit-mask-image:linear-gradient(to right,#000 62%,transparent);mask-image:linear-gradient(to right,#000 62%,transparent)}
+.deck--edu .deck__ph{-webkit-mask-image:linear-gradient(to right,transparent,#000 30%,#000 70%,transparent);mask-image:linear-gradient(to right,transparent,#000 30%,#000 70%,transparent)}

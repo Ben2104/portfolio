@@ -1,4 +1,4 @@
-.hero{border-top:0;background:url(/deck/grain.png) repeat,radial-gradient(620px 420px at 22% 18%,rgba(255,255,255,.075),transparent 70%),radial-gradient(900px 520px at 78% 92%,rgba(255,255,255,.07),transparent 70%),radial-gradient(140% 120% at 50% 40%,#1b1c21 40%,#0d0e12 100%)}
+.hero{border-top:0}
 .hero .stage{height:max(calc(var(--u)*828),100svh)}
 .hero__row,.hero__mid{display:contents}
 .hero__role{position:absolute;left:var(--gutter);top:calc(var(--u)*146);font-weight:700;font-size:calc(var(--u)*66);line-height:1;letter-spacing:.005em;color:var(--or);z-index:3;animation:hero-fade .9s .45s both}
