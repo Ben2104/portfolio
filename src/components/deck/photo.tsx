@@ -10,18 +10,16 @@ export function Photo({
   alt,
   className,
   sizes,
-  drift = 36,
 }: {
   src: string;
   alt: string;
   className: string;
   sizes: string;
-  drift?: number;
 }) {
   const reduceMotion = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [drift, -drift]);
+  const y = useTransform(scrollYProgress, [0, 1], [18, -18]);
   return (
     <motion.div ref={ref} className={"ph " + className} style={{ y: reduceMotion ? 0 : y }}>
       <Image src={src} alt={alt} fill sizes={sizes} />

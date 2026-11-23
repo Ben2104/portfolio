@@ -23,7 +23,6 @@ export function GooeyNav() {
   const [scrolled, setScrolled] = useState(false);
   const items = useRef<(HTMLLIElement | null)[]>([]);
   const scroller = useRef<HTMLDivElement>(null);
-  const lockUntil = useRef(0);
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 160, damping: 28, mass: 0.4 });
 
@@ -33,7 +32,6 @@ export function GooeyNav() {
     const read = () => {
       raf = 0;
       setScrolled(window.scrollY > 48);
-      if (performance.now() < lockUntil.current) return;
       const line = 112;
       let found: (typeof SECTION_IDS)[number] = "top";
       for (const id of SECTION_IDS) {
@@ -76,7 +74,7 @@ export function GooeyNav() {
     const s = scroller.current;
     const li = items.current[active];
     if (s && li && s.scrollWidth > s.clientWidth) {
-      s.scrollTo({ left: li.offsetLeft - (s.clientWidth - li.offsetWidth) / 2, behavior: "smooth" });
+      s.scrollTo({ left: li.offsetLeft - (s.clientWidth - li.offsetWidth) / 2 });
     }
   }, [active]);
 
@@ -84,10 +82,7 @@ export function GooeyNav() {
     const idx = Math.min(RAIL.length - 1, Math.max(0, i));
     const el = document.getElementById(RAIL[idx][0]);
     if (!el) return;
-    lockUntil.current = performance.now() + 1100;
-    setActive(idx);
-    setBurst((b) => b + 1);
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    el.scrollIntoView({ block: "start" });
   }, []);
 
   const centre = box ? box.x + box.w / 2 : 0;

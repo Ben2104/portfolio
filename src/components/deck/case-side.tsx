@@ -8,17 +8,19 @@ export function CaseSide({ items }: { items: readonly (readonly [string, string]
   const [active, setActive] = useState(items[0][0]);
 
   useEffect(() => {
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) if (e.isIntersecting) setActive(e.target.id);
-      },
-      { rootMargin: "-35% 0px -60% 0px" },
-    );
-    for (const [id] of items) {
-      const el = document.getElementById(id);
-      if (el) io.observe(el);
-    }
-    return () => io.disconnect();
+    const sections = items.map(([id]) => document.getElementById(id));
+    const read = () => {
+      const line = Math.max(64, window.innerHeight * 0.2);
+      const current = sections.findLast((section) => section && section.getBoundingClientRect().top <= line);
+      setActive(current?.id ?? items[0][0]);
+    };
+    read();
+    window.addEventListener("scroll", read, { passive: true });
+    window.addEventListener("resize", read);
+    return () => {
+      window.removeEventListener("scroll", read);
+      window.removeEventListener("resize", read);
+    };
   }, [items]);
 
   return (

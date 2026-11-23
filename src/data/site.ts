@@ -10,7 +10,6 @@ export type Project = {
   cat: "ai" | "web" | "auto";
   team: number;
   img: string;
-  tone: number;
   short: string;
   line: string;
   event: string;
@@ -152,7 +151,7 @@ export const facts = [
 ] as const;
 
 export const projects: Project[] = [
-  { slug: 'lobe', title: 'Lobe', year: 2026, cat: 'ai', team: 3, img: 'lobe', tone: 1,
+  { slug: 'lobe', title: 'Lobe', year: 2026, cat: 'ai', team: 3, img: 'lobe',
     short: 'Shared 3D brain MRI review',
     line: 'A web app where people review brain MRI scans together and practice reading them with quick games.',
     event: 'Built at CalHacks 13.0',
@@ -163,7 +162,7 @@ export const projects: Project[] = [
     features: [['Find the tumour', 'Automatic segmentation from four MRI sequences.'], ['Study in 2D and 3D', 'Slices and the 3D brain move together.'], ['Review live', 'Voice, chat, notes and a shared 3D whiteboard in one room.'], ['Ask the assistant', 'A Claude-powered helper drives the viewer for you.'], ['Practice reading', 'Two games: Find the slice and Beat the AI.']],
     stack: ['TypeScript', 'React Three Fiber', 'NiiVue', 'Convex', 'LiveKit', 'MONAI', 'Claude API', 'Docker'],
     links: { devpost: 'https://devpost.com/software/lobe', source: 'https://github.com/DuongAnh1201/Lobe' } },
-  { slug: 'material-enhancement-assistant', title: 'Material Enhancement Assistant', year: 2026, cat: 'ai', team: 4, img: 'material-enhancement-assistant', tone: 2,
+  { slug: 'material-enhancement-assistant', title: 'Material Enhancement Assistant', year: 2026, cat: 'ai', team: 4, img: 'material-enhancement-assistant',
     short: 'Course material workspace for professors',
     line: 'Helps professors make their course material clearer, while they approve every change.',
     event: 'Team project',
@@ -174,7 +173,7 @@ export const projects: Project[] = [
     features: [['Upload any format', 'PDF, DOCX and PPTX up to 50 MB.'], ['Chat with the course', 'Answers come from the uploaded material.'], ['Draft quizzes', 'Gemini writes them, with retries when it stalls.'], ['Outline slides', 'A beta outline writer on Cerebras.'], ['Sign in fast', 'Google or GitHub accounts.']],
     stack: ['Python', 'FastAPI', 'TypeScript', 'Next.js', 'Gemini', 'DeepSeek', 'Cerebras', 'Docker'],
     links: { source: 'https://github.com/spiderpilo/Material-Enhancement-Assistant' } },
-  { slug: 'crisislineai', title: 'CrisisLineAI', year: 2026, cat: 'ai', team: 3, img: 'crisislineai', tone: 3,
+  { slug: 'crisislineai', title: 'CrisisLineAI', year: 2026, cat: 'ai', team: 3, img: 'crisislineai',
     short: 'Crisis chat and phone line',
     line: 'A crisis support chat and phone line where AI keeps people company until a counselor takes over.',
     event: 'Hackathon project',
@@ -185,7 +184,7 @@ export const projects: Project[] = [
     features: [['Answer at once', 'Realtime chat on Firestore with streamed replies.'], ['Take over', 'A counselor dashboard with one-click takeover.'], ['See the risk', 'Each conversation carries a risk level and a summary.'], ['Talk by phone', 'Twilio voice with AssemblyAI and ElevenLabs.'], ['Keep the record', 'Full transcripts after every call.']],
     stack: ['Python', 'FastAPI', 'LangChain', 'OpenAI API', 'Firebase', 'Twilio', 'AssemblyAI', 'Docker'],
     links: { devpost: 'https://devpost.com/software/crisisline-ai', source: 'https://github.com/Ben2104/CrisisLineAI' } },
-  { slug: 'shape-sign', title: 'Shape-Sign', year: 2025, cat: 'ai', team: 4, img: 'shape-sign', tone: 4,
+  { slug: 'shape-sign', title: 'Shape-Sign', year: 2025, cat: 'ai', team: 4, img: 'shape-sign',
     short: 'Sign language through the webcam',
     line: 'Learn sign language in front of your webcam: it recognises your hand shapes as you sign.',
     event: 'Best Overall, BeachHacks 8.0', award: 'Best Overall',
@@ -196,7 +195,7 @@ export const projects: Project[] = [
     features: [['Read hand shapes', 'MediaPipe and TensorFlow, live in the browser.'], ['Follow motion', 'An LSTM over 60 frames plus a dense network.'], ['Learn the alphabet', 'Letter by letter with instant checks.'], ['Play to learn', 'Music and shape-matching lessons.']],
     stack: ['JavaScript', 'Next.js', 'React', 'Tailwind CSS', 'TensorFlow', 'MediaPipe', 'Python', 'Vercel'],
     links: { live: 'https://shape-sign.vercel.app', devpost: 'https://devpost.com/software/shape-sign', source: 'https://github.com/Ben2104/Shape-Sign' } },
-  { slug: '911-operator-assistant', title: '911 Operator Assistant', year: 2025, cat: 'ai', team: 3, img: '911_operator', tone: 5,
+  { slug: '911-operator-assistant', title: '911 Operator Assistant', year: 2025, cat: 'ai', team: 3, img: '911_operator',
     short: 'Call audio to incidents on a map',
     line: 'Helps 911 operators turn call audio into incident details and a pin on the map.',
     event: 'Best Overall, Marina Hacks 5.0', award: 'Best Overall',
@@ -207,7 +206,7 @@ export const projects: Project[] = [
     features: [['Transcribe calls', 'faster-whisper on the call audio.'], ['Read the incident', 'Gemini parses what happened and where.'], ['Map it', 'Google geocoding and a marker per incident.'], ['Dispatch', 'Send units from the incident card.']],
     stack: ['TypeScript', 'Next.js', 'Tailwind CSS', 'Python', 'FastAPI', 'Gemini', 'Google Maps', 'Twilio'],
     links: { devpost: 'https://devpost.com/software/911-operator-assistant', source: 'https://github.com/Ben2104/911-Operator-Assistant' } },
-  { slug: 'llm-chatbot', title: 'LLM Chatbot', year: 2025, cat: 'ai', team: 1, img: 'chatbot', tone: 1,
+  { slug: 'llm-chatbot', title: 'LLM Chatbot', year: 2025, cat: 'ai', team: 1, img: 'chatbot',
     short: 'Chat, summarise links, read files',
     line: 'A chat app that talks with GPT, summarises a web page from its link and reads files you upload.',
     event: 'Solo project',
@@ -218,7 +217,7 @@ export const projects: Project[] = [
     features: [['Chat with GPT', 'A plain chat window.'], ['Summarise links', 'Paste a URL, get the gist.'], ['Upload files', 'Multer takes the file for the model.']],
     stack: ['React', 'Tailwind CSS', 'Vite', 'Node.js', 'Express', 'OpenAI API'],
     links: { source: 'https://github.com/Ben2104/Chat-Bot' } },
-  { slug: 'quizzriff', title: 'QuizzRiff', year: 2023, cat: 'web', team: 4, img: 'quizzriff', tone: 2,
+  { slug: 'quizzriff', title: 'QuizzRiff', year: 2023, cat: 'web', team: 4, img: 'quizzriff',
     short: 'Personal quizzes with a scoreboard',
     line: 'Writes a quiz for each student and keeps a competitive score, so practice feels like a game.',
     event: 'Team project',
@@ -229,7 +228,7 @@ export const projects: Project[] = [
     features: [['Generate quizzes', 'Questions written for each student.'], ['Compete', 'A shared scoreboard for the class.']],
     stack: ['Python', 'Flask', 'SQLite', 'HTML', 'CSS', 'WolframAlpha'],
     links: { source: 'https://github.com/Ben2104/QuizzRiff' } },
-  { slug: 'the-bookstore', title: 'The Bookstore', year: 2024, cat: 'web', team: 1, img: 'Bookstore', tone: 3,
+  { slug: 'the-bookstore', title: 'The Bookstore', year: 2024, cat: 'web', team: 1, img: 'Bookstore',
     short: 'Books and authors, full CRUD',
     line: 'A full-stack app for keeping a list of books and authors: add, edit, find and delete.',
     event: 'Solo project',
@@ -240,7 +239,7 @@ export const projects: Project[] = [
     features: [['Manage books', 'Create, edit and delete.'], ['Manage authors', 'Linked to their books.']],
     stack: ['React', 'Node.js', 'Express', 'MongoDB', 'Tailwind CSS'],
     links: { source: 'https://github.com/Ben2104/BookStore' } },
-  { slug: 'pickleball-booking-extension', title: 'Pickleball Booking Extension', year: 2025, cat: 'auto', team: 1, img: 'pickleball', tone: 4,
+  { slug: 'pickleball-booking-extension', title: 'Pickleball Booking Extension', year: 2025, cat: 'auto', team: 1, img: 'pickleball',
     short: 'Books a court at 7 AM sharp',
     line: 'A Chrome extension that books a court at iPickle Cerritos at 7 AM, the moment booking opens seven days ahead.',
     event: 'Solo project',
@@ -251,7 +250,7 @@ export const projects: Project[] = [
     features: [['Book on time', 'Fires at 7:00 sharp.'], ['Schedule it', 'One button to set it up.'], ['Get told', 'A notification when the booking lands.']],
     stack: ['JavaScript', 'Chrome', 'HTML', 'CSS'],
     links: { source: 'https://github.com/Ben2104/Pickleball-Booking-Extension' } },
-  { slug: 'pickleball-bot', title: 'Pickleball Bot', year: 2025, cat: 'auto', team: 1, img: 'pickleball_bot', tone: 5,
+  { slug: 'pickleball-bot', title: 'Pickleball Bot', year: 2025, cat: 'auto', team: 1, img: 'pickleball_bot',
     short: 'Court booking that runs itself',
     line: 'The next step after the extension: a bot that books courts on a schedule without a laptop open.',
     event: 'Solo project',
@@ -268,11 +267,10 @@ export const cats: Record<string, string> = { ai: 'AI and ML', web: 'Web apps', 
 
 // tool name -> file in public/deck/icons; tools without one show as words
 export const toolIcons: Record<string, string> = {
-  'TypeScript': 'typescript-icon', 'JavaScript': 'javascript', 'Python': 'python', 'Swift': 'swift', 'React': 'react',
+  'TypeScript': 'typescript-icon', 'JavaScript': 'javascript', 'Python': 'python', 'React': 'react',
   'React Three Fiber': 'threejs', 'Next.js': 'nextjs-icon', 'Node.js': 'nodejs-icon', 'FastAPI': 'fastapi-icon',
   'Tailwind CSS': 'tailwindcss-icon', 'TensorFlow': 'tensorflow', 'Docker': 'docker-icon', 'GitHub Actions': 'github-actions',
   'MongoDB': 'mongodb-icon', 'Firebase': 'firebase-icon', 'Playwright': 'playwright', 'OpenAI API': 'openai-icon',
   'Claude API': 'claude-icon', 'Gemini': 'google-gemini-icon', 'Twilio': 'twilio-icon', 'LangChain': 'langchain-icon',
   'Flask': 'flask', 'Express': 'express', 'SQLite': 'sqlite', 'HTML': 'html-5', 'Chrome': 'chrome', 'Vercel': 'vercel-icon',
-  'Fastify': 'fastify', 'GitHub': 'github-icon',
 };

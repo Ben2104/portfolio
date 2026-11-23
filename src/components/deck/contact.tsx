@@ -82,18 +82,18 @@ export function Contact() {
           </Reveal>
 
           <Reveal delay={0.1}>
-            <form className="ct__form" id="contact-form" aria-label="Contact form" onSubmit={submit}>
+            <form className="ct__form" id="contact-form" aria-label="Contact form" method="post" onSubmit={submit}>
               <label>
                 Name
-                <input name="name" type="text" autoComplete="name" placeholder="Your name" required maxLength={120} />
+                <input name="name" readOnly={state === "sending"} type="text" autoComplete="name" placeholder="Your name" required maxLength={120} />
               </label>
               <label>
                 Email
-                <input name="email" type="email" autoComplete="email" placeholder="you@company.example" required maxLength={200} />
+                <input name="email" readOnly={state === "sending"} type="email" autoComplete="email" placeholder="you@company.example" required maxLength={200} />
               </label>
               <label>
                 Message
-                <textarea name="message" placeholder="Tell me about your project" required maxLength={4000} />
+                <textarea name="message" readOnly={state === "sending"} placeholder="Tell me about your project" required maxLength={4000} />
               </label>
               <button className="ct__send" type="submit" disabled={state === "sending"}>
                 {state === "sending" ? "Sending…" : "Send message ↗"}

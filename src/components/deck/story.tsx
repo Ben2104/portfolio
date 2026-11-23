@@ -46,7 +46,6 @@ export function About() {
           src="/deck/k-about.webp"
           alt="Hoang Khoi Do adjusting his cuff"
           sizes="(max-width: 860px) 90vw, 40vw"
-          drift={18}
         />
       </div>
     </section>
