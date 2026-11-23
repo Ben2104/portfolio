@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Archive } from "@/components/deck/archive";
+import { ExperienceExperiment } from "@/components/deck/experience-experiment";
 
 export const metadata: Metadata = {
   title: "Projects | Khoi Do",
@@ -25,6 +26,7 @@ export default function ProjectsPage() {
           </header>
           <Archive />
         </div>
+        <ExperienceExperiment />
       </main>
       <Analytics />
     </>

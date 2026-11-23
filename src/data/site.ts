@@ -34,7 +34,7 @@ export type Role = {
   tags: string[];
 };
 
-/** Newest first. The number is the order I held them in, oldest = 01. */
+/** Current roles first, then past roles from newest to oldest. */
 export const experience: Role[] = [
   {
     "n": "07",
@@ -64,6 +64,19 @@ export const experience: Role[] = [
     ]
   },
   {
+    "n": "03",
+    "role": "Instructional Student Assistant",
+    "org": "CSULB",
+    "when": "Aug 2025 – Present",
+    "where": "Long Beach, CA",
+    "text": "Support 150+ students a term in computer science courses, in lab sessions and office hours.",
+    "tags": [
+      "Teaching",
+      "Code review",
+      "Office hours"
+    ]
+  },
+  {
     "n": "05",
     "role": "Software Engineering Intern",
     "org": "DFM Europe",
@@ -87,19 +100,6 @@ export const experience: Role[] = [
       "Next.js",
       "Performance",
       "Lighthouse 58 → 94"
-    ]
-  },
-  {
-    "n": "03",
-    "role": "Instructional Student Assistant",
-    "org": "CSULB",
-    "when": "Aug 2025 – Present",
-    "where": "Long Beach, CA",
-    "text": "Support 150+ students a term in computer science courses, in lab sessions and office hours.",
-    "tags": [
-      "Teaching",
-      "Code review",
-      "Office hours"
     ]
   },
   {
