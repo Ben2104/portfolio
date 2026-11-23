@@ -8,8 +8,10 @@ const RAIL = [
   ["intro", "Intro"],
   ["about", "About"],
   ["education", "Education"],
+  ["skills", "Skills"],
   ["experience", "Experience"],
   ["selected", "Projects"],
+  ["opensource", "Open source"],
   ["contact", "Contact"],
 ] as const;
 
