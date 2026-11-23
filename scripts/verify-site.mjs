@@ -30,6 +30,14 @@ const browser = await chromium.launch({
 
 async function open(width, height, opts = {}) {
   const ctx = await browser.newContext({ viewport: { width, height }, ...opts });
+  // the Next dev badge sits over the bottom-left of the page and swallows clicks; it does not exist in production
+  await ctx.addInitScript(() => {
+    document.addEventListener("DOMContentLoaded", () => {
+      const s = document.createElement("style");
+      s.textContent = "nextjs-portal{display:none!important}";
+      document.head.appendChild(s);
+    });
+  });
   const page = await ctx.newPage();
   const errors = [];
   page.on("pageerror", (e) => errors.push("pageerror: " + e.message));
@@ -37,6 +45,35 @@ async function open(width, height, opts = {}) {
     if (m.type() === "error") errors.push("console: " + m.text());
   });
   return { ctx, page, errors };
+}
+
+// waits for the Experience section to report a given active role (scrolling is smooth, so it takes a moment)
+const waitActive = (page, test) =>
+  page.waitForFunction((src) => new Function("a", "return " + src)(Number(document.getElementById("experience").dataset.active)), test, { timeout: 6000 }).then(() => true, () => false);
+const expState = (page) =>
+  page.evaluate(() => {
+    const s = document.getElementById("experience");
+    return { active: Number(s.dataset.active), mode: s.dataset.mode, title: s.querySelector(".exp__card h3")?.textContent ?? "" };
+  });
+
+// Experience: the three.js tunnel draws, the rail jumps between roles and the card follows
+async function checkExperience(page, tag) {
+  await page.evaluate(() => document.getElementById("experience").scrollIntoView({ behavior: "instant", block: "start" }));
+  const ready = await page.waitForSelector('.exp__gl[data-ready="1"]', { timeout: 15000 }).then(() => true, () => false);
+  check("experience (" + tag + "): three.js canvas renders", ready);
+  await page.waitForTimeout(1500);
+  const gl = page.locator(".exp__gl");
+  const before = await gl.screenshot();
+  const s0 = await expState(page);
+  await page.locator(".exp__rail button").nth(6).click();
+  await waitActive(page, "a === 6");
+  await page.waitForTimeout(2200);
+  const after = await gl.screenshot();
+  const s6 = await expState(page);
+  check("experience (" + tag + "): rail jumps to the last role and the card follows", s0.active === 0 && s6.active === 6 && !!s6.title && s6.title !== s0.title, s0.active + " " + s0.title + " -> " + s6.active + " " + s6.title);
+  check("experience (" + tag + "): the scene moves as you travel", !before.equals(after), before.length + " vs " + after.length + " bytes");
+  await page.locator(".exp__rail button").nth(0).click();
+  check("experience (" + tag + "): rail jumps back to the first role", await waitActive(page, "a === 0"));
 }
 
 async function settle(page, ms = 1300) {
@@ -99,6 +136,13 @@ async function shotSections(page, dir, tag) {
   const afterPrev = await page.locator("nav.gn a[aria-current='location']").innerText();
   check("next / previous arrows move one section", afterNext === "Intro" && afterPrev === "Home", afterNext + " / " + afterPrev);
 
+  await checkExperience(page, "1440");
+  // scrolling with the wheel advances the role too
+  await page.evaluate(() => document.getElementById("experience").scrollIntoView({ behavior: "instant", block: "start" }));
+  await waitActive(page, "a === 0");
+  await page.mouse.wheel(0, 1000);
+  check("experience (1440): wheel scroll advances the active role", await waitActive(page, "a >= 1"), "active=" + (await expState(page)).active);
+
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   check("no horizontal overflow at 1440", overflow <= 0, "overflow=" + overflow);
 
@@ -128,8 +172,23 @@ async function shotSections(page, dir, tag) {
   await settle(page, 1800);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   check("no horizontal overflow at 390", overflow <= 0, "overflow=" + overflow);
+  await checkExperience(page, "390");
   await shotSections(page, OUT + "/390", "m");
   check("no console or page errors at 390", errors.length === 0, errors.slice(0, 3).join(" | "));
+  await ctx.close();
+}
+
+// ---------- reduced motion: plain list, no canvas ----------
+{
+  const { ctx, page, errors } = await open(1440, 900, { reducedMotion: "reduce" });
+  await page.goto(URL_, { waitUntil: "networkidle" });
+  await page.waitForTimeout(800);
+  const m = await page.evaluate(() => {
+    const s = document.getElementById("experience");
+    return { mode: s.dataset.mode, canvas: !!s.querySelector("canvas"), listH: Math.round(s.querySelector(".exp__list").getBoundingClientRect().height), secH: s.offsetHeight, vh: innerHeight };
+  });
+  check("experience: reduced motion shows a plain list, no canvas", m.mode === "list" && !m.canvas && m.listH > 200 && m.secH < m.vh * 4, JSON.stringify(m));
+  check("no console or page errors with reduced motion", errors.length === 0, errors.slice(0, 3).join(" | "));
   await ctx.close();
 }
 
