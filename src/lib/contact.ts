@@ -9,6 +9,8 @@ export async function sendMessage(f: ContactInput) {
     headers: { Accept: "application/json", "Content-Type": "application/json" },
     body: JSON.stringify({ ...f, _subject: "Portfolio inquiry from " + f.name, _template: "table", _honey: "" }),
   });
-  const out = (await res.json().catch(() => ({}))) as { success?: boolean | string; message?: string };
-  if (!res.ok || out.success === false || out.success === "false") throw new Error(out.message || "The message could not be sent.");
+  const out = (await res.json().catch(() => ({}))) as { success?: boolean | string; message?: string } | null;
+  if (!res.ok || (out?.success !== true && out?.success !== "true")) {
+    throw new Error(out?.message || "The message could not be sent.");
+  }
 }
