@@ -7,7 +7,7 @@
   --gutter:clamp(20px,5vw,120px);
 }
 html{scroll-behavior:smooth;background:var(--bg)}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:clip}
+body{margin:0;color:var(--ink);font-family:var(--sans);font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:clip}
 ::selection{background:rgba(255,145,77,.3)}
 /* one fixed backdrop under every section, so scrolling never meets a seam */
 body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:url(/deck/grain.png) repeat,url(/deck/bg.jpg) center/cover no-repeat,#17181d}
