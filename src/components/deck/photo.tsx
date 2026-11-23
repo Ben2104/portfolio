@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import Image from "next/image";
 import { useRef } from "react";
 
@@ -18,11 +18,12 @@ export function Photo({
   sizes: string;
   drift?: number;
 }) {
+  const reduceMotion = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [drift, -drift]);
   return (
-    <motion.div ref={ref} className={"ph " + className} style={{ y }}>
+    <motion.div ref={ref} className={"ph " + className} style={{ y: reduceMotion ? 0 : y }}>
       <Image src={src} alt={alt} fill sizes={sizes} />
     </motion.div>
   );

@@ -23,6 +23,7 @@ export default function ProjectsPage() {
             <p className="lbl">Project archive</p>
             <h1 className="giant">Projects</h1>
             <p className="lead">Case studies, team builds, and experiments in AI, web development, and automation.</p>
+            <a className="pill" href="#experience-experiment">Jump to the experience experiment ↓</a>
           </header>
           <Archive />
         </div>

@@ -23,7 +23,7 @@ An interactive portfolio that turns my projects, experience, and engineering pra
 
 ## Site structure
 
-The homepage presents my background, education, work experience, and projects. The project archive links to ten case studies with screenshots, technical details, and project links. The experience timeline uses a Three.js scene with a list view for visitors who prefer reduced motion.
+The homepage presents my background, education, current and past roles, and selected projects. The Projects page has a filterable archive with ten case studies and an optional Three.js experience timeline.
 
 ## Stack
 

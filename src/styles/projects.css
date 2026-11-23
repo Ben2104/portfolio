@@ -12,6 +12,7 @@
 .arc{min-height:calc(100svh - 56px)}
 .arc__head{margin-bottom:40px}
 .arc__head .lbl{margin-bottom:16px}
+.arc__head .pill{margin-top:22px}
 .arc__filters{display:flex;align-items:flex-start;flex-wrap:wrap;gap:18px 40px;border-bottom:1px solid var(--line);padding-bottom:24px}
 .arc__filters legend{margin-bottom:10px}
 .fbtn{min-height:36px;padding:0 14px;margin:0 6px 6px 0;border-radius:999px;border:1px solid var(--line);color:var(--ink);font-size:14px;cursor:pointer}
@@ -19,7 +20,7 @@
 .fbtn[aria-pressed="true"]{background:rgba(255,145,77,.12);border-color:var(--or);color:var(--or)}
 .fbtn:focus-visible,.pc:focus-visible{outline:1px solid var(--or);outline-offset:3px}
 .arc__count{margin:22px 0}
-.arc__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:28px clamp(20px,2.4vw,40px);padding:0;margin:0;list-style:none}
+.arc__grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,max(280px,22%)),1fr));gap:28px clamp(20px,2.4vw,40px);padding:0;margin:0;list-style:none}
 .pc{display:block;height:100%;padding:0 0 24px;border-bottom:1px solid var(--line)}
 .pc__img{position:relative;aspect-ratio:16/10;overflow:hidden;border-radius:8px;background:#0f1013}
 .pc__img img{object-fit:cover;transition:transform .35s}
@@ -31,5 +32,4 @@
 
 @media (max-width:860px){
   .selected__layout{grid-template-columns:1fr}
-  .selected .wrap,.arc .wrap{padding:0 20px}
 }
