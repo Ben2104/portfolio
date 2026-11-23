@@ -21,16 +21,8 @@
 .skills .giant{font-size:clamp(46px,8vw,150px);margin:0}
 .skills__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(24px,5vw,96px);margin-top:clamp(28px,4vw,56px)}
 .skills__pill{height:auto;min-height:44px;padding:10px 26px;margin:0 0 20px;font-weight:600;font-family:var(--sans)}
-.osrc__cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(24px,5vw,96px);margin-top:clamp(32px,4vw,64px)}
-.osrc__list{list-style:none;margin:16px 0 28px;padding:0}
-.osrc__list li{border-top:1px solid var(--line)}
-.osrc__list a,.osrc__list li>div{display:grid;gap:6px;padding:20px 0;transition:color .2s}
-.osrc__list a:hover strong{color:var(--or)}
-.osrc__list strong{font-size:clamp(18px,1.6vw,26px);font-weight:500}
-.osrc__list span{color:#a9aab2;line-height:1.55;max-width:46ch}
-.osrc__list em{font-style:normal}
-.osec .giant{font-size:clamp(40px,6vw,110px);line-height:.95;margin:14px 0 20px;max-width:16ch}
-@media (max-width:860px){.skills__grid,.osrc__cols{grid-template-columns:1fr}}
+.osec .cs__h2{line-height:1.02;margin:14px 0 10px;max-width:20ch}
+@media (max-width:860px){.skills__grid{grid-template-columns:1fr}}
 
 /* deck slides: full-screen compositions copied from the Canva pages */
 .deck{min-height:100svh;padding:0;display:block}
@@ -74,3 +66,6 @@
 .hero__cut img{-webkit-mask-image:linear-gradient(to right,transparent,#000 16%,#000 84%,transparent),linear-gradient(to bottom,#000 78%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(to right,transparent,#000 16%,#000 84%,transparent),linear-gradient(to bottom,#000 78%,transparent);mask-composite:intersect}
 .deck--about .deck__ph img,.deck--edu .deck__ph img{-webkit-mask-image:linear-gradient(to bottom,transparent,#000 16%,#000 78%,transparent);mask-image:linear-gradient(to bottom,transparent,#000 16%,#000 78%,transparent)}
 .deck--intro .deck__ph img{-webkit-mask-image:linear-gradient(to bottom,#000 94%,transparent);mask-image:linear-gradient(to bottom,#000 94%,transparent)}
+.osrc__txt{font-size:13px;line-height:1.5;color:#a9aab2}
+.osrc__plain{grid-column:1/-1;display:grid;gap:3px}
+.osrc__all{margin-top:20px}
