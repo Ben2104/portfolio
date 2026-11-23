@@ -69,7 +69,7 @@
 
 @media (max-width:860px){
   .cs__bar{padding:0 16px}
-  .cs__bar>.mono{display:none}
+  .cs__bar>span.mono{display:none}
   .cs__shell{grid-template-columns:1fr}
   .cs__side{top:56px;z-index:15;height:auto;min-height:0;flex-direction:row;align-items:center;overflow-x:auto;border-right:0;border-bottom:1px solid rgba(255,255,255,.07);padding:8px 12px;background:rgba(23,24,29,.97);scrollbar-width:none}
   .cs__side>.mono,.cs__back,.cs__nl small{display:none}

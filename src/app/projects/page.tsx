@@ -1,4 +1,3 @@
-import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -29,7 +28,6 @@ export default function ProjectsPage() {
         </div>
         <ExperienceExperiment />
       </main>
-      <Analytics />
     </>
   );
 }

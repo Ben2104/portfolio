@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
 import { Anton, JetBrains_Mono, Poppins } from "next/font/google";
 import type { ReactNode } from "react";
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
     <html lang="en" className={`${anton.variable} ${poppins.variable} ${mono.variable}`}>
       <body>
         <MotionProvider>{children}</MotionProvider>
+        {process.env.VERCEL === "1" && <Analytics />}
       </body>
     </html>
   );

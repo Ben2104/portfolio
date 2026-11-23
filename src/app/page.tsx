@@ -1,4 +1,3 @@
-import { Analytics } from "@vercel/analytics/next";
 
 import { GooeyNav } from "@/components/deck/gooey-nav";
 import { Contact } from "@/components/deck/contact";
@@ -20,7 +19,6 @@ export default function Home() {
         <Selected />
         <Contact />
       </main>
-      <Analytics />
     </>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion, useMotionValueEvent, useScroll, useTransform } from "motion/react";
+import { motion, useMotionValueEvent, useScroll, useTransform } from "motion/react";
 import dynamic from "next/dynamic";
 import { useCallback, useRef, useState, useSyncExternalStore } from "react";
 import type { CSSProperties } from "react";
@@ -23,7 +23,7 @@ const subscribeMotionPref = (cb: () => void) => {
 const useReduceMotion = () => useSyncExternalStore(subscribeMotionPref, () => window.matchMedia(QUERY).matches, () => false);
 
 /**
- * Work experience. A sticky stage holds a three.js tunnel; scrolling flies the camera through one frame per role
+ * A sticky stage holds a three.js tunnel; scrolling flies the camera through one frame per role
  * while the card beside it and the numbered rail follow. With reduced motion it is a plain list instead.
  */
 export function ExperienceExperiment() {
@@ -58,7 +58,7 @@ function ExperienceTunnel() {
     const el = track.current;
     if (!el) return;
     const top = el.getBoundingClientRect().top + window.scrollY;
-    window.scrollTo({ top: top + (el.offsetHeight - window.innerHeight) * (i / (N - 1)) });
+    window.scrollTo({ top: top + (el.offsetHeight - window.innerHeight) * (i / (N - 1)), behavior: "instant" });
   };
 
   const r = roles[active];
@@ -83,33 +83,30 @@ function ExperienceTunnel() {
           <>
             {!glFailed && <Scene roles={roles} progress={progress} onFail={onFail} />}
             <div className="exp__in exp__ui">
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.article
-                  key={r.n}
-                  className="exp__card"
-                  aria-hidden="true"
-                  initial={{ opacity: 0, y: 26, filter: "blur(6px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, y: -18, filter: "blur(6px)" }}
-                  transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <p className="exp__no mono">
-                    <b>{r.n}</b> / {total}
-                  </p>
-                  <p className="yr">{r.when}</p>
-                  <h3>{r.role}</h3>
-                  <p className="exp__org">{r.org}</p>
-                  <p className="mono exp__where">{r.where}</p>
-                  <p className="exp__txt">{r.text}</p>
-                  <ul>
-                    {r.tags.map((t) => (
-                      <li className="tag" key={t}>
-                        {t}
-                      </li>
-                    ))}
-                  </ul>
-                </motion.article>
-              </AnimatePresence>
+              <motion.article
+                key={r.n}
+                className="exp__card"
+                aria-hidden="true"
+                initial={{ opacity: 0, y: 26, filter: "blur(6px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <p className="exp__no mono">
+                  <b>{r.n}</b> / {total}
+                </p>
+                <p className="yr">{r.when}</p>
+                <h3>{r.role}</h3>
+                <p className="exp__org">{r.org}</p>
+                <p className="mono exp__where">{r.where}</p>
+                <p className="exp__txt">{r.text}</p>
+                <ul>
+                  {r.tags.map((t) => (
+                    <li className="tag" key={t}>
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+              </motion.article>
               <motion.p className="mono exp__hint" style={{ opacity: hint }} aria-hidden="true">
                 Scroll from current to earlier roles
               </motion.p>

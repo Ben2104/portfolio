@@ -165,11 +165,15 @@ for (const width of [390, 2560]) {
   if (width > 1000) {
     const history = await page.locator(".work-history__list").boundingBox();
     check("work history uses the wide viewport", history.width > 2000, String(history.width));
-    await page.locator("#experience").scrollIntoViewIfNeeded();
+    await page.locator("#experience").evaluate((section) => section.scrollIntoView({ behavior: "instant" }));
+    await page.waitForFunction(() => document.querySelector("nav.gn a[aria-current=location]")?.textContent === "Experience");
     await page.screenshot({ path: OUT + "/2560/experience.png" });
   }
 
   await openArchive(page);
+  check(`archive (${width}): home and experience links stay visible`,
+    await page.getByRole("link", { name: "Home" }).isVisible() &&
+    await page.getByRole("link", { name: "Work experience" }).isVisible());
   const cards = page.getByRole("list", { name: "Projects", exact: true }).getByRole("listitem");
   check(`archive (${width}): all ten projects appear`, await cards.count() === 10);
   check(`archive (${width}): no horizontal overflow`, await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));

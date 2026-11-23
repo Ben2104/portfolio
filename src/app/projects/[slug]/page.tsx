@@ -1,4 +1,3 @@
-import { Analytics } from "@vercel/analytics/next";
 import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -235,7 +234,6 @@ export default async function CasePage({ params }: Props) {
           </section>
         </main>
       </div>
-      <Analytics />
     </div>
   );
 }
