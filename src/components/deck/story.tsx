@@ -55,7 +55,7 @@ export function Education() {
           </article>
         ))}
       </Reveal>
-      <Photo className="deck__ph" src="/deck/k-profile.webp" alt="Hoang Khoi Do in a dark suit" sizes="(max-width: 860px) 60vw, 30vw" />
+      <Photo className="deck__ph" src="/deck/k-edu.webp" alt="Hoang Khoi Do in a dark suit, hand on chin" sizes="(max-width: 860px) 60vw, 36vw" />
       <h2 className="deck__vert" id="edu-h">Education</h2>
     </section>
   );
