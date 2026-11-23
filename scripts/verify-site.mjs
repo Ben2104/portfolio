@@ -205,9 +205,9 @@ for (const width of [390, 2560]) {
   await tunnel.locator('.exp__gl[data-ready="1"]').waitFor({ timeout: 15000 });
   check("experience experiment renders the current role first", (await tunnel.locator(".exp__card").innerText()).includes("Netsservice"));
   await page.getByRole("button", { name: "Show Teaching Assistant, De Anza College" }).click();
-  await tunnel.getByRole("button", { current: "step", name: "Show Teaching Assistant, De Anza College" }).waitFor();
   await tunnel.locator(".exp__card h3").filter({ hasText: "Teaching Assistant" }).waitFor();
-  check("experience experiment can jump to the earliest role", true);
+  check("experience experiment can jump to the earliest role",
+    await page.getByRole("button", { name: "Show Teaching Assistant, De Anza College" }).getAttribute("aria-current") === "step");
   await ctx.close();
 }
 

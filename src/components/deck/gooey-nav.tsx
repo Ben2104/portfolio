@@ -27,14 +27,14 @@ export function GooeyNav() {
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 160, damping: 28, mass: 0.4 });
 
-  // scroll-spy: the active item is the last section whose top has passed 40% of the viewport
+  // Activate sections as they reach the area just under the fixed navigation.
   useEffect(() => {
     let raf = 0;
     const read = () => {
       raf = 0;
       setScrolled(window.scrollY > 48);
       if (performance.now() < lockUntil.current) return;
-      const line = window.innerHeight * 0.4;
+      const line = 112;
       let found: (typeof SECTION_IDS)[number] = "top";
       for (const id of SECTION_IDS) {
         const el = document.getElementById(id);
