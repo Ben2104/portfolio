@@ -19,3 +19,6 @@ pnpm-debug.log*
 
 # playwright verification output
 .verify/
+
+# Local design prototype and browser artifacts
+/prototype/
