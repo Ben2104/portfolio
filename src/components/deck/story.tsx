@@ -19,7 +19,7 @@ export function Intro() {
         </p>
       </Reveal>
       <h2 className="deck__word" id="intro-h">Introduction</h2>
-      <Photo className="deck__ph" src="/deck/k-cover-cut.webp" alt="Hoang Khoi Do in a black suit" sizes="(max-width: 860px) 70vw, 30vw" />
+      <Photo className="deck__ph" src="/deck/k-intro.webp" alt="Hoang Khoi Do in a black suit, hands clasped" sizes="(max-width: 860px) 70vw, 30vw" />
     </section>
   );
 }
