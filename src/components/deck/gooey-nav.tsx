@@ -13,9 +13,7 @@ const RAIL = [
   ["contact", "Contact"],
 ] as const;
 
-/** Sections that belong to a rail item without having one of their own. */
-const ALIAS: Record<string, string> = { work: "selected" };
-const SECTION_IDS = ["top", "intro", "about", "education", "experience", "selected", "work", "contact"];
+const SECTION_IDS = RAIL.map(([id]) => id);
 
 /** Fixed glass pill. A goo-filtered blob slides to the section you are in and pops a burst of droplets. */
 export function GooeyNav() {
@@ -37,12 +35,12 @@ export function GooeyNav() {
       setScrolled(window.scrollY > 48);
       if (performance.now() < lockUntil.current) return;
       const line = window.innerHeight * 0.4;
-      let found = "top";
+      let found: (typeof SECTION_IDS)[number] = "top";
       for (const id of SECTION_IDS) {
         const el = document.getElementById(id);
         if (el && el.getBoundingClientRect().top <= line) found = id;
       }
-      const idx = RAIL.findIndex(([id]) => id === (ALIAS[found] ?? found));
+      const idx = RAIL.findIndex(([id]) => id === found);
       setActive((prev) => {
         if (prev !== idx) setBurst((b) => b + 1);
         return idx;

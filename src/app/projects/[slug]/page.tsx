@@ -58,7 +58,7 @@ export default async function CasePage({ params }: Props) {
             <i />
             <i />
           </span>
-          <Link className="mono" href="/#work">
+          <Link className="mono" href="/projects">
             <b>KHOI.OS</b> / PROJECT_{pad(i + 1, 3)}
           </Link>
         </div>
@@ -227,7 +227,7 @@ export default async function CasePage({ params }: Props) {
                     {next.title} →
                   </Link>
                 </div>
-                <Link className="pill" href="/#work">
+                <Link className="pill" href="/projects">
                   ← Back to archive
                 </Link>
               </div>

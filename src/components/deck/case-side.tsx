@@ -34,7 +34,7 @@ export function CaseSide({ items }: { items: readonly (readonly [string, string]
           </li>
         ))}
       </ol>
-      <Link className="cs__back" href="/#work">
+      <Link className="cs__back" href="/projects">
         ← Back to archive
       </Link>
     </aside>
