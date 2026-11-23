@@ -14,7 +14,7 @@ const arg = (k, d) => {
 };
 const URL_ = arg("url", "http://localhost:3100");
 const OUT = arg("out", ".verify");
-const SECTIONS = ["top", "intro", "about", "education", "experience", "selected", "work", "contact"];
+const SECTIONS = ["top", "intro", "about", "education", "experience", "selected", "contact"];
 const RAIL = ["Home", "Intro", "About", "Education", "Experience", "Projects", "Contact"];
 
 const results = [];
@@ -47,33 +47,18 @@ async function open(width, height, opts = {}) {
   return { ctx, page, errors };
 }
 
-// waits for the Experience section to report a given active role (scrolling is smooth, so it takes a moment)
-const waitActive = (page, test) =>
-  page.waitForFunction((src) => new Function("a", "return " + src)(Number(document.getElementById("experience").dataset.active)), test, { timeout: 6000 }).then(() => true, () => false);
-const expState = (page) =>
-  page.evaluate(() => {
-    const s = document.getElementById("experience");
-    return { active: Number(s.dataset.active), mode: s.dataset.mode, title: s.querySelector(".exp__card h3")?.textContent ?? "" };
-  });
+async function checkHistory(page, tag) {
+  const roles = await page.locator("#experience .work-history__list > li").allTextContents();
+  const currentCount = roles.filter((role) => role.includes("Present")).length;
+  check(`experience (${tag}): current roles come first`,
+    roles.length === 7 && currentCount === 3 &&
+    roles[0].includes("Netsservice") && roles.slice(0, currentCount).every((role) => role.includes("Present")) &&
+    roles.at(-1).includes("Teaching Assistant"));
+}
 
-// Experience: the three.js tunnel draws, the rail jumps between roles and the card follows
-async function checkExperience(page, tag) {
-  await page.evaluate(() => document.getElementById("experience").scrollIntoView({ behavior: "instant", block: "start" }));
-  const ready = await page.waitForSelector('.exp__gl[data-ready="1"]', { timeout: 15000 }).then(() => true, () => false);
-  check("experience (" + tag + "): three.js canvas renders", ready);
-  await page.waitForTimeout(1500);
-  const gl = page.locator(".exp__gl");
-  const before = await gl.screenshot();
-  const s0 = await expState(page);
-  await page.locator(".exp__rail button").nth(6).click();
-  await waitActive(page, "a === 6");
-  await page.waitForTimeout(2200);
-  const after = await gl.screenshot();
-  const s6 = await expState(page);
-  check("experience (" + tag + "): rail jumps to the last role and the card follows", s0.active === 0 && s6.active === 6 && !!s6.title && s6.title !== s0.title, s0.active + " " + s0.title + " -> " + s6.active + " " + s6.title);
-  check("experience (" + tag + "): the scene moves as you travel", !before.equals(after), before.length + " vs " + after.length + " bytes");
-  await page.locator(".exp__rail button").nth(0).click();
-  check("experience (" + tag + "): rail jumps back to the first role", await waitActive(page, "a === 0"));
+async function openArchive(page) {
+  await page.getByRole("link", { name: "Open the archive" }).click();
+  await page.waitForURL("**/projects");
 }
 
 async function settle(page, ms = 1300) {
@@ -136,12 +121,7 @@ async function shotSections(page, dir, tag) {
   const afterPrev = await page.locator("nav.gn a[aria-current='location']").innerText();
   check("next / previous arrows move one section", afterNext === "Intro" && afterPrev === "Home", afterNext + " / " + afterPrev);
 
-  await checkExperience(page, "1440");
-  // scrolling with the wheel advances the role too
-  await page.evaluate(() => document.getElementById("experience").scrollIntoView({ behavior: "instant", block: "start" }));
-  await waitActive(page, "a === 0");
-  await page.mouse.wheel(0, 1000);
-  check("experience (1440): wheel scroll advances the active role", await waitActive(page, "a >= 1"), "active=" + (await expState(page)).active);
+  await checkHistory(page, "1440");
 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   check("no horizontal overflow at 1440", overflow <= 0, "overflow=" + overflow);
@@ -172,23 +152,62 @@ async function shotSections(page, dir, tag) {
   await settle(page, 1800);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   check("no horizontal overflow at 390", overflow <= 0, "overflow=" + overflow);
-  await checkExperience(page, "390");
+  await checkHistory(page, "390");
   await shotSections(page, OUT + "/390", "m");
   check("no console or page errors at 390", errors.length === 0, errors.slice(0, 3).join(" | "));
   await ctx.close();
 }
 
-// ---------- reduced motion: plain list, no canvas ----------
-{
-  const { ctx, page, errors } = await open(1440, 900, { reducedMotion: "reduce" });
+// ---------- projects on mobile and wide displays ----------
+for (const width of [390, 2560]) {
+  const { ctx, page, errors } = await open(width, width > 1000 ? 1440 : 844, { reducedMotion: "reduce" });
   await page.goto(URL_, { waitUntil: "networkidle" });
-  await page.waitForTimeout(800);
-  const m = await page.evaluate(() => {
-    const s = document.getElementById("experience");
-    return { mode: s.dataset.mode, canvas: !!s.querySelector("canvas"), listH: Math.round(s.querySelector(".exp__list").getBoundingClientRect().height), secH: s.offsetHeight, vh: innerHeight };
-  });
-  check("experience: reduced motion shows a plain list, no canvas", m.mode === "list" && !m.canvas && m.listH > 200 && m.secH < m.vh * 4, JSON.stringify(m));
-  check("no console or page errors with reduced motion", errors.length === 0, errors.slice(0, 3).join(" | "));
+  if (width > 1000) {
+    const history = await page.locator(".work-history__list").boundingBox();
+    check("work history uses the wide viewport", history.width > 2000, String(history.width));
+    await page.locator("#experience").scrollIntoViewIfNeeded();
+    await page.screenshot({ path: OUT + "/2560/experience.png" });
+  }
+
+  await openArchive(page);
+  const cards = page.getByRole("list", { name: "Projects", exact: true }).getByRole("listitem");
+  check(`archive (${width}): all ten projects appear`, await cards.count() === 10);
+  check(`archive (${width}): no horizontal overflow`, await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+  await page.getByRole("button", { name: "Solo builds" }).click();
+  await page.getByRole("button", { name: "Automation" }).click();
+  const filtered = await cards.allTextContents();
+  check(`archive (${width}): collection and category filters combine`, filtered.length > 0 &&
+    filtered.length < 10 && filtered.every((card) => card.includes("Automation") && card.includes("Solo build")));
+
+  await cards.first().getByRole("link").click();
+  await page.waitForURL(/\/projects\/[^/]+$/);
+  check(`archive (${width}): project links open a case study`, await page.getByRole("heading", { level: 1 }).isVisible());
+  await page.getByRole("link", { name: "Back to archive" }).last().click();
+  await page.waitForURL("**/projects");
+
+  await page.getByText("Interactive experience timeline", { exact: true }).click();
+  const tunnel = page.locator("#experience-tunnel");
+  await tunnel.locator(".exp__list").waitFor({ state: "visible" });
+  check(`archive (${width}): reduced motion uses the timeline list`,
+    await tunnel.getAttribute("data-mode") === "list" && await tunnel.locator("canvas").count() === 0);
+  check(`archive (${width}): no console or page errors`, errors.length === 0, errors.slice(0, 3).join(" | "));
+  await ctx.close();
+}
+
+// ---------- interactive experiment ----------
+{
+  const { ctx, page } = await open(1440, 900);
+  await page.goto(URL_ + "/projects");
+  check("experience experiment starts collapsed", await page.locator("#experience-tunnel").count() === 0);
+  await page.getByText("Interactive experience timeline", { exact: true }).click();
+  const tunnel = page.locator("#experience-tunnel");
+  await tunnel.evaluate((element) => element.scrollIntoView({ behavior: "instant" }));
+  await tunnel.locator('.exp__gl[data-ready="1"]').waitFor({ timeout: 15000 });
+  check("experience experiment renders the current role first", (await tunnel.locator(".exp__card").innerText()).includes("Netsservice"));
+  await page.getByRole("button", { name: "Show Teaching Assistant, De Anza College" }).click();
+  await tunnel.getByRole("button", { current: "step", name: "Show Teaching Assistant, De Anza College" }).waitFor();
+  await tunnel.locator(".exp__card h3").filter({ hasText: "Teaching Assistant" }).waitFor();
+  check("experience experiment can jump to the earliest role", true);
   await ctx.close();
 }
 
