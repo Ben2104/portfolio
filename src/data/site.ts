@@ -274,3 +274,60 @@ export const toolIcons: Record<string, string> = {
   'Claude API': 'claude-icon', 'Gemini': 'google-gemini-icon', 'Twilio': 'twilio-icon', 'LangChain': 'langchain-icon',
   'Flask': 'flask', 'Express': 'express', 'SQLite': 'sqlite', 'HTML': 'html-5', 'Chrome': 'chrome', 'Vercel': 'vercel-icon',
 };
+
+/** Per-role detail from the Canva deck, keyed by Role.n. */
+export const xpDetail: Record<string, { summary: string; points: string[]; tags: string[] }> = {
+  "07": {
+    summary: "Developing end-to-end software solutions, with a focus on iOS applications, backend systems, and real-time communication.",
+    points: ["Developed an iOS ride-hailing application.", "Implemented real-time passenger and driver synchronization.", "Integrated backend services and WebSocket communication."],
+    tags: ["Swift", "SwiftUI", "Fastify", "iOS", "WebSocket"],
+  },
+  "06": {
+    summary: "Leading a faculty-mentored biometric sensor research project, coordinating a four-member team and translating research findings into technical direction and project deliverables.",
+    points: ["Directed a 4-member research team, defining project scope, milestones, and individual responsibilities.", "Analyzed findings from 10+ research papers on wearable sensors and physiological data collection.", "Built GitHub Actions CI/CD pipelines to automate testing, containerization, and deployment to Render."],
+    tags: ["Research Coordination", "Biometric Sensors", "GitHub Actions", "CI/CD", "Render"],
+  },
+  "05": {
+    summary: "Developed AI-powered engineering solutions to automate 3D-to-2D technical drawing conversion, optimizing processing efficiency and improving drawing accuracy.",
+    points: ["Built a LangGraph-based multi-agent pipeline that converted 3D engineering models into 2D technical drawings, reducing manual work by 90% across 500 test cases.", "Collaborated with mechanical and AI engineers to cut processing time by 85%, while improving drawing accuracy from 60% to 87% through a Python/FastAPI service integrated with OpenAI API."],
+    tags: ["Multi-agent Systems", "LangGraph", "OpenAI API", "FastAPI", "Python"],
+  },
+  "04": {
+    summary: "Rebuilt and enhanced the ACM at CSULB website, improving web performance and developing dashboard features to support its growing community.",
+    points: ["Rebuilt the ACM website using Next.js, increasing Lighthouse performance from 58 to 94 for 1,000+ monthly visitors.", "Developed dashboard features for image upload and management, integrating Next.js with a MongoDB-backed API to support 500 active users."],
+    tags: ["Next.js", "Tailwind CSS", "React.js", "MongoDB"],
+  },
+  "03": {
+    summary: "Supported computer science instruction by grading Python assignments, labs, and exams, providing detailed feedback to help students strengthen their programming and computational skills.",
+    points: ["Graded Python assignments, labs, and exams for 150+ students per term across computer arithmetic and matrix computation topics, applying consistent evaluation rubrics.", "Reviewed 150+ submissions per semester for correctness, efficiency, and code quality, helping raise average assignment scores by 90%."],
+    tags: ["Python", "Matrix Computations", "Grading Rubrics", "Computer Arithmetic"],
+  },
+  "02": {
+    summary: "Provided hands-on technical support by maintaining computer systems, troubleshooting hardware and software issues, and refurbishing devices for students in need.",
+    points: ["Installed and configured hardware, software, system updates, and security patches across computing environments.", "Diagnosed and resolved hardware failures, software malfunctions, and network connectivity issues to minimize downtime.", "Refurbished outdated laptops by replacing defective components and reinstalling software, restoring devices for distribution to underprivileged students."],
+    tags: ["Linux", "Troubleshooting", "Hardware", "System Setup"],
+  },
+  "01": {
+    summary: "Supported introductory C++ programming instruction by assisting professors, guiding students through programming concepts, and providing hands-on academic support.",
+    points: ["Assisted professors in planning and delivering lessons for Beginning Programming Methodologies in C++, helping students understand fundamental programming concepts.", "Conducted review sessions, provided one-on-one tutoring, and facilitated group discussions to strengthen student understanding.", "Evaluated labs, assignments, quizzes, and exams, providing constructive feedback to students and instructors to support academic growth."],
+    tags: ["C++", "Linux", "Debugging"],
+  },
+};
+
+export const skills = [
+  { title: "Frontend development", text: "Building responsive and user-friendly web interfaces using React.js, Next.js, TypeScript, JavaScript, HTML, CSS, and Tailwind CSS. Focused on creating seamless digital experiences through clean, maintainable, and scalable frontend solutions." },
+  { title: "Backend & AI automation", text: "Developing backend services and intelligent automation using Node.js, Express.js, Python, FastAPI, OpenAI API, and TensorFlow. Experienced with API integration, database management, real-time communication, and automated workflows." },
+];
+
+/** Real public repos from github.com/Ben2104. */
+export const repos = [
+  { name: "network-simulator", url: "https://github.com/Ben2104/network-simulator", text: "Educational network routing simulator: BFS over virtual routers.", stack: "React · Fastify · TypeScript" },
+  { name: "jarvis-neuro", url: "https://github.com/Ben2104/jarvis-neuro", text: "Educational 3D brain-tumour viewer with a voice agent. Not for diagnosis.", stack: "TypeScript" },
+  { name: "schemacheck", url: "https://github.com/Ben2104/schemacheck", text: "Tiny declarative JSON-style schema validator.", stack: "Python" },
+];
+
+export const contributions = [
+  { title: "Student mentoring", text: "Teaching assistant, grader and tutor for introductory CS students." },
+  { title: "Community Discord bot", text: "Server setup and bot for a Vietnamese LeetCode community.", url: "https://github.com/Ben2104/Ticungbimdsa-discord-bot" },
+  { title: "ACM at CSULB website", text: "Rebuilt the chapter site: Lighthouse 58 to 94." },
+];

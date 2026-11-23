@@ -1,4 +1,4 @@
-import { education, facts } from "@/data/site";
+import { education, facts, skills } from "@/data/site";
 import { Photo } from "./photo";
 import { Reveal } from "./reveal";
 
@@ -69,6 +69,26 @@ export function Education() {
               </li>
             ))}
           </ol>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+export function Skills() {
+  return (
+    <section className="scr story skills" id="skills" aria-labelledby="skills-h">
+      <div className="wrap">
+        <Reveal>
+          <h2 className="giant" id="skills-h">Technical skills</h2>
+          <div className="skills__grid">
+            {skills.map((s) => (
+              <div key={s.title}>
+                <h3 className="pill pill--o skills__pill">{s.title}</h3>
+                <p className="lead">{s.text}</p>
+              </div>
+            ))}
+          </div>
         </Reveal>
       </div>
     </section>

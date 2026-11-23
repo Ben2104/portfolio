@@ -92,7 +92,7 @@ export function Contact() {
         </div>
       </section>
 
-      <section className="scr ty" aria-labelledby="ty-h">
+      <section className="scr ty" id="thank-you" aria-labelledby="ty-h">
         <div className="wrap">
           <div className="ty__top mono">
             <span>KHOI.OS / Portfolio 2026</span>
