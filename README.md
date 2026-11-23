@@ -21,34 +21,9 @@ An interactive portfolio that turns my projects, experience, and engineering pra
 
 </div>
 
-## Built to feel alive
+## Site structure
 
-This is not a static résumé page. The experience opens with an astronaut drifting into place, moves through a focused project narrative, and closes with a direct path to connect.
-
-- **Astronaut arrival** — a brief, no-click intro hands the mascot off to the hero.
-- **Motion-led storytelling** — restrained transitions guide attention without blocking content.
-- **Project carousel** — draggable, scroll-snapping work samples make exploration tactile.
-- **Orbital skills system** — a canvas-rendered skill field turns a long technology list into an interactive visual.
-- **Single source of truth** — profile, project, skill, education, and experience content live in `src/data/portfolio.ts`.
-
-## Architecture
-
-```mermaid
-flowchart TD
-    A["src/app/page.tsx"] --> B["PortfolioPage"]
-    A --> C["Vercel Analytics"]
-    B --> D["Astronaut intro"]
-    B --> E["Navigation · Hero · About"]
-    B --> F["Experience · Projects"]
-    B --> G["Skills · Education · Contact"]
-    H["src/data/portfolio.ts"] --> E
-    H --> F
-    H --> G
-    F --> I["Draggable project carousel"]
-    G --> J["Canvas skill orbit"]
-```
-
-The App Router entrypoint stays intentionally thin. `PortfolioPage` owns section composition, while typed data and specialized client components keep content, motion, and rendering concerns separate.
+The homepage presents my background, education, current and past roles, and selected projects. The Projects page has a filterable archive with ten case studies and an optional Three.js experience timeline.
 
 ## Stack
 
@@ -56,47 +31,42 @@ The App Router entrypoint stays intentionally thin. `PortfolioPage` owns section
 | --- | --- |
 | Framework | Next.js 16, React 19, TypeScript |
 | Styling | Tailwind CSS 4, custom CSS tokens |
-| Motion and 3D | Motion, Three.js, Spline |
-| UI utilities | Lucide React, clsx, tailwind-merge |
+| Motion and 3D | Motion, Three.js |
 | Analytics and delivery | Vercel Analytics, Vercel |
 
 ## Run locally
 
-Requires Node.js 20.9+ and npm.
+CI uses Node.js 22 and npm.
 
 ```bash
 git clone https://github.com/Ben2104/portfolio.git
 cd portfolio
-npm install
+npm ci
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
 
-### Production check
+### Local checks
 
 ```bash
+npm run lint
+npx next typegen
+npx tsc --noEmit
 npm run build
 npm run start
 ```
 
+With Google Chrome installed and the production server running, run `node scripts/verify-site.mjs --url http://localhost:3000` for desktop and mobile browser checks.
+
 ## Project map
 
 ```text
-src/
-├── app/                         # App Router entrypoint, metadata, global styles
-├── components/portfolio/        # Page sections and interactive experiences
-│   ├── portfolio-page.tsx       # Section composition
-│   ├── intro-overlay.tsx        # Opening astronaut intro
-│   ├── project-carousel.tsx     # Draggable, snapping project navigation
-│   └── skills.tsx               # Canvas skill visualization
-├── data/portfolio.ts            # Portfolio content and links
-└── lib/                         # Shared utilities
-
-public/
-├── assets/                      # Technology icons
-├── photos/                      # Profile and experience photography
-└── projects/                    # Project artwork
+src/app/                 Homepage, layout, and project case-study route
+src/components/deck/     Site sections, navigation, and experience scene
+src/data/site.ts          Portfolio content and project links
+src/styles/               Styles for the homepage and case studies
+public/deck/              Site photography, project artwork, and icons
 ```
 
 ## Contact

@@ -1,13 +1,24 @@
-import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
+import type { Metadata, Viewport } from "next";
+import { Anton, JetBrains_Mono, Poppins } from "next/font/google";
 import type { ReactNode } from "react";
 
+import { MotionProvider } from "@/components/deck/motion-provider";
 import "./globals.css";
-import { INTRO_SCRIPT } from "@/components/portfolio/intro-state";
+
+const anton = Anton({ weight: "400", subsets: ["latin"], variable: "--font-anton", display: "swap" });
+const poppins = Poppins({
+  weight: ["300", "400", "500", "600", "700"],
+  subsets: ["latin"],
+  variable: "--font-poppins",
+  display: "swap",
+});
+const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jbm", display: "swap" });
 
 export const metadata: Metadata = {
   title: "Khoi Do | Portfolio",
   description:
-    "Portfolio website of Khoi Do, a software engineer specializing in web development and design. Showcasing projects, skills, and experience in creating modern and responsive web applications.",
+    "Portfolio of Hoang Khoi Do, a Computer Science student and full stack developer. Work experience, selected projects and case studies, from the first idea to the shipped product.",
   icons: {
     icon: "/profile/favicon.png",
     shortcut: "/profile/favicon.png",
@@ -15,22 +26,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: ReactNode;
-}>) {
+export const viewport: Viewport = { themeColor: "#17181d" };
+
+export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: INTRO_SCRIPT }} />
-        {/* Fontshare: Clash Display (headlines) + Satoshi (body) */}
-        <link
-          href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=satoshi@300,400,500,600,700,900&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body>{children}</body>
+    <html lang="en" className={`${anton.variable} ${poppins.variable} ${mono.variable}`}>
+      <body>
+        <MotionProvider>{children}</MotionProvider>
+        {process.env.VERCEL === "1" && <Analytics />}
+      </body>
     </html>
   );
 }

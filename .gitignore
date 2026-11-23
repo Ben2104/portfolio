@@ -16,3 +16,13 @@ pnpm-debug.log*
 .superpowers/
 .vercel
 .env*
+
+# playwright verification output
+.verify/
+
+# Local design prototype and browser artifacts
+/prototype/
+
+# Generated Next.js and TypeScript files
+/next-env.d.ts
+*.tsbuildinfo
