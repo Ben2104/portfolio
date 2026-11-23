@@ -36,7 +36,7 @@ export function Contact() {
       <section className="scr ct" id="contact" aria-labelledby="ct-h">
         <div className="wrap">
           <Reveal>
-            <h2 className="giant" id="ct-h">Contact us</h2>
+            <h2 className="giant" id="ct-h">Contact me</h2>
           </Reveal>
 
           <div className="ct__grid">
