@@ -2,6 +2,7 @@ import { Analytics } from "@vercel/analytics/next";
 
 import { GooeyNav } from "@/components/deck/gooey-nav";
 import { Archive } from "@/components/deck/archive";
+import { Contact } from "@/components/deck/contact";
 import { Experience } from "@/components/deck/experience";
 import { Hero } from "@/components/deck/hero";
 import { Selected } from "@/components/deck/projects";
@@ -19,6 +20,7 @@ export default function Home() {
         <Experience />
         <Selected />
         <Archive />
+        <Contact />
       </main>
       <Analytics />
     </>
