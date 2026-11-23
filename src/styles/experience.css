@@ -1,5 +1,5 @@
 /* experience: a tall track with a sticky stage; scrolling flies a three.js camera through one frame per role */
-.exp{position:relative;border-top:1px solid rgba(255,255,255,.04);height:calc(100vh + var(--steps)*80vh);height:calc(100svh + var(--steps)*80svh)}
+.exp{position:relative;height:calc(100vh + var(--steps)*80vh);height:calc(100svh + var(--steps)*80svh)}
 .exp__stick{position:sticky;top:0;height:100vh;height:100svh;overflow:clip}
 .exp__in{position:relative;max-width:1440px;margin:0 auto;padding:0 calc(var(--u)*84)}
 .exp__stick>.exp__in:first-child{padding-top:max(92px,11vh);position:relative;z-index:0}

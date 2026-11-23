@@ -69,3 +69,8 @@
 }
 .deck--about .deck__ph{-webkit-mask-image:linear-gradient(to right,#000 62%,transparent);mask-image:linear-gradient(to right,#000 62%,transparent)}
 .deck--edu .deck__ph{-webkit-mask-image:linear-gradient(to right,transparent,#000 30%,#000 70%,transparent);mask-image:linear-gradient(to right,transparent,#000 30%,#000 70%,transparent)}
+
+/* photos fade into the backdrop on every edge that meets another section */
+.hero__cut img{-webkit-mask-image:linear-gradient(to right,transparent,#000 16%,#000 84%,transparent),linear-gradient(to bottom,#000 78%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(to right,transparent,#000 16%,#000 84%,transparent),linear-gradient(to bottom,#000 78%,transparent);mask-composite:intersect}
+.deck--about .deck__ph img,.deck--edu .deck__ph img{-webkit-mask-image:linear-gradient(to bottom,transparent,#000 16%,#000 78%,transparent);mask-image:linear-gradient(to bottom,transparent,#000 16%,#000 78%,transparent)}
+.deck--intro .deck__ph img{-webkit-mask-image:linear-gradient(to bottom,#000 94%,transparent);mask-image:linear-gradient(to bottom,#000 94%,transparent)}
