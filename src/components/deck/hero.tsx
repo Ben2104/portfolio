@@ -25,7 +25,7 @@ export function Hero() {
           <p className="hero__date">
             <LiveDate />
             <br />
-            Khoi do
+            Hoang Khoi Do
           </p>
         </div>
         <ul className="hero__soc" aria-label="Elsewhere">
