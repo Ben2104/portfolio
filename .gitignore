@@ -16,3 +16,6 @@ pnpm-debug.log*
 .superpowers/
 .vercel
 .env*
+
+# playwright verification output
+.verify/

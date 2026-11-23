@@ -1,10 +1,19 @@
-import { PortfolioPage } from "@/components/portfolio/portfolio-page";
 import { Analytics } from "@vercel/analytics/next";
 
-export default function Page() {
+import { GooeyNav } from "@/components/deck/gooey-nav";
+import { Hero } from "@/components/deck/hero";
+import { About, Education, Intro } from "@/components/deck/story";
+
+export default function Home() {
   return (
     <>
-      <PortfolioPage />
+      <GooeyNav />
+      <main>
+        <Hero />
+        <Intro />
+        <About />
+        <Education />
+      </main>
       <Analytics />
     </>
   );
