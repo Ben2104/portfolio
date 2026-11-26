@@ -157,6 +157,9 @@ export const imgH: Record<string, number> = {
   'material-enhancement-assistant': 875, pickleball: 934, pickleball_bot: 1400, quizzriff: 787, 'shape-sign': 934,
 };
 
+/** Card badge: the award or hackathon name; null for plain "... project" events. */
+export const badge = (p: Project) => (p.award ? p.event : /project$/i.test(p.event) ? null : p.event);
+
 export const projects: Project[] = [
   { slug: 'lobe', title: 'Lobe', year: 2026, cat: 'ai', team: 3, img: 'lobe', roleTitle: 'Front-end developer',
     short: 'Shared 3D brain MRI review',

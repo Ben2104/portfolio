@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { cats, projects } from "@/data/site";
+import { badge, cats, projects } from "@/data/site";
 import type { Project } from "@/data/site";
 
 type Who = "all" | "team" | "solo";
@@ -18,7 +18,6 @@ const catOptions = ["all", ...Object.keys(cats)];
 const isSolo = (p: Project) => p.team === 1;
 const okWho = (p: Project, w: Who) => w === "all" || (w === "solo") === isSolo(p);
 const okCat = (p: Project, c: string) => c === "all" || p.cat === c;
-export const badge = (p: Project) => (p.award ? p.event : /project$/i.test(p.event) ? null : p.event);
 /** Code / Demo / Devpost links, rendered only when the project has them. */
 export function QuickLinks({ p }: { p: Project }) {
   const items: [string | undefined, string, string][] = [

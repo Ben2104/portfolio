@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { projects } from "@/data/site";
-import { QuickLinks, badge } from "./archive";
+import { badge, projects } from "@/data/site";
+import { QuickLinks } from "./archive";
 import { Photo } from "./photo";
 import { Reveal } from "./reveal";
 
