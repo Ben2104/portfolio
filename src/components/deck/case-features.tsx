@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useRef, useState } from "react";
+import { imgH } from "@/data/site";
 
 type Props = {
   features: [string, string][];
@@ -32,7 +33,7 @@ export function CaseFeatures({ features, img, title, details }: Props) {
             <span className="mono cf__id">Feature_{pad(k + 1)}</span>
             <h3>{n}</h3>
             <p>{t}</p>
-            <button type="button" className="cf__go mono" onClick={() => show(k)} aria-haspopup="dialog">
+            <button type="button" className="cf__go mono" onClick={() => show(k)} aria-haspopup="dialog" aria-label={`Details: ${n}`}>
               Details +
             </button>
           </li>
@@ -55,7 +56,7 @@ export function CaseFeatures({ features, img, title, details }: Props) {
           <h3 id="cf-name">{name}</h3>
           <p className="cf__sub">{text}</p>
           <div className="cf__prev">
-            <Image src={src} alt={`${title}: ${name}`} width={1600} height={900} sizes="(max-width: 860px) 92vw, 1000px" />
+            <Image src={src} alt={`${title}: ${name}`} width={1400} height={imgH[img]} sizes="(max-width: 860px) 92vw, 1000px" />
           </div>
           <p className="lbl cf__tdh">Technical details</p>
           <dl className="cf__tech">

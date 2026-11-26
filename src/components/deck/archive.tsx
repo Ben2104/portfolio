@@ -19,6 +19,7 @@ const catOptions = ["all", ...Object.keys(cats)];
 const isSolo = (p: Project) => p.team === 1;
 const okWho = (p: Project, w: Who) => w === "all" || (w === "solo") === isSolo(p);
 const okCat = (p: Project, c: string) => c === "all" || p.cat === c;
+const badge = (p: Project) => (p.award ? p.event : /project$/i.test(p.event) ? null : p.event);
 const pad = (n: number, len: number) => String(n).padStart(len, "0");
 const TOTAL = pad(projects.length, 2);
 const YEARS = `${Math.min(...projects.map((p) => p.year))}–${Math.max(...projects.map((p) => p.year))}`;
@@ -45,7 +46,7 @@ export function Archive() {
 
   const shown = projects.filter((p) => okWho(p, who) && okCat(p, cat));
   const sel = shown.find((p) => p.slug === pick) ?? shown[0];
-  const n = sel ? projects.indexOf(sel) + 1 : null;
+  const n = sel ? shown.indexOf(sel) + 1 : null;
 
   const refilter = (w: Who, c: string) => {
     setWho(w);
@@ -100,7 +101,7 @@ export function Archive() {
               <p className="mono">A collection of ideas, experiments &amp; builds.</p>
             </div>
             <span className="os__sel mono" aria-hidden="true">
-              {n === null ? "00" : pad(n, 2)} / {TOTAL}
+              {n === null ? "00" : pad(n, 2)} / {pad(shown.length, 2)}
             </span>
           </div>
           <p className="sr-only" role="status">
@@ -121,7 +122,7 @@ export function Archive() {
                 <div className="pc__in">
                   <span className="mono pc__id">CASE_{pad(projects.indexOf(p) + 1, 3)}</span>
                   <h2>{p.title}</h2>
-                  <span className="mono pc__badge">{p.award ?? p.event}</span>
+                  {badge(p) && <span className="mono pc__badge">{badge(p)}</span>}
                   <span className="cat mono">
                     {cats[p.cat]} · {p.year} · {isSolo(p) ? "Solo build" : "Team build"}
                   </span>

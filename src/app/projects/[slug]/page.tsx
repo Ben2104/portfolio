@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { CaseFeatures } from "@/components/deck/case-features";
 import { CaseSide } from "@/components/deck/case-side";
 import { Reveal } from "@/components/deck/reveal";
-import { cats, projects, toolIcons } from "@/data/site";
+import { cats, imgH, projects, toolIcons } from "@/data/site";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -75,7 +75,7 @@ export default async function CasePage({ params }: Props) {
   ];
   const layers = LAYERS.map((l, k) => [l, p.stack.filter((t) => layerOf(t) === k)] as const).filter(([, tools]) => tools.length);
   const role = [
-    ["Ownership", "Primary ownership", solo ? "Built end to end, alone: design, code and shipping." : `One of ${p.team} on the team, working as ${p.roleTitle}.`, "Ownership scope", p.roleTitle],
+    ["Ownership", "Primary ownership", solo ? "Built end to end, alone: design, code and shipping." : `One of ${p.team} on the team.`, "Ownership scope", p.roleTitle],
     ["Execution", "Technical execution", `Built with ${p.stack.slice(0, 4).join(", ")}.`, "Key deliverable", p.features[0][0]],
     ["Impact", "Teamwork & impact", p.line, "Result", p.award ?? p.event],
   ];
@@ -117,7 +117,7 @@ export default async function CasePage({ params }: Props) {
             </p>
             <div className="cs__ovrow">
               <div className="cs__frame">
-                <Image src={"/deck/projects/" + p.img + ".webp"} alt={p.title + " project preview"} fill priority sizes="(max-width: 860px) 100vw, 900px" />
+                <Image src={"/deck/projects/" + p.img + ".webp"} alt={p.title + " project preview"} width={1400} height={imgH[p.img]} priority sizes="(max-width: 860px) 100vw, 900px" />
               </div>
               <div className="cs__panel cs__snap">
                 <p className="lbl">Project snapshot</p>
