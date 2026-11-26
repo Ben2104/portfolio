@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Project } from "@/data/site";
 import { projects } from "@/data/site";
+import { QuickLinks } from "./archive";
 import { Photo } from "./photo";
 import { Reveal } from "./reveal";
 
@@ -37,21 +38,24 @@ export function Selected() {
               </p>
               <ul className="sel__cards">
                 {featured.map((p) => (
-                  <li key={p.slug}>
-                    <Link className="sc" href={"/projects/" + p.slug}>
-                      <span className="sc__img">
-                        <Image src={"/deck/projects/" + p.img + ".webp"} alt="" fill sizes="(max-width: 860px) 90vw, 20vw" />
-                      </span>
-                      {badge(p) && <span className="mono sc__badge">{badge(p)}</span>}
-                      <h3>{p.title}</h3>
-                      <span className="mono sc__role">{p.roleTitle}</span>
-                      <span className="sc__line">{p.line}</span>
-                      <span className="sc__tags">
-                        {p.stack.slice(0, 3).map((t) => (
-                          <span className="tag" key={t}>{t}</span>
-                        ))}
-                      </span>
-                    </Link>
+                  <li className="sc" key={p.slug}>
+                    <span className="sc__img">
+                      <Image src={"/deck/projects/" + p.img + ".webp"} alt="" fill sizes="(max-width: 860px) 90vw, 20vw" />
+                    </span>
+                    {badge(p) && <span className="mono sc__badge">{badge(p)}</span>}
+                    <h3>
+                      <Link href={"/projects/" + p.slug}>{p.title}</Link>
+                    </h3>
+                    <span className="mono sc__role">{p.roleTitle}</span>
+                    <span className="sc__line">{p.line}</span>
+                    <span className="sc__tags">
+                      {p.stack.slice(0, 3).map((t) => (
+                        <span className="tag" key={t}>{t}</span>
+                      ))}
+                    </span>
+                    <span className="sc__links">
+                      <QuickLinks p={p} />
+                    </span>
                   </li>
                 ))}
               </ul>

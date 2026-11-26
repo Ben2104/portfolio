@@ -2,8 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
-import type { PointerEvent } from "react";
+import { useState } from "react";
 import { cats, projects } from "@/data/site";
 import type { Project } from "@/data/site";
 
@@ -20,39 +19,35 @@ const isSolo = (p: Project) => p.team === 1;
 const okWho = (p: Project, w: Who) => w === "all" || (w === "solo") === isSolo(p);
 const okCat = (p: Project, c: string) => c === "all" || p.cat === c;
 const badge = (p: Project) => (p.award ? p.event : /project$/i.test(p.event) ? null : p.event);
+/** Code / Demo / Devpost links, rendered only when the project has them. */
+export function QuickLinks({ p }: { p: Project }) {
+  const items: [string | undefined, string, string][] = [
+    [p.links.source, "Code", "source code"],
+    [p.links.live, "Demo", "live demo"],
+    [p.links.devpost, "Devpost", "Devpost page"],
+  ];
+  return items.map(([href, label, what]) =>
+    href ? (
+      <a key={label} className="ql" href={href} target="_blank" rel="noopener noreferrer" aria-label={`${p.title} ${what} (opens in new tab)`}>
+        {label} ↗
+      </a>
+    ) : null,
+  );
+}
+
 const pad = (n: number, len: number) => String(n).padStart(len, "0");
 const TOTAL = pad(projects.length, 2);
 const YEARS = `${Math.min(...projects.map((p) => p.year))}–${Math.max(...projects.map((p) => p.year))}`;
 
-/** The archive: a window-style card with two filters and a row of case-study cards. Hovering a card selects it. */
+/** The archive: a window-style card with two filters and a grid of case-study cards. */
 export function Archive() {
   const [who, setWho] = useState<Who>("all");
   const [cat, setCat] = useState("all");
-  const [pick, setPick] = useState("");
-  const row = useRef<HTMLUListElement>(null);
-  const [prog, setProg] = useState(0);
-  const drag = useRef<{ x: number; left: number } | null>(null);
-
-  const onScroll = () => {
-    const el = row.current;
-    if (el) setProg(el.scrollWidth > el.clientWidth ? el.scrollLeft / (el.scrollWidth - el.clientWidth) : 0);
-  };
-  const onDown = (e: PointerEvent<HTMLUListElement>) => {
-    if (e.pointerType === "mouse") drag.current = { x: e.clientX, left: e.currentTarget.scrollLeft };
-  };
-  const onMove = (e: PointerEvent<HTMLUListElement>) => {
-    if (drag.current) e.currentTarget.scrollLeft = drag.current.left - (e.clientX - drag.current.x);
-  };
-
   const shown = projects.filter((p) => okWho(p, who) && okCat(p, cat));
-  const sel = shown.find((p) => p.slug === pick) ?? shown[0];
-  const n = sel ? shown.indexOf(sel) + 1 : null;
 
   const refilter = (w: Who, c: string) => {
     setWho(w);
     setCat(c);
-    setPick("");
-    row.current?.scrollTo({ left: 0, behavior: "instant" });
   };
 
   return (
@@ -101,21 +96,16 @@ export function Archive() {
               <p className="mono">A collection of ideas, experiments &amp; builds.</p>
             </div>
             <span className="os__sel mono" aria-hidden="true">
-              {n === null ? "00" : pad(n, 2)} / {pad(shown.length, 2)}
+              {shown.length} shown
             </span>
           </div>
           <p className="sr-only" role="status">
             {shown.length} {shown.length === 1 ? "project" : "projects"}
           </p>
           {shown.length === 0 && <p className="os__empty">No projects match this pair of filters.</p>}
-          <ul className="row" ref={row} aria-label="Projects" tabIndex={0} onScroll={onScroll} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={() => (drag.current = null)} onPointerLeave={() => (drag.current = null)}>
+          <ul className="row" aria-label="Projects">
             {shown.map((p) => (
-              <li
-                key={p.slug}
-                className={"pc" + (sel?.slug === p.slug ? " on" : "")}
-                onMouseEnter={() => setPick(p.slug)}
-                onFocus={() => setPick(p.slug)}
-              >
+              <li key={p.slug} className="pc">
                 <div className="pc__img">
                   <Image src={"/deck/projects/" + p.img + ".webp"} alt="" fill sizes="(max-width: 860px) 78vw, (max-width: 1920px) 25vw, 480px" />
                 </div>
@@ -132,19 +122,16 @@ export function Archive() {
                       <span className="tag" key={t}>{t}</span>
                     ))}
                   </span>
-                  <Link className="pc__go" href={"/projects/" + p.slug} aria-label={`View case study for ${p.title}`}>
-                    View case study ↗
-                  </Link>
+                  <div className="pc__links">
+                    <Link className="pc__go" href={"/projects/" + p.slug} aria-label={`View case study for ${p.title}`}>
+                      Case study ↗
+                    </Link>
+                    <QuickLinks p={p} />
+                  </div>
                 </div>
               </li>
             ))}
           </ul>
-          {shown.length > 0 && (
-            <div className="os__rail">
-              <span className="mono">Drag to explore</span>
-              <i aria-hidden="true"><b style={{ width: `${12 + prog * 88}%` }} /></i>
-            </div>
-          )}
         </div>
       </div>
     </div>

@@ -90,7 +90,7 @@
 .cf__card h3{font-family:var(--sans);font-weight:700;font-size:20px;text-transform:uppercase;margin:0 0 6px}
 .cf__card p{font-size:14px;line-height:1.6;color:#b9bac2;margin:0 0 16px}
 .cf__go{margin-top:auto;align-self:flex-end;background:none;border:0;padding:0 0 2px;color:var(--or);border-bottom:1px solid currentColor;cursor:pointer}
-.cf__go:focus-visible,.cf__x:focus-visible{outline:1px solid var(--or);outline-offset:3px}
+.cf__go:focus-visible,.cf__x:focus-visible,.cs__nl:focus-visible,.cs__btn:focus-visible,.cs__next .big:focus-visible{outline:1px solid var(--or);outline-offset:3px}
 .cf__dlg{margin:auto;width:min(1000px,92vw);max-height:92svh;padding:0;border:1px solid rgba(255,255,255,.1);border-radius:14px;background:var(--bg);color:var(--ink)}
 .cf__dlg::backdrop{background:rgba(8,8,10,.72);backdrop-filter:blur(3px)}
 .cf__dlg[open]{animation:cf-in .25s ease-out}
