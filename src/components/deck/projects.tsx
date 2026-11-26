@@ -1,14 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Project } from "@/data/site";
 import { projects } from "@/data/site";
-import { QuickLinks } from "./archive";
+import { QuickLinks, badge } from "./archive";
 import { Photo } from "./photo";
 import { Reveal } from "./reveal";
 
 const featured = ["shape-sign", "911-operator-assistant", "lobe"].map((slug) => projects.find((p) => p.slug === slug)!);
-
-const badge = (p: Project) => (p.award ? p.event : /project$/i.test(p.event) ? null : p.event);
 
 export function Selected() {
   return (

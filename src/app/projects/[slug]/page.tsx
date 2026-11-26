@@ -149,7 +149,7 @@ export default async function CasePage({ params }: Props) {
                   ).map(
                     ([label, href]) =>
                       href && (
-                        <a key={label} className="cs__btn" href={href} target="_blank" rel="noopener noreferrer">
+                        <a key={label} className="cs__btn" href={href} target="_blank" rel="noopener noreferrer" aria-label={`${label} (opens in new tab)`}>
                           {label} ↗
                         </a>
                       ),
