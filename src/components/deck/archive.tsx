@@ -50,6 +50,7 @@ export function Archive() {
   const refilter = (w: Who, c: string) => {
     setWho(w);
     setCat(c);
+    setPick("");
     row.current?.scrollTo({ left: 0, behavior: "instant" });
   };
 
@@ -118,12 +119,18 @@ export function Archive() {
                   <Image src={"/deck/projects/" + p.img + ".webp"} alt="" fill sizes="(max-width: 860px) 78vw, (max-width: 1920px) 25vw, 480px" />
                 </div>
                 <div className="pc__in">
-                  <span className="mono pc__id">CASE_{pad(projects.indexOf(p) + 1, 3)} <b aria-hidden="true">↗</b></span>
+                  <span className="mono pc__id">CASE_{pad(projects.indexOf(p) + 1, 3)}</span>
                   <h2>{p.title}</h2>
+                  <span className="mono pc__badge">{p.award ?? p.event}</span>
                   <span className="cat mono">
                     {cats[p.cat]} · {p.year} · {isSolo(p) ? "Solo build" : "Team build"}
                   </span>
                   <p>{p.line}</p>
+                  <span className="pc__tags">
+                    {p.stack.slice(0, 4).map((t) => (
+                      <span className="tag" key={t}>{t}</span>
+                    ))}
+                  </span>
                   <Link className="pc__go" href={"/projects/" + p.slug} aria-label={`View case study for ${p.title}`}>
                     View case study ↗
                   </Link>
@@ -131,10 +138,12 @@ export function Archive() {
               </li>
             ))}
           </ul>
-          <div className="os__rail">
-            <span className="mono">Drag to explore</span>
-            <i aria-hidden="true"><b style={{ width: `${12 + prog * 88}%` }} /></i>
-          </div>
+          {shown.length > 0 && (
+            <div className="os__rail">
+              <span className="mono">Drag to explore</span>
+              <i aria-hidden="true"><b style={{ width: `${12 + prog * 88}%` }} /></i>
+            </div>
+          )}
         </div>
       </div>
     </div>

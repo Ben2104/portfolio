@@ -1,7 +1,10 @@
+import Image from "next/image";
 import Link from "next/link";
 import { projects } from "@/data/site";
 import { Photo } from "./photo";
 import { Reveal } from "./reveal";
+
+const featured = ["shape-sign", "911-operator-assistant", "lobe"].map((slug) => projects.find((p) => p.slug === slug)!);
 
 export function Selected() {
   return (
@@ -23,7 +26,7 @@ export function Selected() {
                 projects
               </h2>
               <div className="sel__pills">
-                <span className="pill pill--o">{projects.length} featured projects</span>
+                <span className="pill pill--o">{featured.length} featured · {projects.length} total</span>
                 <span className="pill">Team collaboration</span>
                 <span className="pill">Individual contributions</span>
               </div>
@@ -31,8 +34,28 @@ export function Selected() {
                 Hackathon winners, team builds and solo tools. Each one has a case study: the idea, what I owned, how it
                 works and the stack behind it.
               </p>
+              <ul className="sel__cards">
+                {featured.map((p) => (
+                  <li key={p.slug}>
+                    <Link className="sc" href={"/projects/" + p.slug}>
+                      <span className="sc__img">
+                        <Image src={"/deck/projects/" + p.img + ".webp"} alt="" fill sizes="(max-width: 860px) 90vw, 20vw" />
+                      </span>
+                      <span className="mono sc__badge">{p.award ?? p.event}</span>
+                      <h3>{p.title}</h3>
+                      <span className="mono sc__role">{p.roleTitle}</span>
+                      <span className="sc__line">{p.line}</span>
+                      <span className="sc__tags">
+                        {p.stack.slice(0, 3).map((t) => (
+                          <span className="tag" key={t}>{t}</span>
+                        ))}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
               <Link className="pill pill--w" href="/projects">
-                Open the archive ↗
+                View all {projects.length} projects →
               </Link>
             </Reveal>
           </div>

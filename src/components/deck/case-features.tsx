@@ -29,16 +29,11 @@ export function CaseFeatures({ features, img, title, details }: Props) {
       <ul className="cf">
         {features.map(([n, t], k) => (
           <li key={n} className="cf__card">
-            <span className="mono cf__id">
-              Feature_{pad(k + 1)} <b aria-hidden="true">↗</b>
-            </span>
-            <div className="cf__thumb">
-              <Image src={src} alt="" fill sizes="(max-width: 860px) 90vw, 30vw" />
-            </div>
+            <span className="mono cf__id">Feature_{pad(k + 1)}</span>
             <h3>{n}</h3>
             <p>{t}</p>
             <button type="button" className="cf__go mono" onClick={() => show(k)} aria-haspopup="dialog">
-              View details ↗
+              Details +
             </button>
           </li>
         ))}
@@ -60,7 +55,7 @@ export function CaseFeatures({ features, img, title, details }: Props) {
           <h3 id="cf-name">{name}</h3>
           <p className="cf__sub">{text}</p>
           <div className="cf__prev">
-            <Image src={src} alt={`${title}: ${name}`} fill sizes="(max-width: 860px) 92vw, 1000px" />
+            <Image src={src} alt={`${title}: ${name}`} width={1600} height={900} sizes="(max-width: 860px) 92vw, 1000px" />
           </div>
           <p className="lbl cf__tdh">Technical details</p>
           <dl className="cf__tech">
