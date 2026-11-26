@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { CaseFeatures } from "@/components/deck/case-features";
 import { CaseSide } from "@/components/deck/case-side";
 import { Reveal } from "@/components/deck/reveal";
-import { cats, projects, toolIcons } from "@/data/site";
+import { cats, imgH, projects, toolIcons } from "@/data/site";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -16,7 +16,14 @@ export const generateStaticParams = () => projects.map((p) => ({ slug: p.slug })
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const p = projects.find((x) => x.slug === slug);
-  return p ? { title: p.title + " | Khoi Do", description: p.line } : {};
+  if (!p) return {};
+  const title = p.title + " | Khoi Do";
+  return {
+    title,
+    description: p.line,
+    openGraph: { title, description: p.line, images: ["/deck/projects/" + p.img + ".webp"] },
+    twitter: { card: "summary_large_image" },
+  };
 }
 
 const SECTIONS = [
@@ -49,10 +56,10 @@ export default async function CasePage({ params }: Props) {
   const i = projects.findIndex((x) => x.slug === slug);
   if (i < 0) notFound();
   const p = projects[i];
-  const next = projects[(i + 1) % projects.length];
+  const n = (i + 1) % projects.length;
+  const next = projects[n];
   const total = pad(projects.length, 2);
   const solo = p.team === 1;
-  const demo = p.links.live ?? p.links.devpost;
   const links = (
     [
       ["GitHub repository", p.links.source],
@@ -68,7 +75,7 @@ export default async function CasePage({ params }: Props) {
   ];
   const layers = LAYERS.map((l, k) => [l, p.stack.filter((t) => layerOf(t) === k)] as const).filter(([, tools]) => tools.length);
   const role = [
-    ["Ownership", "Primary ownership", solo ? "Built end to end, alone: design, code and shipping." : `One of ${p.team} on the team, owning the ${p.roleTitle.toLowerCase()} work.`, "Ownership scope", p.roleTitle],
+    ["Ownership", "Primary ownership", solo ? "Built end to end, alone: design, code and shipping." : `One of ${p.team} on the team.`, "Ownership scope", p.roleTitle],
     ["Execution", "Technical execution", `Built with ${p.stack.slice(0, 4).join(", ")}.`, "Key deliverable", p.features[0][0]],
     ["Impact", "Teamwork & impact", p.line, "Result", p.award ?? p.event],
   ];
@@ -99,17 +106,18 @@ export default async function CasePage({ params }: Props) {
           <section className="cs__sec cs__ov" id="overview" aria-labelledby="cs-title">
             <div className="cs__ovtop">
               <p className="lbl">CASE_{pad(i + 1, 3)} / Project overview</p>
-              {p.award && <span className="lbl">{p.award}</span>}
+              {p.award && <span className="cs__award">{p.event}</span>}
             </div>
             <h1 id="cs-title" style={{ "--ts": ts } as CSSProperties}>
               {p.title}
             </h1>
             <p className="mono">
               {cats[p.cat]} · {solo ? "Solo" : "Team"} · {p.year}
+              {!p.award && !/project$/.test(p.event) && ` · ${p.event}`}
             </p>
             <div className="cs__ovrow">
               <div className="cs__frame">
-                <Image src={"/deck/projects/" + p.img + ".webp"} alt={p.title + " project preview"} fill priority sizes="(max-width: 860px) 100vw, 900px" />
+                <Image src={"/deck/projects/" + p.img + ".webp"} alt={p.title + " project preview"} width={1400} height={imgH[p.img]} priority sizes="(max-width: 860px) 100vw, 900px" />
               </div>
               <div className="cs__panel cs__snap">
                 <p className="lbl">Project snapshot</p>
@@ -132,15 +140,19 @@ export default async function CasePage({ params }: Props) {
                   </div>
                 </dl>
                 <div className="cs__btns">
-                  {p.links.source && (
-                    <a className="cs__btn" href={p.links.source} target="_blank" rel="noopener noreferrer">
-                      GitHub ↗
-                    </a>
-                  )}
-                  {demo && (
-                    <a className="cs__btn" href={demo} target="_blank" rel="noopener noreferrer">
-                      Live demo ↗
-                    </a>
+                  {(
+                    [
+                      ["Live demo", p.links.live],
+                      ["Devpost", p.links.devpost],
+                      ["Source", p.links.source],
+                    ] as [string, string | undefined][]
+                  ).map(
+                    ([label, href]) =>
+                      href && (
+                        <a key={label} className="cs__btn" href={href} target="_blank" rel="noopener noreferrer" aria-label={`${label} (opens in new tab)`}>
+                          {label} ↗
+                        </a>
+                      ),
                   )}
                 </div>
               </div>
@@ -317,7 +329,7 @@ export default async function CasePage({ params }: Props) {
                     {links.map(([label, href], k) => (
                       <li key={label}>
                         <a href={href} target="_blank" rel="noopener noreferrer">
-                          <span className="lbl">Resource_{pad(k + 1, 2)}</span>
+                          <span className="lbl" aria-hidden="true">Resource_{pad(k + 1, 2)}</span>
                           <strong>{label}</strong>
                           <span className="mono">{href.replace(/^https?:\/\//, "")}</span>
                           <b aria-hidden="true">↗</b>
@@ -329,7 +341,7 @@ export default async function CasePage({ params }: Props) {
               </div>
               <div className="cs__next">
                 <div>
-                  <p className="mono">Next case study / {pad(((i + 1) % projects.length) + 1, 2)}</p>
+                  <p className="mono">Next case study / {pad(n + 1, 2)}</p>
                   <Link className="big" href={"/projects/" + next.slug}>
                     {next.title} →
                   </Link>

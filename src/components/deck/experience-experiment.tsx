@@ -2,7 +2,7 @@
 
 import { motion, useMotionValueEvent, useScroll, useTransform } from "motion/react";
 import dynamic from "next/dynamic";
-import { useCallback, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { CSSProperties } from "react";
 import { experience } from "@/data/site";
 import { activeAt } from "./experience-math";
@@ -28,9 +28,20 @@ const useReduceMotion = () => useSyncExternalStore(subscribeMotionPref, () => wi
  */
 export function ExperienceExperiment() {
   const [open, setOpen] = useState(false);
+  const el = useRef<HTMLDetailsElement>(null);
+
+  // the "3D timeline" link targets this id: open the details when the hash points here
+  useEffect(() => {
+    const sync = () => {
+      if (location.hash === "#experience-experiment" && el.current) el.current.open = true;
+    };
+    sync();
+    window.addEventListener("hashchange", sync);
+    return () => window.removeEventListener("hashchange", sync);
+  }, []);
 
   return (
-    <details className="exp__experiment" id="experience-experiment" onToggle={(event) => setOpen(event.currentTarget.open)}>
+    <details ref={el} className="exp__experiment" id="experience-experiment" onToggle={(event) => setOpen(event.currentTarget.open)}>
       <summary className="wrap">
         <span>Interactive experience timeline</span>
       </summary>

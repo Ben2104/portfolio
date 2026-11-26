@@ -16,6 +16,7 @@ const poppins = Poppins({
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jbm", display: "swap" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://portfolio-alpha-khaki-92.vercel.app"),
   title: "Khoi Do | Portfolio",
   description:
     "Portfolio of Hoang Khoi Do, a Computer Science student and full stack developer. Work experience, selected projects and case studies, from the first idea to the shipped product.",
